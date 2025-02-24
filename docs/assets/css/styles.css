@@ -315,3 +315,48 @@ model-viewer {
 
 /* RESPONSIVE */
 
+.cartasc {
+  max-width: 1200px;
+  text-align: center;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: auto;
+}
+
+@media (max-width: 992px) {
+  .cartasc {
+    flex-direction: column;
+  }
+}
+
+.cartasc .tarjetas {
+  border: 2px solid black;
+  padding: 10px;
+  width: 33%;
+}
+
+@media (max-width: 992px) {
+  .cartasc .tarjetas {
+    width: 90%;
+  }
+}
+
+.tarjetas img {
+  width: 100%;
+  border-radius: 30px;
+}
+
+.tarjetas button {
+  background: black;
+  color: white;
+  padding: 10px 25px;
+}
+
+.tarjetas button:hover {
+  background: #edce2e;
+  color: black;
+}
+
+
+
