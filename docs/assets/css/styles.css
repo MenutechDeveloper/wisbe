@@ -343,6 +343,16 @@ model-viewer {
   }
 }
 
+.tarjetas {
+  height: 450px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  margin: 5px;
+  border-radius: 20px;
+}
+
 .tarjetas img {
   width: 100%;
   border-radius: 30px;
