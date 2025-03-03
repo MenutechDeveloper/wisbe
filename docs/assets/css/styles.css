@@ -371,7 +371,7 @@ model-viewer {
 
 /*estilos para  Book a free*/
 .hero {
-  background: url("wisbe1.jpg");
+  background: url("./wisbe1.jpg");
   width: 100%;
   height: 400px;
   background-position: left;
