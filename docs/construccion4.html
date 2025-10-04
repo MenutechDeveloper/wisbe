@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AltaBuild LA — Construcción de Casas (Demo)</title>
+  <meta name="description" content="Constructora en Los Ángeles. Diseño y construcción de casas residenciales. Demo ficticia." />
+  <style>
+     :root{
+      --bg:#0f1724; --card:#0b1220; --accent:#ff7a18; --muted:#94a3b8; --glass: rgba(255,255,255,0.04);
+      --maxw:1200px; --radius:14px; --gap:18px; --fw: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:var(--fw); background:linear-gradient(180deg,#071028 0%, #071827 60%); color:#e6eef8; -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale; line-height:1.45;
+    }
+    .container{max-width:var(--maxw); margin:0 auto; padding:28px}
+    :root{
+      --bg:#0f1724; --card:#0b1220; --accent:#ff7a18; --muted:#94a3b8; --glass: rgba(255,255,255,0.04);
+      --maxw:1200px; --radius:14px; --gap:18px; --fw: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:var(--fw); background:linear-gradient(180deg,#071028 0%, #071827 60%); color:#e6eef8; -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale; line-height:1.45;
+    }
+    .container{max-width:var(--maxw); margin:0 auto; padding:28px}
+    /* Promo bar */
+    .promo{background:linear-gradient(90deg,var(--accent),#ffbc5e); color:#08101a; padding:10px 16px; border-radius:999px; display:flex; gap:12px; align-items:center; justify-content:center; font-weight:700}
+
+    /* NAV */
+    header{position:sticky; top:16px; z-index:40}
+    .navwrap{display:flex; align-items:center; justify-content:space-between; gap:12px}
+    .brand{display:flex; gap:12px; align-items:center}
+    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,#113; #0bb);display:grid;place-items:center;font-weight:900;color:#071827}
+    nav{display:flex;align-items:center;gap:20px}
+    .navlinks{display:flex; gap:14px}
+    .navlinks a{color:var(--muted); text-decoration:none; padding:6px 10px; border-radius:8px}
+    .navlinks a:hover{color:#fff; background:var(--glass)}
+    .cta{background:var(--accent); color:#071827; padding:8px 14px; border-radius:10px;font-weight:700;text-decoration:none}
+    .langswitch{background:transparent;border:1px solid rgba(255,255,255,0.06); padding:6px 8px;border-radius:8px;cursor:pointer}
+
+    /* Hamburger */
+    .hambtn{display:none; background:transparent;border:0;color:inherit}
+    @media(max-width:900px){
+      .navlinks, .cta{display:none}
+      .hambtn{display:inline-flex}
+    }
+    /* Mobile menu */
+    .mobilemenu{position:fixed; inset:78px 18px auto 18px; background:linear-gradient(180deg, rgba(8,12,20,0.9), rgba(4,7,12,0.95)); border-radius:12px; padding:18px; display:none; flex-direction:column; gap:12px; box-shadow:0 10px 40px rgba(0,0,0,0.6)}
+    .mobilemenu a{color:#cfe3f6}
+    .mobilemenu.show{display:flex}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr 420px; gap:28px; align-items:center; padding:40px 0}
+    .hero-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:28px; border-radius:20px; box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+    h1{font-size:32px;margin:0 0 12px}
+    p.lead{color:var(--muted); margin:0 0 18px}
+    .hero-cta{display:flex; gap:12px}
+    .btn{padding:10px 14px;border-radius:12px;border:0;cursor:pointer}
+    .btn-primary{background:var(--accent);color:#071827;font-weight:800}
+    .btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+
+    /* Services */
+    .services{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:28px 0}
+    .service{background:var(--card); padding:18px;border-radius:12px}
+    .service h4{margin:0 0 8px}
+    @media(max-width:900px){.hero{grid-template-columns:1fr;}.services{grid-template-columns:1fr 1fr}}
+    @media(max-width:600px){.services{grid-template-columns:1fr}}
+
+    /* Gallery */
+    .gallery{display:grid; grid-template-columns:repeat(4,1fr); gap:12px}
+    .gal-item{border-radius:12px; overflow:hidden; height:140px; display:grid; place-items:center; background:linear-gradient(180deg,#0b1220,#071028); border:1px solid rgba(255,255,255,0.03); cursor:pointer}
+    .gal-item svg{opacity:0.06}
+    @media(max-width:1000px){.gallery{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:700px){.gallery{grid-template-columns:repeat(2,1fr)}}
+
+    /* About & history */
+    .two-col{display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start}
+    .card{background:var(--card); padding:18px; border-radius:12px}
+    @media(max-width:900px){.two-col{grid-template-columns:1fr}}
+
+    /* Contact */
+    form .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    form input, form textarea{width:100%; padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04); background:transparent;color:inherit}
+    form textarea{min-height:120px}
+
+    /* Footer */
+    footer{margin-top:36px; padding:28px 0; color:var(--muted)}
+
+    /* small utilities */
+    .muted{color:var(--muted)}
+    .small{font-size:13px}
+
+    /* Reveal animations */
+    .reveal{opacity:0; transform:translateY(20px); transition:all 700ms cubic-bezier(.2,.9,.2,1)}
+    .reveal.show{opacity:1; transform:none}
+
+    /* Promo sticky bar bottom */
+    .promo-bottom{position:fixed; left:18px; right:18px; bottom:18px; z-index:60; display:flex; justify-content:center}
+
+    /* Lightbox modal */
+    .lightbox{position:fixed; inset:0; display:none; place-items:center; background:rgba(2,6,23,0.75); z-index:80}
+    .lightbox.show{display:grid}
+    .lightbox .box{max-width:900px; width:90%; border-radius:12px; overflow:hidden}
+
+    /* small logo text */
+    .logo-text{font-weight:800}
+
+    /* Contact info list */
+    .info-list{display:flex; gap:12px; flex-direction:column}
+
+  </style>
+</head>
+<body>
+  <div style="position:fixed; inset:0; pointer-events:none; z-index:10;">
+    <canvas id="particleCanvas" style="width:100%; height:100%;"></canvas>
+  </div>
+
+  <div class="container">
+    <div class="promo reveal" id="promoTop">Construcción 0% comisión — Oferta demo: descuento de lanzamiento 12% en proyectos nuevos</div>
+
+    <header class="reveal">
+      <div class="navwrap">
+        <div class="brand">
+          <div class="logo">A</div>
+          <div>
+            <div class="logo-text">AltaBuild LA</div>
+            <div class="small muted">Residential Builders • Los Ángeles, CA</div>
+          </div>
+        </div>
+        <nav>
+          <div class="navlinks" id="navlinks">
+            <a href="#about" data-i18n="nav_about">About</a>
+            <a href="#services" data-i18n="nav_services">Services</a>
+            <a href="#gallery" data-i18n="nav_gallery">Gallery</a>
+            <a href="#history" data-i18n="nav_history">History</a>
+            <a href="#contact" data-i18n="nav_contact">Contact</a>
+          </div>
+          <button class="langswitch" id="langBtn">ES</button>
+          <a href="#contact" class="cta" data-i18n="nav_cta">Get a Quote</a>
+          <button class="hambtn" id="hamb"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+        </nav>
+      </div>
+      <div class="mobilemenu" id="mobilemenu">
+        <a href="#about" data-i18n="nav_about">About</a>
+        <a href="#services" data-i18n="nav_services">Services</a>
+        <a href="#gallery" data-i18n="nav_gallery">Gallery</a>
+        <a href="#history" data-i18n="nav_history">History</a>
+        <a href="#contact" data-i18n="nav_contact">Contact</a>
+        <a href="#contact" class="cta" style="margin-top:4px" data-i18n="nav_cta">Get a Quote</a>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-card reveal">
+        <h1 data-i18n="hero_title">Construimos casas que duran y enamoran</h1>
+        <p class="lead" data-i18n="hero_sub">AltaBuild LA diseña y ejecuta proyectos residenciales en Los Ángeles: reformas, ampliaciones y casas desde cero. Materiales responsables, planificación puntual y comunicación clara.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary" id="quoteBtn" data-i18n="hero_cta">Solicitar presupuesto</button>
+          <button class="btn btn-outline" id="learnBtn" data-i18n="hero_learn">Conócenos</button>
+        </div>
+        <div style="margin-top:18px; color:var(--muted);" class="small">Trabajo ficticio — datos de ejemplo para demo.</div>
+      </div>
+      <aside class="card reveal">
+        <h3 data-i18n="aside_title">Servicios Express</h3>
+        <ul class="muted small">
+          <li data-i18n="aside_li1">Diseño arquitectónico</li>
+          <li data-i18n="aside_li2">Construcción llave en mano</li>
+          <li data-i18n="aside_li3">Permisos y trámites</li>
+          <li data-i18n="aside_li4">Remodelaciones y ampliaciones</li>
+        </ul>
+        <div style="margin-top:12px; display:flex; gap:8px">
+          <button class="btn btn-outline" onclick="scrollToSection('services')" data-i18n="aside_btn1">Ver servicios</button>
+          <button class="btn btn-primary" onclick="scrollToSection('contact')" data-i18n="aside_btn2">Contactar</button>
+        </div>
+      </aside>
+    </section>
+
+    <section id="about" class="reveal two-col">
+      <div class="card">
+        <h3 data-i18n="about_title">Sobre AltaBuild LA</h3>
+        <p data-i18n="about_text">AltaBuild LA nace como estudio de construcción enfocado en viviendas residenciales. Equipo local con más de 20 años combinados de experiencia, enfoque en durabilidad, eficiencia energética y estética moderna. Trabajos en zonas de Los Ángeles: Silver Lake, Echo Park, Highland Park y más.</p>
+        <ul class="muted">
+          <li data-i18n="about_li1">Gestión de permisos rápidos</li>
+          <li data-i18n="about_li2">Materiales de calidad USA</li>
+          <li data-i18n="about_li3">Garantía 2 años en estructura</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 data-i18n="team_title">Equipo (demo)</h3>
+        <p class="muted small" data-i18n="team_text">Pequeño equipo multidisciplinario: arquitectos, ingenieros, capataces y un gestor de proyectos asignado por obra.</p>
+        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap">
+          <div style="background:var(--glass); padding:8px 12px; border-radius:8px">Ana — Arquitecta</div>
+          <div style="background:var(--glass); padding:8px 12px; border-radius:8px">Carlos — Jefe de obra</div>
+          <div style="background:var(--glass); padding:8px 12px; border-radius:8px">Maya — PM</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="services" class="reveal">
+      <h3>Servicios</h3>
+      <div class="services">
+        <div class="service">
+          <h4 data-i18n="svc_design">Diseño & Planificación</h4>
+          <p class="muted">Planos, permisos, y coordinación con ingenierías. Ejecución con entregables claros.</p>
+        </div>
+        <div class="service">
+          <h4 data-i18n="svc_build">Construcción</h4>
+          <p class="muted">Estructura, instalaciones, acabados y gestión completa de obra.</p>
+        </div>
+        <div class="service">
+          <h4 data-i18n="svc_reno">Remodelación</h4>
+          <p class="muted">Reformas de cocina, baños, ampliaciones y mejoras energéticas.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery" class="reveal">
+      <h3 data-i18n="gallery_title">Galería de proyectos</h3>
+      <div class="gallery">
+        <div class="gal-item" data-img="Proyecto 1" onclick="openLightbox('Proyecto 1')">
+          <svg width="160" height="90" viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg"><rect width="160" height="90" fill="#0b1220"/></svg>
+          <div style="position:absolute; color:var(--muted); font-size:13px">Proyecto 1 — Echo Park</div>
+        </div>
+        <div class="gal-item" data-img="Proyecto 2" onclick="openLightbox('Proyecto 2')">
+          <svg width="160" height="90" viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg"><rect width="160" height="90" fill="#0b1220"/></svg>
+          <div style="position:absolute; color:var(--muted); font-size:13px">Proyecto 2 — Highland Park</div>
+        </div>
+        <div class="gal-item" data-img="Proyecto 3" onclick="openLightbox('Proyecto 3')">
+          <svg width="160" height="90" viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg"><rect width="160" height="90" fill="#0b1220"/></svg>
+          <div style="position:absolute; color:var(--muted); font-size:13px">Proyecto 3 — Silver Lake</div>
+        </div>
+        <div class="gal-item" data-img="Proyecto 4" onclick="openLightbox('Proyecto 4')">
+          <svg width="160" height="90" viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg"><rect width="160" height="90" fill="#0b1220"/></svg>
+          <div style="position:absolute; color:var(--muted); font-size:13px">Proyecto 4 — Demo</div>
+        </div>
+        <div class="gal-item" data-img="Proyecto 5" onclick="openLightbox('Proyecto 5')">
+          <svg width="160" height="90" viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg"><rect width="160" height="90" fill="#0b1220"/></svg>
+          <div style="position:absolute; color:var(--muted); font-size:13px">Proyecto 5 — Downtown LA</div>
+        </div>
+        <div class="gal-item" data-img="Proyecto 6" onclick="openLightbox('Proyecto 6')">
+          <svg width="160" height="90" viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg"><rect width="160" height="90" fill="#0b1220"/></svg>
+          <div style="position:absolute; color:var(--muted); font-size:13px">Proyecto 6 — Pasadena</div>
+        </div>
+        <div class="gal-item" data-img="Proyecto 7" onclick="openLightbox('Proyecto 7')">
+          <svg width="160" height="90" viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg"><rect width="160" height="90" fill="#0b1220"/></svg>
+          <div style="position:absolute; color:var(--muted); font-size:13px">Proyecto 7 — Hollywood</div>
+        </div>
+        <div class="gal-item" data-img="Proyecto 8" onclick="openLightbox('Proyecto 8')">
+          <svg width="160" height="90" viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg"><rect width="160" height="90" fill="#0b1220"/></svg>
+          <div style="position:absolute; color:var(--muted); font-size:13px">Proyecto 8 — Santa Mónica</div>
+        </div>
+      </div>
+    </section>
+
+    <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+      <div class="box card" role="dialog" aria-modal="true">
+        <div style="padding:18px">
+          <h3 id="lbTitle">Proyecto</h3>
+          <p class="muted">Galería demo. Imágenes de ejemplo.</p>
+          <div style="height:360px; background:linear-gradient(180deg,#071827,#071028); border-radius:8px; display:grid; place-items:center; color:var(--muted);">Imagen de proyecto (demo)</div>
+        </div>
+      </div>
+    </div>
+
+    <section id="history" class="reveal two-col">
+      <div class="card">
+        <h3 data-i18n="history_title">Historia</h3>
+        <p data-i18n="history_text">Fundada con la idea de crear casas bien pensadas y bien construidas, AltaBuild LA ha colaborado con familias y diseñadores locales. Este sitio es una demo ficticia con contenido de ejemplo orientado a mostrar una plantilla moderna.</p>
+        <div class="muted small">Timeline — 2018 idea • 2020 primer proyecto • 2024 equipo consolidado (demo)</div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="safety_title">Seguridad & permisos</h3>
+        <p class="muted" data-i18n="safety_text">Asesoría completa para cumplir códigos locales, inspecciones y permisos municipales de Los Ángeles.</p>
+      </div>
+    </section>
+
+    <section id="contact" class="reveal">
+      <h3 data-i18n="contact_title">Contacto</h3>
+      <div class="two-col">
+        <div class="card">
+          <h4 data-i18n="contact_info">Información</h4>
+          <div class="info-list">
+            <div><strong>Dirección:</strong> 123 Demo Ave, Los Ángeles, CA</div>
+            <div><strong>Tel:</strong> (323) 555-0142</div>
+            <div><strong>Email:</strong> hello@altabuildla.example</div>
+          </div>
+          <div style="margin-top:12px">
+            <h4 class="small">Horario</h4>
+            <div class="muted small">Lun - Vie 8:00 - 17:00</div>
+          </div>
+        </div>
+        <div class="card">
+          <h4 data-i18n="form_title">Enviar mensaje</h4>
+          <form id="contactForm" onsubmit="submitContact(event)">
+            <div class="row">
+              <input id="name" placeholder="Nombre" required />
+              <input id="email" type="email" placeholder="Correo" required />
+            </div>
+            <div style="margin-top:10px">
+              <textarea id="message" placeholder="Mensaje" required></textarea>
+            </div>
+            <div style="margin-top:10px; display:flex; gap:8px">
+              <button class="btn btn-primary" type="submit" data-i18n="form_send">Enviar</button>
+              <button class="btn btn-outline" type="button" onclick="document.getElementById('contactForm').reset()" data-i18n="form_reset">Limpiar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal" style="margin-top:20px">
+      <div class="card">
+        <h4 data-i18n="news_title">Newsletter</h4>
+        <p class="muted">Suscríbete para recibir actualizaciones de proyectos y promociones (demo).</p>
+        <form id="newsletter" onsubmit="subscribeNews(event)" style="display:flex; gap:8px; margin-top:8px">
+          <input id="newsEmail" placeholder="Correo electrónico" required />
+          <button class="btn btn-primary" type="submit" data-i18n="news_btn">Suscribir</button>
+        </form>
+      </div>
+    </section>
+
+    <div class="promo-bottom reveal">
+      <div class="promo" id="promoBottom">Promoción: 10% OFF en reformas pequeñas — vigencia demo</div>
+    </div>
+
+    <footer class="reveal">
+      <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap">
+        <div>
+          <strong>AltaBuild LA</strong>
+          <div class="muted small">Construcción residencial — Los Ángeles, CA</div>
+        </div>
+        <div class="muted small">© <span id="year"></span> AltaBuild LA (demo)</div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Small utilities
+    function scrollToSection(id){ document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'}); }
+
+    // Hamburger mobile
+    const hamb = document.getElementById('hamb');
+    const mobile = document.getElementById('mobilemenu');
+    hamb.addEventListener('click', ()=> mobile.classList.toggle('show'));
+
+    // Lightbox
+    function openLightbox(title){ document.getElementById('lbTitle').textContent = title; document.getElementById('lightbox').classList.add('show'); }
+    function closeLightbox(e){ if(e.target.id === 'lightbox') document.getElementById('lightbox').classList.remove('show'); }
+
+    // Contact form (demo)
+    function submitContact(e){ e.preventDefault(); const name = document.getElementById('name').value; alert('Gracias, ' + name + '! Mensaje enviado (demo).'); e.target.reset(); }
+    function subscribeNews(e){ e.preventDefault(); alert('Gracias por suscribirte (demo).'); e.target.reset(); }
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Scroll reveal with IntersectionObserver
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(en=>{ if(en.isIntersecting) en.target.classList.add('show'); else en.target.classList.remove('show'); });
+    },{threshold:0.12});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+     // Particles: herramientas de construcción
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let DPR = window.devicePixelRatio || 1;
+    function resizeCanvas(){ 
+      canvas.width = window.innerWidth * DPR; 
+      canvas.height = window.innerHeight * DPR; 
+      canvas.style.width = window.innerWidth + 'px'; 
+      canvas.style.height = window.innerHeight + 'px'; 
+      ctx.setTransform(DPR,0,0,DPR,0,0); 
+    }
+    window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+    // Lista de emojis herramientas
+    const toolEmojis = ['🔨'];
+
+    class Particle{ 
+      constructor(){ this.reset(); }
+      reset(){ 
+        this.x = Math.random()*window.innerWidth; 
+        this.y = Math.random() * window.innerHeight;
+        this.vx = (Math.random()-0.5)*0.5; // horizontal
+this.vy = (Math.random()-0.5)*0.5;
+        this.s = 10 + Math.random()*16; 
+        this.r = Math.random()*Math.PI*2; 
+        this.rotSpeed = (Math.random()-0.5)*0.08; 
+        this.emoji = toolEmojis[Math.floor(Math.random()*toolEmojis.length)]; 
+        this.alpha = 0.4 + Math.random()*0.2; // opacidad entre 0.7 y 0.9
+      }
+      step(){ 
+        this.x += this.vx; 
+        this.y += this.vy; 
+        this.r += this.rotSpeed; 
+        if(this.y > window.innerHeight + 40) this.reset(); 
+      }
+      draw(ctx){ 
+        ctx.save(); 
+        ctx.translate(this.x, this.y); 
+        ctx.rotate(this.r); 
+        ctx.font = this.s + 'px serif'; 
+        ctx.globalAlpha = this.alpha; 
+        ctx.fillText(this.emoji, -this.s/2, this.s/2); 
+        ctx.restore(); 
+      }
+    }
+
+    const parts = Array.from({length:40}, ()=> new Particle());
+    function loop(){ 
+      ctx.clearRect(0,0,canvas.width,canvas.height); 
+      parts.forEach(p=>{ p.step(); p.draw(ctx); }); 
+      requestAnimationFrame(loop); 
+    }
+    loop();
+
+    // Simple language toggle (EN/ES) using data-i18n attributes
+    const translations = {
+      es: {
+        nav_about:'Sobre', nav_services:'Servicios', nav_gallery:'Galería', nav_history:'Historia', nav_contact:'Contacto', nav_cta:'Cotizar',
+        hero_title:'Construimos casas que duran y enamoran', hero_sub:'AltaBuild LA diseña y ejecuta proyectos residenciales en Los Ángeles: reformas, ampliaciones y casas desde cero. Materiales responsables, planificación puntual y comunicación clara.', hero_cta:'Solicitar presupuesto', hero_learn:'Conócenos',
+        aside_title:'Servicios Express', aside_li1:'Diseño arquitectónico', aside_li2:'Construcción llave en mano', aside_li3:'Permisos y trámites', aside_li4:'Remodelaciones y ampliaciones', aside_btn1:'Ver servicios', aside_btn2:'Contactar',
+        about_title:'Sobre AltaBuild LA', about_text:'AltaBuild LA nace como estudio de construcción enfocado en viviendas residenciales. Equipo local con más de 20 años combinados de experiencia, enfoque en durabilidad, eficiencia energética y estética moderna. Trabajos en zonas de Los Ángeles: Silver Lake, Echo Park, Highland Park y más.', about_li1:'Gestión de permisos rápidos', about_li2:'Materiales de calidad USA', about_li3:'Garantía 2 años en estructura',
+        team_title:'Equipo (demo)', team_text:'Pequeño equipo multidisciplinario: arquitectos, ingenieros, capataces y un gestor de proyectos asignado por obra.',
+        svc_design:'Diseño & Planificación', svc_build:'Construcción', svc_reno:'Remodelación',
+        gallery_title:'Galería de proyectos', history_title:'Historia', history_text:'Fundada con la idea de crear casas bien pensadas y bien construidas, AltaBuild LA ha colaborado con familias y diseñadores locales. Este sitio es una demo ficticia con contenido de ejemplo orientado a mostrar una plantilla moderna.', safety_title:'Seguridad & permisos', safety_text:'Asesoría completa para cumplir códigos locales, inspecciones y permisos municipales de Los Ángeles.',
+        contact_title:'Contacto', contact_info:'Información', form_title:'Enviar mensaje', form_send:'Enviar', form_reset:'Limpiar', news_title:'Newsletter', news_btn:'Suscribir'
+      },
+      en: {
+        nav_about:'About', nav_services:'Services', nav_gallery:'Gallery', nav_history:'History', nav_contact:'Contact', nav_cta:'Get a Quote',
+        hero_title:'We build homes that last and delight', hero_sub:'AltaBuild LA designs and builds residential projects in Los Angeles: remodels, additions and new homes. Responsible materials, on-time planning and clear communication.', hero_cta:'Request Quote', hero_learn:'Learn more',
+        aside_title:'Express Services', aside_li1:'Architectural design', aside_li2:'Turnkey construction', aside_li3:'Permits & filings', aside_li4:'Renovations & additions', aside_btn1:'View services', aside_btn2:'Contact us',
+        about_title:'About AltaBuild LA', about_text:'AltaBuild LA was born as a construction studio focused on residential homes. Local team with 20+ years combined experience, focus on durability, efficiency and modern aesthetics. Projects across Los Angeles neighborhoods such as Silver Lake and Echo Park.', about_li1:'Fast permit management', about_li2:'US quality materials', about_li3:'2-year structural warranty',
+        team_title:'Team (demo)', team_text:'Small multidisciplinary team: architects, engineers, foremen and a dedicated project manager per job.',
+        svc_design:'Design & Planning', svc_build:'Build', svc_reno:'Remodeling',
+        gallery_title:'Project Gallery', history_title:'History', history_text:'Founded to craft well-thought, well-built homes, AltaBuild LA has worked with families and local designers. This site is a fictitious demo showing a modern template.', safety_title:'Safety & permits', safety_text:'Full guidance to meet local codes, inspections and LA municipal permits.',
+        contact_title:'Contact', contact_info:'Info', form_title:'Send message', form_send:'Send', form_reset:'Reset', news_title:'Newsletter', news_btn:'Subscribe'
+      }
+    };
+
+    let current = 'es'; // default Spanish UI
+    const langBtn = document.getElementById('langBtn');
+    function applyLang(lang){ document.querySelectorAll('[data-i18n]').forEach(el=>{ const key = el.getAttribute('data-i18n'); if(translations[lang] && translations[lang][key]) el.textContent = translations[lang][key]; }); langBtn.textContent = lang === 'es' ? 'EN' : 'ES'; current = lang; }
+    langBtn.addEventListener('click', ()=> applyLang(current === 'es' ? 'en' : 'es'));
+    applyLang('es');
+
+    // small accessibility: close mobile when clicking link
+    document.querySelectorAll('.mobilemenu a').forEach(a=>a.addEventListener('click', ()=> mobile.classList.remove('show')));
+
+  </script>
+</body>
+</html>
