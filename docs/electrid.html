@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ElectroPro - Soluciones Eléctricas Profesionales</title>
+  <meta name="description" content="Soluciones eléctricas residenciales, comerciales e industriales. Instalación, mantenimiento, auditoría energética y productos de calidad." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#0057b8; /* azul */
+      --accent-2:#ffb400; /* amarillo */
+      --bg:#f7f9fc;
+      --card:#ffffff;
+      --muted:#6b7280;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:#0b1220;line-height:1.5}
+    .container{max-width:1100px;margin:0 auto;padding:24px}
+
+    /* Header */
+    header{background:linear-gradient(90deg, rgba(0,87,184,0.06), rgba(255,180,0,0.03));backdrop-filter: blur(2px)}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:46px;height:46px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#2a9df4);display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+    nav ul{display:flex;gap:18px;list-style:none;margin:0;padding:0}
+    nav a{color:var(--muted);text-decoration:none;font-weight:600}
+    .cta{background:var(--accent);color:white;padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:700}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;padding:48px 0}
+    .hero h1{font-size:34px;margin:0 0 12px}
+    .hero p{color:var(--muted);margin:0 0 18px}
+    .hero .buttons{display:flex;gap:12px}
+    .card{background:var(--card);border-radius:12px;box-shadow:0 6px 22px rgba(9,18,30,0.06);padding:18px}
+    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+    .service-item{padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(0,0,0,0.02),transparent)}
+    .service-item h4{margin:6px 0 0;font-size:15px}
+
+    /* Features */
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:36px 0}
+    .feature{background:var(--card);padding:18px;border-radius:12px}
+    .feature h3{margin:0 0 8px}
+    .feature p{color:var(--muted);margin:0}
+
+    /* Products */
+    .products{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .product{background:var(--card);border-radius:12px;padding:0;overflow:hidden}
+    .product img{width:100%;height:180px;object-fit:cover;display:block}
+    .product .meta{padding:12px}
+
+    /* CTA strip */
+    .cta-strip{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-radius:12px;background:linear-gradient(90deg,var(--accent),#0a84ff);color:white;margin:30px 0}
+
+    /* Contact */
+    .contact{display:grid;grid-template-columns:1fr 420px;gap:18px;margin-bottom:80px}
+    form{background:var(--card);padding:18px;border-radius:12px}
+    label{display:block;font-weight:600;margin:8px 0 6px}
+    input[type=text],input[type=email],textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e9ef}
+    button[type=submit]{background:var(--accent-2);border:none;padding:10px 14px;border-radius:8px;font-weight:700}
+
+    footer{padding:28px 0;color:var(--muted)}
+
+    /* Responsive */
+    @media (max-width:900px){
+      .hero{grid-template-columns:1fr;}
+      .contact{grid-template-columns:1fr}
+      .features{grid-template-columns:1fr}
+      .products{grid-template-columns:1fr}
+      nav ul{display:none}
+      .mobile-menu{display:block}
+    }
+
+    @media (max-width:480px){
+      .hero h1{font-size:26px}
+      .logo{width:40px;height:40px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo">E</div>
+        <div>
+          <div style="font-weight:700">ElectroPro</div>
+          <div style="font-size:12px;color:var(--muted)">Soluciones Eléctricas Profesionales</div>
+        </div>
+      </div>
+
+      <nav>
+        <ul>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#productos">Productos</a></li>
+          <li><a href="#proyectos">Proyectos</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <div style="display:flex;gap:12px;align-items:center">
+        <a class="cta" href="#contacto">Solicitar Cotización</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <h1>Soluciones eléctricas confiables para empresas y proyectos industriales</h1>
+        <p>Explore nuestros servicios y productos diseñados para optimizar la energía, mejorar la seguridad eléctrica y reducir costos operativos en su empresa.</p>
+        <div class="buttons">
+          <a class="cta" href="#contacto">Solicitar cotización</a>
+          <a style="padding:10px 14px;border-radius:8px;background:transparent;border:2px solid var(--accent);text-decoration:none;font-weight:700;color:var(--accent)" href="#servicios">Ver servicios</a>
+        </div>
+
+        <div style="margin-top:26px;display:flex;gap:12px;align-items:flex-start">
+          <div class="card" style="flex:1">
+            <strong>Horario de servicio</strong>
+            <p style="margin:6px 0;color:var(--muted)">Lunes - Viernes • 8:00 - 18:00</p>
+            <div class="services-grid">
+              <div class="service-item"><img src="" alt=""> <h4>Instalaciones Comerciales</h4></div>
+              <div class="service-item"><h4>Mantenimiento Preventivo</h4></div>
+              <div class="service-item"><h4>Auditorías Energéticas</h4></div>
+            </div>
+          </div>
+
+          <div class="card" style="width:240px;text-align:center">
+            <div style="font-weight:700;font-size:20px">24/7</div>
+            <div style="color:var(--muted)">Soporte de emergencia</div>
+            <div style="margin-top:12px;font-size:20px">(55) 1234 5678</div>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="card">
+          <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="electricians" style="width:100%;height:220px;object-fit:cover;border-radius:8px;margin-bottom:12px"/>
+          <h3 style="margin:0 0 6px">Proyectos recientes</h3>
+          <p style="color:var(--muted);margin:0 0 12px">Instalación eléctrica completa en planta industrial y actualización de tablero de distribución para complejo comercial.</p>
+          <a href="#proyectos" style="text-decoration:none;font-weight:700;color:var(--accent)">Ver más proyectos →</a>
+        </div>
+      </aside>
+    </section>
+
+    <section id="servicios">
+      <h2 style="margin-top:6px">Nuestros servicios</h2>
+      <div class="features">
+        <div class="feature">
+          <h3>Instalaciones y montajes</h3>
+          <p>Diseño e instalación de sistemas eléctricos para oficinas, naves industriales, centros comerciales y edificios corporativos.</p>
+        </div>
+        <div class="feature">
+          <h3>Mantenimiento preventivo y correctivo</h3>
+          <p>Planes a medida para minimizar paros y alargar la vida útil de su infraestructura eléctrica.</p>
+        </div>
+        <div class="feature">
+          <h3>Auditoría y eficiencia energética</h3>
+          <p>Evaluamos consumos, proponemos mejoras y soluciones de ahorro (LED, variadores, gestión de cargas).</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="productos">
+      <h2>Productos</h2>
+      <p style="color:var(--muted);margin-top:6px">Suministramos componentes certificados: tableros, breakers, transformadores, luminarias industriales y soluciones de automatización.</p>
+      <div class="products" style="margin-top:12px">
+        <div class="product">
+          <img src="https://images.unsplash.com/photo-1581093588401-9a2a7d7f4c6b?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="panel" />
+          <div class="meta">
+            <strong>Tableros de distribución</strong>
+            <div style="color:var(--muted);font-size:14px;margin-top:6px">Diseñados según la demanda de su planta.</div>
+          </div>
+        </div>
+
+        <div class="product">
+          <img src="https://images.unsplash.com/photo-1581092337790-7f8cfe9f1f3d?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="transformer" />
+          <div class="meta">
+            <strong>Transformadores</strong>
+            <div style="color:var(--muted);font-size:14px;margin-top:6px">Baja pérdida y alta confiabilidad para cargas críticas.</div>
+          </div>
+        </div>
+
+        <div class="product">
+          <img src="https://images.unsplash.com/photo-1581094651076-4d6f5b1c7c72?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="led" />
+          <div class="meta">
+            <strong>Luminarias LED industriales</strong>
+            <div style="color:var(--muted);font-size:14px;margin-top:6px">Mayor eficiencia, menor mantenimiento.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta-strip">
+      <div>
+        <div style="font-weight:700">¿Listo para optimizar el consumo eléctrico de tu empresa?</div>
+        <div style="font-size:14px">Solicita una auditoría energética y cotización personalizada.</div>
+      </div>
+      <div>
+        <a href="#contacto" style="background:white;padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:700;color:var(--accent)">Contactar ahora</a>
+      </div>
+    </div>
+
+    <section id="proyectos">
+      <h2>Proyectos destacados</h2>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px">
+        <div class="card">
+          <h4 style="margin:0 0 6px">Planta de alimentos - Actualización eléctrica</h4>
+          <p style="color:var(--muted);margin:0">Reemplazo de tableros, puesta a tierra nueva y remodelación de circuitos de fuerza.</p>
+        </div>
+        <div class="card">
+          <h4 style="margin:0 0 6px">Complejo comercial - Iluminación LED</h4>
+          <p style="color:var(--muted);margin:0">Sustitución de luminarias por LED con control por zonas y ahorro estimado del 45% en consumo.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacto" style="margin-top:28px">
+      <h2>Contacto</h2>
+      <div class="contact">
+        <form id="contactForm" onsubmit="return handleSubmit(event)">
+          <label for="empresa">Empresa</label>
+          <input id="empresa" name="empresa" type="text" placeholder="Nombre de la empresa" required />
+
+          <label for="nombre">Nombre</label>
+          <input id="nombre" name="nombre" type="text" placeholder="Tu nombre" required />
+
+          <label for="email">Correo</label>
+          <input id="email" name="email" type="email" placeholder="tu@empresa.com" required />
+
+          <label for="servicio">Servicios de interés</label>
+          <select id="servicio" name="servicio">
+            <option>Instalaciones</option>
+            <option>Mantenimiento</option>
+            <option>Auditoría energética</option>
+            <option>Soporte de emergencia</option>
+          </select>
+
+          <label for="mensaje">Mensaje</label>
+          <textarea id="mensaje" name="mensaje" rows="4" placeholder="Cuéntanos brevemente tu proyecto"></textarea>
+
+          <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
+            <button type="submit">Enviar solicitud</button>
+            <div style="color:var(--muted);font-size:13px">O llama: <strong>(55) 1234 5678</strong></div>
+          </div>
+        </form>
+
+        <aside>
+          <div class="card">
+            <h4 style="margin:0 0 6px">Datos</h4>
+            <p style="color:var(--muted);margin:0">Av. Principal 123, Ciudad • RFC: XAXX010101000</p>
+            <p style="color:var(--muted);margin:10px 0 0">Correo: contacto@electropro.mx</p>
+            <div style="margin-top:12px;font-weight:700">Horario: Lun-Vie 8:00 - 18:00</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-weight:700">ElectroPro</div>
+      <div style="color:var(--muted)">© " + new Date().getFullYear() + " ElectroPro. Todos los derechos reservados.</div>
+    </div>
+  </footer>
+
+  <script>
+    function handleSubmit(e){
+      e.preventDefault();
+      const empresa = document.getElementById('empresa').value;
+      const nombre = document.getElementById('nombre').value;
+      const email = document.getElementById('email').value;
+      // Aquí podrías integrar un envío real (API, EmailJS, Formspree, etc.)
+      alert('Solicitud enviada. Gracias, ' + nombre + '!\nNos pondremos en contacto pronto.');
+      e.target.reset();
+      return false;
+    }
+  </script>
+</body>
+</html>
