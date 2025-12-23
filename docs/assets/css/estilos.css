@@ -1,0 +1,463 @@
+body{
+  overflow-x: hidden !important;
+  width: 100%;
+}
+
+/* Arreglo para contenedores de imágenes generales */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.paquetes {
+    text-align: center;
+    font-size: 18px;
+    width: 100%;
+    
+    display: flex;
+    flex-direction: column;
+    /* Cambiado de nowrap a wrap para permitir que en movil se adapte si hace falta */
+    flex-wrap: wrap; 
+    justify-content: center;
+    
+    margin: auto;
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+  
+.paquetes .col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Aseguramos que las columnas no sean más anchas que la pantalla */
+    max-width: 100%; 
+}
+  
+.paquetes #s {
+    background: rgba(0,0,0,0.1);
+}
+  
+.paquetes i {
+    color: green;
+    font-size: 25px;
+}
+  
+.paquetes #p {
+    color: #444444;
+    max-width: 70%;
+}
+/* En movil, el texto debe aprovechar más espacio */
+@media (max-width: 768px) {
+    .paquetes #p {
+        max-width: 95%;
+        padding: 0 10px;
+    }
+}
+
+#paquete .slide {
+    background: #FF9533;
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    border: 2px white solid;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 12px;
+}
+
+@media (max-width: 992px) {
+    #paquete .slide{
+      font-size: 14px; /* Ajuste leve para legibilidad */
+      padding: 8px 10px;
+      width: 100%;
+      box-sizing: border-box; /* Para que el padding no sume al ancho */
+    }
+}
+  
+.cabezeraPaquetes{
+    width: 100%;
+    margin: auto;
+    display: flex;
+    justify-content:center;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    z-index: 3;
+    position:sticky;
+    top: 280px;
+    text-align: center;
+}
+
+/* Corrección de posición sticky en movil */
+@media (max-width: 992px) {
+    .cabezeraPaquetes {
+        position: relative; /* Quitar sticky en movil para evitar problemas de altura */
+        top: 0;
+        margin-bottom: 20px;
+    }
+    .cabezeraPaquetes h3 {
+       max-width: 100%;
+      font-size: 16px;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 10px;
+    }
+    .cabezeraPaquetes h4 {
+      max-width: 100%;
+      font-size: 14px;
+      justify-content: center;
+      align-items: center;
+      padding: 0 10px;
+    }
+    .cabezeraPaquetes button {
+      font-size: 14px;
+      width: 80%; /* Botón más ancho en movil */
+      margin: 10px auto;
+    }
+}
+  
+@media (max-width: 600px) {
+    .paquetes #p {
+      width: 100%;
+      padding: 0 15px;
+      max-width: none;
+    }
+}
+  
+#paquete {
+    margin-top: 90px;
+    color: #FF9533;
+    font-size: 22px;
+    font-family: 'Montserrat';
+    background: white;
+}
+  
+.lineaP {
+    background: #FF9533;
+    width: 100%;
+    height: 2px;
+}
+  
+#precio {
+    margin-top: 10px;
+    color: #FF9533;
+    font-family: 'Montserrat';
+}
+  
+.paquetes span {
+    color: #FF9533;
+}
+
+.botones {
+    border-radius: 20px;
+    background: #FF9533;
+    color: #fff;
+    padding: 5px 20px;
+    border: none;
+    cursor: pointer;
+}
+  
+.paquetes #elboton {
+    margin-top: 40px;
+}
+
+.web1{
+    width: 70%;
+    height: auto;
+    margin: auto;
+}
+/* Hacer más ancha la sección web en movil */
+@media (max-width: 768px) {
+    .web1 {
+        width: 95%;
+    }
+}
+
+.web1 .imagenesWeb{
+    width: 100%;
+}
+
+.web1 #web2{
+    width: 60%;
+    height: auto;
+    margin: auto;
+}
+@media (max-width: 768px) {
+    .web1 #web2 {
+        width: 100%;
+    }
+}
+
+.web2{
+    width: 100%;
+    text-align: center;
+    max-width:800px;
+    margin:auto;
+    margin-bottom:50px;
+    padding: 0 15px; /* Evitar pegarse a los bordes */
+}
+
+.web2 img{
+    width: 80%;
+}
+@media (max-width: 768px) {
+    .web2 img{
+        width: 100%;
+    }
+}
+
+.lineaSeparadora{
+    background: orange;
+    width: 60%;
+    height: 5px;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.mk{
+    margin-top: 40px;
+    width: 100%;
+    height: auto;
+    text-align: center;
+}
+
+.mk img{
+    width: 90%;
+    margin: auto;
+}
+
+.mk #poster{
+    width: 30%;
+}
+@media (max-width: 768px) {
+    .mk #poster {
+        width: 80%; /* Poster más grande en movil */
+        margin-top: 20px;
+    }
+}
+
+.contPaypal{
+    width:100%;
+    /* Quitamos la altura fija de 1000px para que se adapte al contenido */
+    height: auto; 
+    min-height: 400px;
+    margin: auto;
+    text-align: center;
+    margin-top:150px;
+    padding-bottom: 50px;
+}
+@media (max-width: 768px) {
+    .contPaypal {
+        margin-top: 60px;
+    }
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.irarriba {
+    display: none;
+    padding: 20px;
+    border: 2px #e88817 solid;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 10000;
+    color: #e88817;
+    background: rgba(255,255,255,0.9); /* Fondo para que se vea sobre el contenido */
+}
+
+.submenu {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap; /* Importante para que los botones bajen si no caben */
+}
+
+@media (max-width: 992px) {
+    .submenu {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center; /* Centrado en movil */
+      width: 100%;
+    }
+}
+
+@media (max-width: 992px) {
+    .submenu a {
+      width: 90%; /* Botones anchos en movil */
+      text-align: center;
+      margin: 5px auto;
+    }
+}
+
+.submenu a {
+    margin: 5px;
+    background: #FF9533;
+    padding: 10px 20px; /* Un poco más de padding */
+    border-radius: 30px;
+    color: #fff;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.printing h1 {
+    color: #FF9533;
+}
+
+.printing {
+    max-width: 800px;
+    margin: auto;
+    text-align: left;
+    padding: 0 20px; /* Margen de seguridad lateral */
+}
+
+.printing img {
+    width: 100%;
+}
+
+.restaurant {
+    max-width: 800px;
+    margin: auto;
+    text-align: left;
+    padding: 0 20px;
+}
+
+.restaurant h1 {
+    color: #FF9533;
+}
+
+.restaurant img {
+    width: 100%;
+}
+
+.restaurant .columnas li {
+    width: 100%;
+}
+
+.scrollimage {
+    height: 500px;
+    overflow-y: scroll;
+    /* Mejora scroll táctil */
+    -webkit-overflow-scrolling: touch; 
+}
+
+.restaurant .columnas2 {
+    margin-bottom: 50px;
+}
+
+.restaurant .org {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.how {
+    max-width: 800px;
+    margin: auto;
+    text-align: left;
+    padding: 0 20px;
+}
+
+.how h1 {
+    color: #FF9533;
+}
+
+.how img {
+    width: 100%;
+}
+
+.how .red {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+}
+
+.red img {
+    width: 50%;
+}
+@media (max-width: 768px) {
+    .red img { width: 90%; }
+}
+
+.recommended h1 {
+    color: #FF9533;
+}
+
+.sindecoracion {
+    list-style: none;
+    padding: 0;
+}
+
+.recommended {
+    max-width: 800px;
+    margin: auto;
+    text-align: left;
+    padding: 0 20px;
+}
+
+.tablaImpresoras {
+    text-align: center;
+    font-size: 18px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    margin: auto;
+    margin-top: 60px;
+    margin-bottom: 60px;
+    overflow-x: auto; /* Permitir scroll si la tabla es muy ancha */
+}
+
+.tablaImpresoras #verde span {
+    padding: 8px 25px;
+    background: green;
+    color: #fff;
+    font-family: 'Montserrat';
+    font-weight: 900;
+    display: inline-block; /* Evita roturas feas */
+    white-space: nowrap;
+}
+
+.tablaImpresoras .col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tablaImpresoras .row {
+    margin-top: 50px;
+}
+
+.tablaImpresoras .botondecompra a {
+    background: #ff9533;
+    width: 90%;
+    padding: 8px 25px;
+    border-radius: 5px;
+    font-family: 'Montserrat';
+    font-weight: 900;
+    text-decoration: none;
+    color: #fff;
+    display: inline-block;
+}
+
+.tablaImpresoras .t {
+    color: #ff9533;
+}
+
+.other h3 {
+    color: #ff9533;
+}
+
+.other {
+    max-width: 800px;
+    margin: auto;
+    text-align: left;
+    margin-bottom: 50px;
+    padding: 0 20px;
+}
