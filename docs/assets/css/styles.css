@@ -17,21 +17,13 @@ body {
     background-color: var(--bg-dark);
     color: var(--text-white);
     font-family: var(--font-sans);
-    overflow-x: hidden; /* Vital para evitar scroll horizontal indeseado */
-    width: 100%;
-}
-
-/* Regla general para que ninguna imagen rompa el diseño en movil */
-img {
-    max-width: 100%;
-    height: auto;
+    overflow-x: hidden;
 }
 
 /* --- TYPOGRAPHY --- */
 h1, h2, h3, h4, h5 {
     font-family: var(--font-serif);
     font-weight: 700;
-    word-wrap: break-word; /* Evita que palabras largas rompan el layout */
 }
 
 .text-gradient {
@@ -97,7 +89,6 @@ h1, h2, h3, h4, h5 {
     border-bottom: 1px solid rgba(255,255,255,0.05);
     font-size: 0.9rem;
     transition: all 0.3s;
-    white-space: normal; /* Permite que el texto baje si es muy largo en movil */
 }
 
 .dropdown-item:hover {
@@ -117,8 +108,6 @@ h1, h2, h3, h4, h5 {
     font-weight: 700;
     border-radius: 0;
     transition: all 0.4s ease;
-    white-space: normal;
-    max-width: 100%;
 }
 
 .btn-luxury:hover {
@@ -138,8 +127,6 @@ h1, h2, h3, h4, h5 {
     font-weight: 700;
     border-radius: 0;
     transition: all 0.4s ease;
-    white-space: normal;
-    max-width: 100%;
 }
 
 .btn-luxury-outline:hover {
@@ -149,13 +136,11 @@ h1, h2, h3, h4, h5 {
 
 /* --- HERO SECTION (HOME) --- */
 .hero-section {
-    height: 100vh; /* Altura por defecto */
+    height: 100vh;
     min-height: 700px;
     position: relative;
     background: url('./Asistente%20IA.jpg') no-repeat center center/cover;
     overflow: hidden;
-    display: flex;
-    align-items: center; /* Centrado vertical */
 }
 
 .hero-bg-overlay {
@@ -165,17 +150,9 @@ h1, h2, h3, h4, h5 {
     z-index: 1;
 }
 
-.hero-content {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    padding: 0 15px; /* Padding lateral para moviles */
-}
-
 .hero-content h1 {
     font-size: 4rem;
     margin-bottom: 20px;
-    line-height: 1.2;
 }
 
 .txt-type > .txt {
@@ -221,7 +198,6 @@ h1, h2, h3, h4, h5 {
     color: white;
     transition: all 0.4s ease;
     height: 100%;
-    margin-bottom: 20px; /* Separacion en movil */
 }
 
 .service-glass-card .icon-box {
@@ -262,7 +238,6 @@ h1, h2, h3, h4, h5 {
 .feature-luxury {
     position: relative;
     group: hover;
-    margin-bottom: 30px; /* Espacio extra en movil */
 }
 
 .feature-luxury .img-wrapper {
@@ -361,8 +336,6 @@ h1, h2, h3, h4, h5 {
     font-size: 0.75rem;
     letter-spacing: 2px;
     transition: 0.3s;
-    display: inline-block; /* Mejora click en movil */
-    margin-bottom: 5px;
 }
 .footer-link:hover { color: var(--accent-orange); }
 
@@ -384,41 +357,17 @@ h1, h2, h3, h4, h5 {
     border-color: var(--accent-orange);
 }
 
-/* --- RESPONSIVE (Optimizaciones Clave) --- */
+/* --- RESPONSIVE --- */
 @media (max-width: 992px) {
     .hero-content h1 { font-size: 2.5rem; }
     .display-4 { font-size: 2.5rem; }
-    .service-glass-card { margin-bottom: 20px; }
-    
-    /* Ajustes generales de padding */
-    .strategy-section, .about-section, .section-padding {
-        padding: 60px 0;
-    }
+    .service-glass-card { margin-bottom: 10px; }
 }
 
 @media (max-width: 768px) {
     .navbar { background: var(--bg-lighter); } /* Fondo gris oscuro en movil siempre */
     .navbar.scrolled { padding: 10px 0; }
-    
-    /* Hero en movil */
-    .hero-section { min-height: 500px; height: auto; padding: 100px 0; }
-    .hero-content h1 { font-size: 2rem; }
-    .lead-text { font-size: 1.1rem; padding: 0 15px; }
-    
-    .navbar-logo {
-        width: 110px; /* Logo más pequeño en movil */
-    }
-}
-
-@media (max-width: 480px) {
-    /* Ajustes para celulares muy pequeños */
-    .hero-content h1 { font-size: 1.8rem; }
-    .btn-luxury, .btn-luxury-outline {
-        width: 100%; /* Botones de ancho completo */
-        margin-bottom: 10px;
-        padding: 12px 10px;
-    }
-    .display-4 { font-size: 2rem; }
+    .hero-section { min-height: 600px; }
 }
 
 /* ---------------------------------------------------- */
@@ -427,9 +376,6 @@ h1, h2, h3, h4, h5 {
 
 .section-padding {
     padding: 100px 0;
-}
-@media (max-width: 768px) {
-    .section-padding { padding: 60px 0; }
 }
 
 .bg-darker-alt {
@@ -445,7 +391,6 @@ h1, h2, h3, h4, h5 {
     border: 1px solid rgba(255,255,255,0.1);
     display: inline-block;
     transition: transform 0.4s ease;
-    max-width: 100%; /* Fix para movil */
 }
 
 .image-frame-luxury:hover {
@@ -472,7 +417,6 @@ h1, h2, h3, h4, h5 {
     margin-right: 15px;
     font-size: 1.1rem;
     margin-top: 2px;
-    flex-shrink: 0; /* Evita que el icono se aplaste */
 }
 
 .text-orange {
@@ -489,7 +433,6 @@ h1, h2, h3, h4, h5 {
     transition: all 0.3s ease;
     height: 100%;
     overflow: hidden;
-    margin-bottom: 20px; /* Espacio en movil */
 }
 
 .other-service-card:hover, .other-service-card.active {
@@ -580,11 +523,6 @@ h1, h2, h3, h4, h5 {
     position: relative;
     text-align: center;
     margin-bottom: 30px;
-    /* Ajuste responsivo */
-    width: 100%;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .pricing-card:hover {
@@ -657,8 +595,7 @@ h1, h2, h3, h4, h5 {
     border: 1px solid #333;
     border-radius: 8px;
     padding: 20px;
-    overflow-x: auto; /* Permite scroll horizontal en tablas en movil */
-    -webkit-overflow-scrolling: touch;
+    overflow-x: auto;
 }
 
 .luxury-table th, .luxury-table td {
@@ -688,7 +625,6 @@ h1, h2, h3, h4, h5 {
     border: 1px solid #222;
     border-radius: 8px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-    padding: 20px; /* Padding seguro */
 }
 
 .clean-block.clean-form,
