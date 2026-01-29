@@ -504,7 +504,7 @@ h1, h2, h3, h4, h5 {
     background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(20,20,20,0.9) 100%), url('./assets/img/wisbe1.jpg') no-repeat center center/cover;
 }
 
-/* Forzar fondo oscuro en secciones antiguas */
+
 .clean-block.clean-pricing.dark,
 .clean-block.clean-form.dark,
 .page-footer.dark {
@@ -512,7 +512,7 @@ h1, h2, h3, h4, h5 {
     color: var(--text-white);
 }
 
-/* Styling the Pricing Cards (Old structure override) */
+
 .pricing-card {
     background: #111;
     border: 1px solid #333;
@@ -590,6 +590,7 @@ h1, h2, h3, h4, h5 {
     box-shadow: 0 0 0 0.2rem rgba(255, 107, 0, 0.25) !important;
 }
 
+
 .glass-table-container {
     background: rgba(255,255,255,0.02);
     border: 1px solid #333;
@@ -620,6 +621,7 @@ h1, h2, h3, h4, h5 {
 .w-40 { width: 40%; min-width: 200px; }
 .w-20 { width: 20%; min-width: 100px; }
 
+/* Footer Contact Form Styles */
 .glass-form {
     background: rgba(0, 0, 0, 0.6);
     border: 1px solid #222;
@@ -627,10 +629,13 @@ h1, h2, h3, h4, h5 {
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
 }
 
+
+
 .clean-block.clean-form,
 .clean-block.clean-form.dark {
     background-color: #0a0a0a !important;
 }
+
 
 .clean-block.clean-form .glass-form {
     background-color: #050505 !important;

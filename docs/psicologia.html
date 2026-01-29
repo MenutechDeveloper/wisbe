@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InnerFocus Psychology | Rediscover Yourself</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%236B8E78%22/><path d=%22M50 20 C30 20 20 40 20 60 C20 80 40 90 50 80 C60 90 80 80 80 60 C80 40 70 20 50 20 Z%22 fill=%22%23F2F0E9%22 opacity=%220.8%22/></svg>">
+
+    <style>
+        /* --- VARIABLES & RESET --- */
+        :root {
+            --primary: #6B8E78; /* Sage Green */
+            --secondary: #D8D0C1; /* Sand Beige */
+            --bg-light: #F9F8F6; /* Warm White */
+            --bg-dark: #2C3632; /* Deep Charcoal */
+            --text-main: #3D4440;
+            --text-light: #F9F8F6;
+            --accent: #E09F7D; /* Soft Clay */
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+            --transition: all 0.4s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: Georgia, 'Times New Roman', serif;
+            font-weight: 400;
+            letter-spacing: -0.5px;
+        }
+
+        /* --- UTILITIES --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: var(--transition);
+            font-weight: 500;
+            border: 1px solid var(--primary);
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: transparent;
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .section-padding { padding: 100px 0; }
+
+        /* --- ANIMATIONS --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- HEADER --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(249, 248, 246, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: Georgia, serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        .lang-switch {
+            background: none;
+            border: 1px solid var(--text-main);
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+        .lang-switch:hover { background: var(--text-main); color: white; }
+
+        /* --- HERO --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            flex: 1;
+            padding-right: 50px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: var(--bg-dark);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: #666;
+            max-width: 500px;
+        }
+
+        .hero-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .float-anim { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-20px); } 100% { transform: translateY(0px); } }
+
+        /* --- CARDS & INFO --- */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--bg-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        /* --- ADVICE SECTION (LONG) --- */
+        .advice-section {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .advice-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 60px;
+        }
+
+        .advice-text { flex: 1; min-width: 300px; }
+        .advice-list { flex: 1; min-width: 300px; }
+
+        .advice-item {
+            background: rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .advice-item:hover { background: rgba(255,255,255,0.2); }
+        .advice-item h4 { margin-bottom: 10px; font-size: 1.1rem; }
+        .advice-item p { font-size: 0.9rem; opacity: 0.9; }
+
+        /* --- QUOTE --- */
+        .quote-section {
+            text-align: center;
+            background-color: var(--secondary);
+        }
+        .quote-text {
+            font-size: 2rem;
+            font-family: Georgia, serif;
+            font-style: italic;
+            color: var(--bg-dark);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 80px 0 30px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+        
+        .footer-col h4 { color: var(--secondary); margin-bottom: 20px; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 10px; opacity: 0.7; }
+        .copyright { text-align: center; opacity: 0.4; font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; }
+
+        /* --- MOBILE --- */
+        .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+
+        @media (max-width: 768px) {
+            .hero { flex-direction: column-reverse; height: auto; padding-top: 120px; text-align: center; }
+            .hero-content { padding-right: 0; padding-bottom: 60px; }
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; position: absolute; top: 70px; left: 0; width: 100%; background: white; flex-direction: column; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+            .nav-links.active { display: flex; }
+            .mobile-menu-btn { display: block; }
+            .advice-container { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 20C30 20 20 40 20 60C20 80 40 90 50 80C60 90 80 80 80 60C80 40 70 20 50 20Z" fill="#6B8E78"/>
+                        <path d="M50 35C40 35 35 45 35 55C35 65 45 70 50 65C55 70 65 65 65 55C65 45 60 35 50 35Z" fill="#F9F8F6"/>
+                    </svg>
+                    InnerFocus
+                </div>
+                <button class="mobile-menu-btn">☰</button>
+                <ul class="nav-links">
+                    <li><a href="#home" data-en="Home" data-es="Inicio">Home</a></li>
+                    <li><a href="#about" data-en="Our Philosophy" data-es="Filosofía">Our Philosophy</a></li>
+                    <li><a href="#tips" data-en="Daily Guidance" data-es="Guía Diaria">Daily Guidance</a></li>
+                    <li><a href="#contact" data-en="Contact" data-es="Contacto">Contact</a></li>
+                </ul>
+                <button class="lang-switch" id="langToggle">ES</button>
+            </nav>
+        </div>
+    </header>
+
+    <section id="home" class="hero container">
+        <div class="hero-content reveal">
+            <h1 data-en="Find Clarity in the Chaos." data-es="Encuentra Claridad en el Caos.">Find Clarity in the Chaos.</h1>
+            <p data-en="We are not just listeners; we are partners in your journey towards emotional balance. No labels, just the best support tailored for you." 
+               data-es="No solo escuchamos; somos compañeros en tu viaje hacia el equilibrio emocional. Sin etiquetas, solo el mejor apoyo diseñado para ti.">
+               We are not just listeners; we are partners in your journey towards emotional balance. No labels, just the best support tailored for you.
+            </p>
+            <a href="#contact" class="btn" data-en="Start Your Journey" data-es="Empieza tu Viaje">Start Your Journey</a>
+        </div>
+        <div class="hero-visual reveal">
+            <svg class="float-anim" width="400" height="400" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#D8D0C1" d="M45.7,-76.3C58.9,-69.3,69.1,-55.6,76.3,-41.2C83.5,-26.8,87.6,-11.7,85.6,2.5C83.5,16.7,75.3,30,65.8,41.4C56.3,52.8,45.5,62.3,33.5,68.3C21.5,74.3,8.3,76.8,-3.8,83.4C-15.9,90,-26.9,100.7,-37.2,97.2C-47.5,93.7,-57.1,76,-66.2,61.2C-75.3,46.4,-83.9,34.5,-85.4,21.8C-86.9,9.1,-81.3,-4.4,-73.9,-16.5C-66.5,-28.6,-57.3,-39.3,-46.6,-47.4C-35.9,-55.5,-23.7,-61,-11.2,-63.3C1.3,-65.6,13.8,-64.7,32.5,-83.3" transform="translate(100 100) scale(1.1)" opacity="0.6" />
+                <path fill="#6B8E78" d="M38.3,-63.6C49.6,-54.6,58.8,-43.3,65.4,-30.7C72,-18.1,76, -4.2,73.4,8.5C70.8,21.2,61.6,32.7,51.8,41.7C42,50.7,31.6,57.2,20.3,60.8C9,64.4,-3.2,65.1,-14.8,62.6C-26.4,60.1,-37.4,54.4,-46.9,46.3C-56.4,38.2,-64.4,27.7,-67.2,16.2C-70,4.7,-67.6,-7.8,-61.2,-18.8C-54.8,-29.8,-44.4,-39.3,-33.4,-48.4C-22.4,-57.5,-10.8,-66.2,1.2,-68.2C13.2,-70.2,27,-80,38.3,-63.6" transform="translate(100 100)" opacity="0.8"/>
+            </svg>
+        </div>
+    </section>
+
+    <section id="about" class="section-padding container">
+        <div class="reveal">
+            <h2 style="text-align: center; margin-bottom: 20px;" data-en="Why InnerFocus?" data-es="¿Por qué InnerFocus?">Why InnerFocus?</h2>
+            <p style="text-align: center; max-width: 700px; margin: 0 auto 60px; color: #666;" 
+               data-en="We believe mental health isn't a destination, it's a practice. We provide a sanctuary where your thoughts are heard, validated, and guided." 
+               data-es="Creemos que la salud mental no es un destino, es una práctica. Ofrecemos un santuario donde tus pensamientos son escuchados, validados y guiados.">
+               We believe mental health isn't a destination, it's a practice. We provide a sanctuary where your thoughts are heard, validated, and guided.
+            </p>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card reveal">
+                <div class="card-icon">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </div>
+                <h3 data-en="Empathetic Listening" data-es="Escucha Empática">Empathetic Listening</h3>
+                <p data-en="A space free of judgment where every emotion is valid." data-es="Un espacio libre de juicios donde cada emoción es válida.">A space free of judgment where every emotion is valid.</p>
+            </div>
+            <div class="card reveal">
+                <div class="card-icon">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 6v6l4 2"></path>
+                    </svg>
+                </div>
+                <h3 data-en="Time for You" data-es="Tiempo para Ti">Time for You</h3>
+                <p data-en="Sessions designed around your pace, not a rigid clock." data-es="Sesiones diseñadas a tu ritmo, no a un reloj rígido.">Sessions designed around your pace, not a rigid clock.</p>
+            </div>
+            <div class="card reveal">
+                <div class="card-icon">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 22h20M12 2v20M2 12h20"/>
+                    </svg>
+                </div>
+                <h3 data-en="Holistic Growth" data-es="Crecimiento Integral">Holistic Growth</h3>
+                <p data-en="Connecting mind, body, and spirit for lasting change." data-es="Conectando mente, cuerpo y espíritu para un cambio duradero.">Connecting mind, body, and spirit for lasting change.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="tips" class="section-padding advice-section">
+        <div class="container advice-container">
+            <div class="advice-text reveal">
+                <h2 data-en="Small Steps, Big Changes" data-es="Pequeños Pasos, Grandes Cambios">Small Steps, Big Changes</h2>
+                <p data-en="Psychology is useful in everyday life. Here are some immediate strategies you can use right now to center yourself." 
+                   data-es="La psicología es útil en la vida diaria. Aquí tienes algunas estrategias inmediatas que puedes usar ahora mismo para centrarte.">
+                   Psychology is useful in everyday life. Here are some immediate strategies you can use right now to center yourself.
+                </p>
+                <br>
+                <p data-en="Remember: Healing is non-linear. Some days you bloom, other days you rest. Both are necessary."
+                   data-es="Recuerda: Sanar no es lineal. Algunos días floreces, otros descansas. Ambos son necesarios.">
+                   Remember: Healing is non-linear. Some days you bloom, other days you rest. Both are necessary.
+                </p>
+            </div>
+            <div class="advice-list reveal">
+                <div class="advice-item">
+                    <h4 data-en="The 5-4-3-2-1 Technique" data-es="La Técnica 5-4-3-2-1">The 5-4-3-2-1 Technique</h4>
+                    <p data-en="For anxiety: Name 5 things you see, 4 you feel, 3 you hear, 2 you smell, and 1 you taste."
+                       data-es="Para la ansiedad: Nombra 5 cosas que ves, 4 que sientes, 3 que oyes, 2 que hueles y 1 que saboreas.">
+                       For anxiety: Name 5 things you see, 4 you feel, 3 you hear, 2 you smell, and 1 you taste.
+                    </p>
+                </div>
+                <div class="advice-item">
+                    <h4 data-en="Box Breathing" data-es="Respiración de Caja">Box Breathing</h4>
+                    <p data-en="Inhale for 4 seconds, hold for 4, exhale for 4, hold for 4. Repeat until calm."
+                       data-es="Inhala 4 segundos, mantén 4, exhala 4, mantén 4. Repite hasta calmarte.">
+                       Inhale for 4 seconds, hold for 4, exhale for 4, hold for 4. Repeat until calm.
+                    </p>
+                </div>
+                <div class="advice-item">
+                    <h4 data-en="Journaling Prompts" data-es="Preguntas para el Diario">Journaling Prompts</h4>
+                    <p data-en="Ask yourself: 'What is this emotion trying to tell me?' rather than trying to suppress it."
+                       data-es="Pregúntate: '¿Qué me intenta decir esta emoción?' en lugar de intentar reprimirla.">
+                       Ask yourself: 'What is this emotion trying to tell me?' rather than trying to suppress it.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding quote-section">
+        <div class="container reveal">
+            <p class="quote-text" data-en="“The good life is a process, not a state of being. It is a direction not a destination.”"
+               data-es="“La buena vida es un proceso, no un estado del ser. Es una dirección, no un destino.”">
+               “The good life is a process, not a state of being. It is a direction not a destination.”
+            </p>
+            <p style="margin-top: 20px; color: #666;">— Carl Rogers</p>
+        </div>
+    </section>
+
+    <section id="contact" class="section-padding container">
+        <div class="reveal" style="text-align: center; max-width: 600px; margin: 0 auto;">
+            <h2 data-en="We are here for you" data-es="Estamos aquí para ti">We are here for you</h2>
+            <p style="margin-bottom: 40px;" data-en="Reach out. Taking the first step is the bravest thing you can do."
+               data-es="Contáctanos. Dar el primer paso es lo más valiente que puedes hacer.">
+               Reach out. Taking the first step is the bravest thing you can do.
+            </p>
+            
+            <form style="text-align: left;">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;" data-en="Name" data-es="Nombre">Name</label>
+                    <input type="text" style="width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;" data-en="Email" data-es="Correo">Email</label>
+                    <input type="email" style="width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;" data-en="How can we help?" data-es="¿Cómo podemos ayudar?">How can we help?</label>
+                    <textarea rows="4" style="width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit;"></textarea>
+                </div>
+                <button type="button" class="btn" style="width: 100%; border: none;" data-en="Send Message" data-es="Enviar Mensaje">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>InnerFocus</h3>
+                    <p style="margin-top: 10px; opacity: 0.7;" data-en="Cultivating mental wellness." data-es="Cultivando bienestar mental.">Cultivating mental wellness.</p>
+                </div>
+                <div class="footer-col">
+                    <h4 data-en="Explore" data-es="Explora">Explore</h4>
+                    <ul>
+                        <li data-en="Anxiety Support" data-es="Apoyo Ansiedad">Anxiety Support</li>
+                        <li data-en="Depression Care" data-es="Cuidado Depresión">Depression Care</li>
+                        <li data-en="Family Therapy" data-es="Terapia Familiar">Family Therapy</li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-en="Contact" data-es="Contacto">Contact</h4>
+                    <ul>
+                        <li>hello@innerfocus.com</li>
+                        <li>+1 (555) 123-4567</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 InnerFocus Psychology. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const elementVisible = 150;
+
+            revealElements.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+
+
+        const langToggle = document.getElementById('langToggle');
+        let currentLang = 'en';
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'es' : 'en';
+            langToggle.textContent = currentLang === 'en' ? 'ES' : 'EN';
+            
+            const translatableElements = document.querySelectorAll('[data-en]');
+            
+            translatableElements.forEach(el => {
+                el.style.opacity = '0';
+                setTimeout(() => {
+                    el.textContent = el.getAttribute(`data-${currentLang}`);
+                    el.style.opacity = '1';
+                }, 200);
+            });
+        });
+
+        // --- MOBILE MENU ---
+        const mobileBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        
+        // Close menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>

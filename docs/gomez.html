@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gomez Construction | Building Solutions</title>
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2210%22 fill=%22%232c3e50%22/><path d=%22M20 80 L20 20 L80 20 L80 35 L50 35 L50 80 Z%22 fill=%22%23f1c40f%22/></svg>">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #F4B400; 
+            --dark: #1A1A1A;    
+            --gray: #4A4A4A;    
+            --light: #F9F9F9;   
+            --white: #FFFFFF;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* General */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: var(--primary);
+            color: var(--dark);
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(244, 180, 0, 0.4);
+        }
+
+        h1, h2, h3 { font-weight: 800; text-transform: uppercase; }
+        .section-padding { padding: 100px 0; }
+
+        /* Header */
+        header {
+            background: var(--dark);
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 900;
+        }
+
+        .logo svg { width: 40px; height: 40px; }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        .lang-switch {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 5px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+
+        .lang-switch:hover { background: var(--primary); color: var(--dark); }
+
+        /* Menu movil */
+        .menu-toggle { display: none; color: white; font-size: 2rem; cursor: pointer; }
+
+        /* Hero */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%);
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-top: 80px;
+            overflow: hidden;
+        }
+
+        /* Animacion fondo */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: moveGrid 20s linear infinite;
+        }
+
+        @keyframes moveGrid {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(40px); }
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            z-index: 2;
+        }
+
+        .hero-text {
+            width: 50%;
+            color: var(--white);
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero-text span { color: var(--primary); }
+
+        .hero-visual {
+            width: 45%;
+            position: relative;
+        }
+        
+        .hero-visual svg {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 0 20px rgba(244, 180, 0, 0.1));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Servicios */
+        .services { background: var(--white); }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-header h2 { font-size: 2.5rem; margin-bottom: 10px; }
+        .divider { width: 60px; height: 4px; background: var(--primary); margin: 0 auto; }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background: var(--light);
+            padding: 40px;
+            border-bottom: 4px solid transparent;
+            transition: var(--transition);
+            cursor: default;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow);
+            border-bottom: 4px solid var(--primary);
+        }
+
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            background: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-radius: 50%;
+        }
+        
+        .icon-box svg { width: 35px; height: 35px; fill: var(--primary); }
+
+        /* Proyectos */
+        .portfolio { background: var(--dark); color: var(--white); }
+        
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 0;
+        }
+
+        .project-item {
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+            background: #333;
+        }
+
+        .project-item svg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+            opacity: 0.7;
+        }
+
+        .project-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(244, 180, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: var(--transition);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .project-item:hover svg { transform: scale(1.1); opacity: 0.3; }
+        .project-item:hover .project-overlay { opacity: 1; }
+
+        .project-overlay h3 { color: var(--dark); margin-bottom: 10px; }
+        .project-overlay p { color: var(--dark); font-weight: 500; }
+
+        /* Contacto */
+        .contact-section { background: var(--light); }
+
+        .contact-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            background: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .contact-info {
+            flex: 1;
+            padding: 60px;
+            background: var(--dark);
+            color: var(--white);
+        }
+
+        .contact-form {
+            flex: 1.5;
+            padding: 60px;
+        }
+
+        .form-group { margin-bottom: 20px; }
+        
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background: #f9f9f9;
+            font-family: inherit;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        input:focus, textarea:focus { border-color: var(--primary); }
+
+        /* Footer */
+        footer {
+            background: #111;
+            color: #777;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        /* Scroll fx */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: absolute;
+                top: 80px;
+                right: -100%;
+                background: var(--dark);
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                padding: 20px 0;
+                transition: 0.4s;
+            }
+            .nav-links.active { right: 0; }
+            .menu-toggle { display: block; }
+            
+            .hero-content { flex-direction: column; text-align: center; }
+            .hero-text { width: 100%; margin-bottom: 40px; }
+            .hero-text h1 { font-size: 2.5rem; }
+            .hero-visual { width: 100%; }
+            
+            .contact-wrapper { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container nav-wrapper">
+            <a href="#" class="logo">
+                <svg viewBox="0 0 100 100" fill="none">
+                    <path d="M10 90 L10 30 L50 10 L90 30 L90 90 Z" fill="#F4B400" />
+                    <path d="M30 90 L30 50 L70 50 L70 90" fill="#2c3e50" />
+                    <rect x="40" y="30" width="20" height="10" fill="#2c3e50" />
+                </svg>
+                GOMEZ<span style="color:var(--primary)">CONST.</span>
+            </a>
+            <div class="menu-toggle">☰</div>
+            <ul class="nav-links">
+                <li><a href="#services" data-key="nav_services">Services</a></li>
+                <li><a href="#projects" data-key="nav_projects">Projects</a></li>
+                <li><a href="#contact" data-key="nav_contact">Contact</a></li>
+                <li><button class="lang-switch" onclick="toggleLanguage()">ES / EN</button></li>
+            </ul>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-text reveal">
+                <h1 data-key="hero_title">Building Your <br><span>Vision</span> Into Reality</h1>
+                <p data-key="hero_subtitle" style="margin-bottom: 30px; font-size: 1.1rem; opacity: 0.9;">
+                    High-end residential and commercial construction with precision engineering and timeless design.
+                </p>
+                <a href="#contact" class="btn" data-key="cta_button">Get a Quote</a>
+            </div>
+            
+            <div class="hero-visual reveal">
+                <svg viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 300 L250 400 L450 300 L250 200 Z" fill="#3a4b5c"/>
+                    <path d="M150 250 L350 350 L350 150 L150 50 Z" fill="#2c3e50"/>
+                    <path d="M150 250 L150 50 L250 100 L250 300 Z" fill="#34495e"/> 
+                    <rect x="360" y="100" width="10" height="250" fill="#F4B400"/>
+                    <rect x="380" y="100" width="10" height="250" fill="#F4B400"/>
+                    <rect x="360" y="150" width="30" height="5" fill="#F4B400"/>
+                    <rect x="360" y="250" width="30" height="5" fill="#F4B400"/>
+                    <rect x="380" y="100" width="100" height="10" fill="#F4B400"/>
+                    <line x1="480" y1="100" x2="480" y2="180" stroke="#F4B400" stroke-width="2"/>
+                    <rect x="460" y="180" width="40" height="20" fill="#DDD"/>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="section-padding services">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 data-key="services_title">Our Expertise</h2>
+                <div class="divider"></div>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card reveal">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3zm5 15h-2v-6H9v6H7v-7.81l5-4.5 5 4.5V18z"/></svg>
+                    </div>
+                    <h3 data-key="service_1_title">Residential</h3>
+                    <p data-key="service_1_desc" style="margin-top: 15px; color: #666;">Custom home building and luxury renovations tailored to your lifestyle.</p>
+                </div>
+
+                <div class="service-card reveal">
+                    <div class="icon-box">
+                        <svg viewBox="0 0 24 24"><path d="M10 4c0-1.1.9-2 2-2s2 .9 2 2h-4zM8 4h2v2H8V4zm-1 2H5v13h14V6h-2V4h2c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h2v2z"/></svg>
+                    </div>
+                    <h3 data-key="service_2_title">Commercial</h3>
+                    <p data-key="service_2_desc" style="margin-top: 15px; color: #666;">Scalable office spaces and retail structures designed for business growth.</p>
+                </div>
+
+                <div class="service-card reveal">
+                    <div class="icon-box">
+                         <svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+                    </div>
+                    <h3 data-key="service_3_title">Renovation</h3>
+                    <p data-key="service_3_desc" style="margin-top: 15px; color: #666;">Modernizing structures while preserving their structural integrity and history.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="section-padding portfolio">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 style="color:white" data-key="projects_title">Recent Projects</h2>
+                <div class="divider"></div>
+            </div>
+        </div>
+        <div class="portfolio-grid">
+            <div class="project-item reveal">
+                <svg viewBox="0 0 400 300" preserveAspectRatio="none">
+                    <rect width="400" height="300" fill="#222"/>
+                    <rect x="50" y="50" width="100" height="250" fill="#333"/>
+                    <rect x="60" y="60" width="20" height="20" fill="#555"/>
+                    <rect x="60" y="90" width="20" height="20" fill="#555"/>
+                    <rect x="60" y="120" width="20" height="20" fill="#F4B400"/> 
+                </svg>
+                <div class="project-overlay">
+                    <h3 data-key="proj_1_name">The Onyx Tower</h3>
+                    <p data-key="proj_1_cat">Commercial</p>
+                </div>
+            </div>
+            <div class="project-item reveal">
+                <svg viewBox="0 0 400 300" preserveAspectRatio="none">
+                    <rect width="400" height="300" fill="#2c2c2c"/>
+                    <path d="M200 50 L350 150 L50 150 Z" fill="#333"/>
+                    <rect x="70" y="150" width="260" height="150" fill="#444"/>
+                    <rect x="220" y="180" width="60" height="120" fill="#F4B400" opacity="0.5"/>
+                </svg>
+                <div class="project-overlay">
+                    <h3 data-key="proj_2_name">Villa Solar</h3>
+                    <p data-key="proj_2_cat">Residential</p>
+                </div>
+            </div>
+            <div class="project-item reveal">
+                <svg viewBox="0 0 400 300" preserveAspectRatio="none">
+                    <rect width="400" height="300" fill="#1a1a1a"/>
+                    <path d="M0 200 Q200 100 400 200" stroke="#555" stroke-width="10" fill="none"/>
+                    <line x1="50" y1="200" x2="50" y2="300" stroke="#333" stroke-width="20"/>
+                    <line x1="350" y1="200" x2="350" y2="300" stroke="#333" stroke-width="20"/>
+                </svg>
+                <div class="project-overlay">
+                    <h3 data-key="proj_3_name">Bridge 42</h3>
+                    <p data-key="proj_3_cat">Infrastructure</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section-padding contact-section">
+        <div class="container">
+            <div class="contact-wrapper reveal">
+                <div class="contact-info">
+                    <h2 data-key="contact_title">Get In Touch</h2>
+                    <p style="margin: 20px 0; opacity: 0.8;" data-key="contact_desc">Ready to start your next project with us? Send us a message and we will get back to you shortly.</p>
+                    <div style="margin-top: 40px;">
+                        <p><strong>Email:</strong> info@gomezconstruction.com</p>
+                        <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form>
+                        <div class="form-group">
+                            <input type="text" placeholder="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea rows="5" placeholder="Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn" data-key="send_btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Gomez Construction. All Rights Reserved. Powered By Wisbe.</p>
+    </footer>
+
+    <script>
+        // Traduccion
+        const translations = {
+            en: {
+                nav_services: "Services",
+                nav_projects: "Projects",
+                nav_contact: "Contact",
+                hero_title: "Building Your <br><span>Vision</span> Into Reality",
+                hero_subtitle: "High-end residential and commercial construction with precision engineering and timeless design.",
+                cta_button: "Get a Quote",
+                services_title: "Our Expertise",
+                service_1_title: "Residential",
+                service_1_desc: "Custom home building and luxury renovations tailored to your lifestyle.",
+                service_2_title: "Commercial",
+                service_2_desc: "Scalable office spaces and retail structures designed for business growth.",
+                service_3_title: "Renovation",
+                service_3_desc: "Modernizing structures while preserving their structural integrity and history.",
+                projects_title: "Recent Projects",
+                proj_1_name: "The Onyx Tower",
+                proj_1_cat: "Commercial",
+                proj_2_name: "Villa Solar",
+                proj_2_cat: "Residential",
+                proj_3_name: "Bridge 42",
+                proj_3_cat: "Infrastructure",
+                contact_title: "Get In Touch",
+                contact_desc: "Ready to start your next project with us? Send us a message.",
+                send_btn: "Send Message"
+            },
+            es: {
+                nav_services: "Servicios",
+                nav_projects: "Proyectos",
+                nav_contact: "Contacto",
+                hero_title: "Construyendo Su <br><span>Visión</span> en Realidad",
+                hero_subtitle: "Construcción residencial y comercial de alta gama con ingeniería de precisión y diseño atemporal.",
+                cta_button: "Cotizar Ahora",
+                services_title: "Nuestra Experiencia",
+                service_1_title: "Residencial",
+                service_1_desc: "Construcción de viviendas personalizadas y renovaciones de lujo adaptadas a su estilo de vida.",
+                service_2_title: "Comercial",
+                service_2_desc: "Espacios de oficinas escalables y estructuras comerciales diseñadas para el crecimiento.",
+                service_3_title: "Renovación",
+                service_3_desc: "Modernización de estructuras preservando su integridad estructural e historia.",
+                projects_title: "Proyectos Recientes",
+                proj_1_name: "Torre Ónix",
+                proj_1_cat: "Comercial",
+                proj_2_name: "Villa Solar",
+                proj_2_cat: "Residencial",
+                proj_3_name: "Puente 42",
+                proj_3_cat: "Infraestructura",
+                contact_title: "Contáctanos",
+                contact_desc: "¿Listo para comenzar su próximo proyecto con nosotros? Envíenos un mensaje.",
+                send_btn: "Enviar Mensaje"
+            }
+        };
+
+        let currentLang = 'en';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'es' : 'en';
+            document.querySelectorAll('[data-key]').forEach(elem => {
+                const key = elem.getAttribute('data-key');
+                if(translations[currentLang][key]) {
+                    elem.innerHTML = translations[currentLang][key]; 
+                }
+            });
+        }
+
+        // Menu movil
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Animaciones
+        const observerOptions = { threshold: 0.2 };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
