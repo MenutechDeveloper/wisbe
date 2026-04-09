@@ -1,469 +1,568 @@
-/**
- * WisbeUI.js - Sistema de Widgets mediante Custom Elements
- * DISEÑO ORIGINAL PRESERVADO - PARIDAD 100% CON PUBLIC PAGES (TAILWIND MAPPED)
- */
-
 (function() {
-    const CONFIG = {
-        SUPABASE_URL: 'https://wwcmtqqbxdamxebkfsqk.supabase.co',
-        SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind3Y210cXFieGRhbXhlYmtmc3FrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MDUzNzksImV4cCI6MjA5MDA4MTM3OX0.4C5gGKxJrpF5BS8FfEAu8FLa9VudEHxCYxwwtb991Io'
-    };
+    const SUPABASE_URL = 'https://wwcmtqqbxdamxebkfsqk.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind3Y210cXFieGRhbXhlYmtmc3FrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MDUzNzksImV4cCI6MjA5MDA4MTM3OX0.4C5gGKxJrpF5BS8FfEAu8FLa9VudEHxCYxwwtb991Io';
 
-    // Lazy load Supabase
-    let isSupabaseLoading = false;
-    async function getSupabase() {
-        if (window.supabase) return window.supabase;
-        if (isSupabaseLoading) {
-            return new Promise((resolve) => {
-                const check = setInterval(() => {
-                    if (window.supabase) { clearInterval(check); resolve(window.supabase); }
-                }, 100);
-            });
-        }
-        isSupabaseLoading = true;
-        return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-            script.async = true;
-            script.onload = () => {
-                isSupabaseLoading = false;
-                if (window.supabase) resolve(window.supabase);
-                else reject(new Error('Supabase no se inicializó.'));
-            };
-            script.onerror = () => { isSupabaseLoading = false; reject(new Error('Error Supabase script.')); };
-            document.head.appendChild(script);
-        });
+    // Dynamically load Supabase if not present
+    if (typeof supabase === 'undefined') {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+        document.head.appendChild(script);
     }
 
-    const BASE_STYLES = `
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Lato:ital,wght@0,400;0,700;1,400&display=swap');
+    const COMMON_STYLE = `
+        @import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+        @import url('https://wisbe.xyz/assets/css/styleGYM.css');
 
         :host {
-            display: block !important;
-            width: 100% !important;
-            font-family: 'Lato', sans-serif;
-            --emerald-500: #10b981;
-            --emerald-600: #059669;
-            --blue-500: #3b82f6;
-            --blue-600: #2563eb;
-            --slate-50: #f8fafc;
-            --slate-100: #f1f5f9;
-            --slate-200: #e2e8f0;
-            --slate-400: #94a3b8;
-            --slate-500: #64748b;
-            --slate-600: #475569;
-            --slate-800: #1e293b;
-            --slate-900: #0f172a;
-            --slate-950: #020617;
+            display: block;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
-        * { box-sizing: border-box; }
-
-        .container { width: 100%; margin: 0 auto; padding: 0; }
-        .grid { display: grid; gap: 2.5rem; width: 100%; }
-
-        /* Utility for animation */
-        .animate-fade-in { animation: fadeIn 0.7s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .loader { padding: 80px; text-align: center; color: var(--slate-400); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; font-size: 12px; }
-        .error { padding: 40px; text-align: center; color: #ef4444; background: #fef2f2; border-radius: 20px; font-weight: 800; font-size: 11px; text-transform: uppercase; border: 1px solid #fee2e2; }
-
-        /* --- NUTRICION (recovered_nutricion.html parity) --- */
-        .n-filters {
-            background: white; border-radius: 40px; shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); border: 1px solid var(--slate-100);
-            padding: 2rem; margin-bottom: 5rem; display: flex; flex-wrap: wrap; gap: 1.5rem;
-            align-items: center; justify-content: space-between;
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
-        .n-filter-select {
-            background: var(--slate-50); padding: 0.75rem 2rem; border-radius: 1rem;
-            font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;
-            color: var(--slate-500); border: none; outline: none; cursor: pointer; transition: all 0.2s;
-        }
-        .n-filter-select:focus { box-shadow: 0 0 0 2px var(--emerald-500); }
-        .n-results-count { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--slate-400); }
-
-        .n-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
-
-        .n-card {
-            background: white; border-radius: 50px; shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); border: 1px solid var(--slate-50);
-            overflow: hidden; transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; flex-direction: column; cursor: default;
-        }
-        .n-card:hover { transform: translateY(-0.75rem); box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25); }
-
-        .n-img-wrapper { height: 16rem; position: relative; overflow: hidden; background: var(--slate-200); }
-        .n-img { width: 100%; height: 100%; object-fit: cover; transition: all 1s; filter: grayscale(0.2); }
-        .n-card:hover .n-img { transform: scale(1.25); filter: grayscale(0); }
-
-        .n-badge {
-            position: absolute; top: 1.5rem; left: 1.5rem;
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(4px);
-            padding: 0.5rem 1rem; border-radius: 1rem;
-            font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;
-            color: var(--emerald-600); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        .n-content { padding: 2.5rem; flex-grow: 1; display: flex; flex-direction: column; }
-        .n-title { font-size: 1.5rem; font-weight: 900; color: var(--slate-800); margin: 0 0 1.5rem 0; line-height: 1.2; letter-spacing: -0.025em; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
-
-        .n-stats { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--slate-50); border-bottom: 1px solid var(--slate-50); padding: 1.5rem 0; margin-bottom: 2.5rem; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--slate-400); }
-        .n-stat { text-align: center; }
-        .n-stat-val { display: block; font-size: 1.5rem; font-weight: 900; color: var(--emerald-600); margin-bottom: 0.25rem; }
-        .n-stat-val-alt { display: block; font-size: 1.5rem; font-weight: 900; color: var(--slate-800); margin-bottom: 0.25rem; }
-
-        .n-btn { width: 100%; padding: 1.25rem; background: var(--slate-900); color: white; border-radius: 1.875rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.75rem; border: none; cursor: pointer; transition: all 0.3s; margin-top: auto; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-        .n-btn:hover { background: var(--emerald-600); box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.2); }
-
-        /* --- NUTRICION MODAL --- */
-        .n-modal-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(24px); z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 1rem; }
-        .n-modal-container { background: white; width: 100%; max-width: 72rem; max-height: 95vh; border-radius: 60px; overflow: hidden; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.5); display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.1); }
-        @media (min-width: 1280px) { .n-modal-container { flex-direction: row; } }
-
-        .n-modal-left { position: relative; height: 20rem; }
-        @media (min-width: 1280px) { .n-modal-left { width: 41.66%; height: auto; } }
-        .n-modal-img { width: 100%; height: 100%; object-fit: cover; }
-        .n-modal-img-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); display: flex; flex-direction: column; justify-content: flex-end; padding: 3rem; }
-        .n-modal-badge { background: var(--emerald-500); color: white; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; padding: 0.5rem 1.25rem; border-radius: 1rem; width: fit-content; margin-bottom: 1rem; box-shadow: 0 20px 25px -5px rgba(6, 78, 59, 0.4); }
-        .n-modal-title { font-size: 3rem; font-weight: 900; color: white; line-height: 0.9; letter-spacing: -0.05em; margin: 0; }
-
-        .n-modal-right { flex-grow: 1; padding: 2rem; overflow-y: auto; background: white; display: flex; flex-direction: column; }
-        @media (min-width: 1280px) { .n-modal-right { padding: 4rem; width: 58.33%; } }
-
-        .n-modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3rem; }
-        .n-modal-macros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; width: 100%; margin-right: 3rem; }
-        .n-macro-box { background: var(--slate-50); padding: 1.5rem; border-radius: 35px; text-align: center; border: 1px solid var(--slate-100); transition: all 0.3s; }
-        .n-macro-box:hover { background: #f0fdf4; }
-        .n-macro-val { display: block; font-size: 1.875rem; font-weight: 900; color: var(--emerald-600); margin-bottom: 0.25rem; }
-        .n-macro-val-dark { color: var(--slate-800); }
-        .n-macro-label { font-size: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--slate-400); }
-
-        .n-close-btn { color: var(--slate-200); cursor: pointer; font-size: 1.875rem; transition: all 0.3s; background: none; border: none; padding: 0; }
-        .n-close-btn:hover { color: var(--emerald-500); }
-
-        .n-section-grid { display: grid; gap: 3rem; margin-bottom: 4rem; }
-        @media (min-width: 768px) { .n-section-grid { grid-template-columns: repeat(2, 1fr); } }
-
-        .n-sec-title { font-size: 1.25rem; font-weight: 900; color: var(--slate-800); margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: -0.025em; display: flex; align-items: center; }
-        .n-sec-num { width: 2rem; height: 2rem; background: #ecfdf5; color: var(--emerald-600); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; margin-right: 0.75rem; font-weight: 900; }
-
-        .n-ingredients { color: var(--slate-600); line-height: 2; font-style: italic; font-size: 0.875rem; white-space: pre-wrap; padding-left: 1.5rem; border-left: 2px solid #ecfdf5; }
-        .n-biodata { display: flex; flex-direction: column; gap: 1rem; }
-        .n-bio-row { background: var(--slate-50); padding: 1rem; border-radius: 1rem; border: 1px solid var(--slate-100); display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
-        .n-bio-label { color: var(--slate-400); }
-        .n-bio-val { color: var(--slate-900); }
-        .n-bio-val-accent { color: var(--emerald-600); }
-        .n-instructions-box { background: var(--slate-50); padding: 2.5rem; border-radius: 40px; border: 2px dashed var(--slate-200); color: var(--slate-600); font-size: 0.875rem; line-height: 1.625; white-space: pre-wrap; }
-
-        /* --- RUTINAS (recovered_rutinas.html parity) --- */
-        .r-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
-        .r-card {
-            background: white; border-radius: 20px; border: 1px solid var(--slate-100); padding: 2rem;
-            transition: all 0.3s; cursor: pointer; display: flex; flex-direction: column; height: 100%;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .r-card:hover { border-color: var(--blue-500); transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1); }
-        .r-icon { width: 4rem; height: 4rem; background: #eff6ff; color: var(--blue-500); border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 2rem; border: 1px solid #dbeafe; transition: all 0.3s; }
-        .r-card:hover .r-icon { background: var(--blue-500); color: white; }
-        .r-title { font-size: 1.25rem; font-weight: 900; color: var(--slate-900); margin: 0 0 0.5rem 0; text-transform: uppercase; letter-spacing: -0.025em; }
-        .r-meta { display: flex; align-items: center; gap: 1rem; font-size: 10px; font-weight: 900; text-transform: uppercase; color: var(--slate-400); letter-spacing: 0.1em; margin-bottom: 2rem; }
-        .r-badge { background: var(--slate-50); padding: 0.125rem 0.5rem; border-radius: 0.25rem; border: 1px solid var(--slate-100); }
-        .r-footer { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--slate-100); color: var(--blue-600); font-size: 10px; font-weight: 900; text-transform: uppercase; display: flex; align-items: center; letter-spacing: 0.1em; }
-        .r-footer i { margin-left: 0.5rem; transition: transform 0.3s; }
-        .r-card:hover .r-footer i { transform: translateX(0.5rem); }
-
-        /* --- RUTINAS MODAL --- */
-        .r-modal-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(8px); z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 1rem; }
-        .r-modal-container { background: white; width: 100%; max-width: 64rem; border-radius: 40px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25); position: relative; display: flex; flex-direction: column; max-height: 90vh; overflow: hidden; }
-        .r-modal-close { position: absolute; top: 2rem; right: 2rem; width: 3rem; height: 3rem; background: var(--slate-100); color: var(--slate-400); border-radius: 9999px; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: all 0.3s; z-index: 10; }
-        .r-modal-close:hover { background: #fee2e2; color: #ef4444; }
-        .r-modal-header { padding: 3rem; background: var(--slate-50); border-bottom: 1px solid var(--slate-100); }
-        .r-modal-title { font-size: 2.25rem; font-weight: 900; color: var(--slate-900); text-transform: uppercase; letter-spacing: -0.025em; margin: 0; }
-        .r-modal-subtitle { color: var(--blue-600); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; display: block; }
-        .r-modal-meta { display: flex; gap: 1rem; margin-top: 1.5rem; }
-        .r-meta-box { background: white; padding: 0.75rem 1.5rem; border-radius: 1rem; border: 1px solid var(--slate-200); }
-        .r-meta-label { font-size: 10px; color: var(--slate-400); font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; margin: 0; }
-        .r-meta-val { font-size: 1rem; color: var(--slate-700); font-weight: 700; margin: 0; }
-        .r-modal-body { padding: 3rem; overflow-y: auto; flex-grow: 1; }
-        .r-day-section { margin-bottom: 3rem; }
-        .r-day-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
-        .r-day-badge { font-size: 0.875rem; font-weight: 900; color: var(--slate-900); text-transform: uppercase; letter-spacing: 0.1em; background: var(--slate-100); padding: 0.5rem 1.5rem; border-radius: 9999px; border: 1px solid var(--slate-200); }
-        .r-day-line { flex-grow: 1; height: 1px; background: var(--slate-100); }
-        .r-exercises-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-        .r-ex-card { background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: 1rem; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-        .r-ex-name { color: var(--slate-900); font-weight: 700; text-transform: uppercase; letter-spacing: -0.025em; font-size: 0.875rem; margin-bottom: 0.25rem; }
-        .r-ex-stats { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--slate-400); }
-        .r-ex-accent { color: var(--blue-500); }
-        .r-video-btn { width: 2.5rem; height: 2.5rem; background: white; color: var(--blue-500); border-radius: 9999px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--slate-200); text-decoration: none; transition: all 0.3s; }
-        .r-video-btn:hover { background: var(--blue-500); color: white; }
-
-        /* --- ENTRENADORES (recovered_entrenadores.html parity) --- */
-        .t-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 3rem; }
-        .t-card {
-            background: white; border-radius: 1rem; border: 1px solid var(--slate-100); padding: 2.5rem;
-            text-align: center; display: flex; flex-direction: column; align-items: center; transition: all 0.3s; height: 100%;
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease forwards;
         }
-        .t-card:hover { border-color: var(--blue-500); transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1); }
-        .t-avatar { width: 7rem; height: 7rem; border-radius: 9999px; border: 4px solid var(--slate-50); overflow: hidden; margin-bottom: 2rem; transition: all 0.5s; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
-        .t-card:hover .t-avatar { transform: scale(1.05); }
-        .t-img { width: 100%; height: 100%; object-fit: cover; }
-        .t-specialty { color: var(--blue-600); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; background: #eff6ff; padding: 0.25rem 0.75rem; border-radius: 9999px; margin-bottom: 0.5rem; border: 1px solid #dbeafe; display: inline-block; }
-        .t-name { font-size: 1.25rem; font-weight: 900; color: var(--slate-900); text-transform: uppercase; letter-spacing: -0.025em; margin: 0 0 1.5rem 0; }
-        .t-bio { color: var(--slate-500); font-size: 0.875rem; line-height: 1.625; margin-bottom: 2rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-        .t-actions { width: 100%; display: flex; gap: 1rem; margin-top: auto; padding-top: 2rem; border-top: 1px solid var(--slate-100); }
-        .t-wa-btn { flex-grow: 1; background: var(--blue-500); color: white; padding: 0.75rem; border-radius: 0.5rem; font-weight: 900; text-transform: uppercase; font-size: 10px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2); }
-        .t-wa-btn:hover { box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.2); background: var(--blue-600); }
-        .t-ig-btn { width: 3rem; height: 3rem; background: var(--slate-50); color: var(--slate-500); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.3s; font-size: 1.25rem; border: 1px solid var(--slate-100); }
-        .t-ig-btn:hover { background: var(--slate-100); color: var(--blue-500); }
+        .animate-fade {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
     `;
 
-    function ensureArray(data) {
-        if (!data) return [];
-        if (Array.isArray(data)) return data;
-        try { return JSON.parse(data); } catch(e) { return []; }
+    async function getOwnerIdByDomain(supabaseClient, domain) {
+        if (!domain) return null;
+        const { data, error } = await supabaseClient
+            .from('wisbe_users')
+            .select('id')
+            .ilike('domain', domain.trim())
+            .maybeSingle();
+        if (error || !data) return null;
+        return data.id;
     }
 
-    class WisbeBase extends HTMLElement {
-        constructor() { super(); this.attachShadow({ mode: 'open' }); this.supabase = null; this.ownerId = null; }
+    function cleanData(val) {
+        if (!val) return '';
+
+        const isJson = (str) => {
+            if (typeof str !== 'string') return false;
+            const s = str.trim();
+            return (s.startsWith('[') && s.endsWith(']')) || (s.startsWith('{') && s.endsWith('}'));
+        };
+
+        let result = val;
+
+        if (Array.isArray(result)) {
+            let flattened = [];
+            result.forEach(item => {
+                if (isJson(item)) {
+                    try {
+                        const p = JSON.parse(item);
+                        if (Array.isArray(p)) flattened = flattened.concat(p);
+                        else flattened.push(p);
+                    } catch(e) { flattened.push(item); }
+                } else {
+                    flattened.push(item);
+                }
+            });
+            result = flattened;
+        }
+
+        if (typeof result === 'string' && isJson(result)) {
+            try {
+                const p = JSON.parse(result);
+                return cleanData(p);
+            } catch(e) { return result.trim(); }
+        }
+
+        if (Array.isArray(result)) {
+            return result
+                .filter(i => i !== null && i !== undefined)
+                .map(i => typeof i === 'string' ? i.trim() : i)
+                .filter(i => i !== '')
+                .join('\n');
+        }
+
+        return result.toString().trim();
+    }
+
+    class WisbeGymNutricion extends HTMLElement {
+        constructor() {
+            super();
+            this.attachShadow({ mode: 'open' });
+        }
 
         async connectedCallback() {
+            const domain = this.getAttribute('domain');
             this.renderLoading();
-            try {
-                const supabaseLib = await getSupabase();
-                this.supabase = supabaseLib.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
-                const domain = this.getAttribute('domain');
-                if (!domain) return this.renderError('Atributo [domain] no configurado.');
-                this.ownerId = await this.resolveOwner(domain);
-                if (!this.ownerId) return this.renderError(`Dominio "${domain}" no reconocido.`);
-                this.loadData();
-            } catch (err) { this.renderError('Error de red Wisbe.'); }
+
+            const checkSupabase = setInterval(async () => {
+                if (window.supabase) {
+                    clearInterval(checkSupabase);
+                    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                    const ownerId = await getOwnerIdByDomain(supabaseClient, domain);
+
+                    if (!ownerId) {
+                        this.renderError('Dominio no configurado o no encontrado.');
+                        return;
+                    }
+
+                    const { data: recipes, error } = await supabaseClient
+                        .from('gym_recipes')
+                        .select('*')
+                        .eq('owner_id', ownerId)
+                        .order('created_at', { ascending: false });
+
+                    if (error) {
+                        this.renderError('Error al cargar las recetas.');
+                        return;
+                    }
+
+                    this.render(recipes);
+                }
+            }, 100);
         }
 
-        async resolveOwner(domain) {
-            const clean = domain.trim().replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0].toLowerCase();
-            let { data: u } = await this.supabase.from('wisbe_users').select('id').ilike('domain', domain.trim()).eq('role', 'gym-owner').maybeSingle();
-            if (u) return u.id;
-            let { data: u2 } = await this.supabase.from('wisbe_users').select('id').ilike('domain', clean).eq('role', 'gym-owner').maybeSingle();
-            if (u2) return u2.id;
-            return null;
-        }
-
-        renderLoading() { this.shadowRoot.innerHTML = `<style>${BASE_STYLES}</style><div class="loader"><i class="fas fa-spinner fa-spin"></i> Sincronizando...</div>`; }
-        renderError(msg) { this.shadowRoot.innerHTML = `<style>${BASE_STYLES}</style><div class="container"><div class="error"><i class="fas fa-exclamation-triangle"></i> ${msg}</div></div>`; }
-    }
-
-    class WisbeNutricion extends WisbeBase {
-        async loadData() {
-            const { data, error } = await this.supabase.from('gym_recipes').select('*').eq('owner_id', this.ownerId).order('created_at', { ascending: false });
-            if (error) return this.renderError('Fallo base de datos.');
-            this.recipes = data || [];
-            this.render();
-        }
-
-        render() {
-            if (this.recipes.length === 0) { this.shadowRoot.innerHTML = `<style>${BASE_STYLES}</style><div class="loader">Biblioteca vacía.</div>`; return; }
+        renderLoading() {
             this.shadowRoot.innerHTML = `
-                <style>${BASE_STYLES}</style>
-                <div class="container">
-                    <div class="n-filters animate-fade-in">
-                        <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-                            <select id="f-diet" class="n-filter-select">
-                                <option value="All">Dieta: Todas</option><option value="Keto">Keto</option><option value="Vegana">Vegana</option><option value="Alta Proteína">Alta Proteína</option><option value="Sin Gluten">Sin Gluten</option><option value="Equilibrada">Equilibrada</option>
-                            </select>
-                            <select id="f-cat" class="n-filter-select">
-                                <option value="All">Categoría: Todas</option><option value="Desayuno">Desayuno</option><option value="Almuerzo">Almuerzo</option><option value="Cena">Cena</option><option value="Postre Fitness">Postre</option><option value="Snack Proteico">Snack</option>
-                            </select>
-                        </div>
-                        <div id="count" class="n-results-count">Escaneando...</div>
-                    </div>
-                    <div id="grid" class="grid n-grid"></div>
+                <style>${COMMON_STYLE}</style>
+                <div class="flex flex-col items-center justify-center py-20 text-slate-400">
+                    <i class="fas fa-spinner fa-spin text-2xl mb-4"></i>
+                    <span class="text-sm font-black uppercase tracking-widest text-emerald-600">Sincronizando Recetario...</span>
                 </div>
-                <div id="modal-host"></div>
             `;
-            const upd = () => {
-                const d = this.shadowRoot.getElementById('f-diet').value, c = this.shadowRoot.getElementById('f-cat').value;
-                const f = this.recipes.filter(r => (d === 'All' || r.diet_type === d) && (c === 'All' || r.category === c));
-                this.shadowRoot.getElementById('count').innerText = `${f.length} Opciones Maestro`;
-                this.renderGrid(f);
-            };
-            this.shadowRoot.getElementById('f-diet').onchange = upd;
-            this.shadowRoot.getElementById('f-cat').onchange = upd;
-            upd();
         }
 
-        renderGrid(recipes) {
-            const grid = this.shadowRoot.getElementById('grid');
-            grid.innerHTML = recipes.map((r, i) => `
-                <div class="n-card animate-fade-in" style="animation-delay:${i*0.05}s">
-                    <div class="n-img-wrapper">
-                        <img src="${r.image_url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600'}" class="n-img">
-                        <span class="n-badge">${r.category}</span>
-                    </div>
-                    <div class="n-content">
-                        <h3 class="n-title">${r.title}</h3>
-                        <div class="n-stats">
-                            <div class="n-stat"><span class="n-stat-val">${r.calories || 0}</span><span>Kcal</span></div>
-                            <div class="n-stat"><span class="n-stat-val-alt">${r.protein || 0}g</span><span>Prote</span></div>
+        renderError(msg) {
+            this.shadowRoot.innerHTML = `
+                <style>${COMMON_STYLE}</style>
+                <div class="py-20 text-center text-slate-500 font-bold">${msg}</div>
+            `;
+        }
+
+        render(recipes) {
+            if (recipes.length === 0) {
+                this.renderError('No hay recetas disponibles para este dominio.');
+                return;
+            }
+
+            const gridHTML = recipes.map(r => `
+                <div class="bg-white rounded-[50px] shadow-sm border border-slate-50 overflow-hidden group hover:shadow-2xl hover:-translate-y-3 transition-all duration-700 animate-fade-in">
+                    <div class="h-64 relative overflow-hidden bg-slate-200">
+                        <img src="${r.image_url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600'}"
+                             class="w-full h-full object-cover group-hover:scale-125 transition duration-1000 grayscale-[0.2] group-hover:grayscale-0">
+                        <div class="absolute top-6 left-6">
+                            <span class="bg-white/95 backdrop-blur-md px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest text-emerald-600 shadow-2xl">${r.diet_type || 'Nutrición'}</span>
                         </div>
-                        <button class="n-btn open-btn" data-id="${r.id}">Receta Master</button>
+                    </div>
+                    <div class="p-10">
+                        <h3 class="text-2xl font-black text-slate-800 mb-6 tracking-tight line-clamp-1">${r.title}</h3>
+                        <div class="flex justify-between items-center mb-10 border-t border-b border-slate-50 py-6 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                            <div class="text-center">
+                                <span class="block text-2xl font-black text-emerald-600 mb-1">${r.calories || 0}</span>
+                                <span>Kcal</span>
+                            </div>
+                            <div class="text-center">
+                                <span class="block text-2xl font-black text-slate-800 mb-1">${r.protein || 0}g</span>
+                                <span>Prote</span>
+                            </div>
+                        </div>
+                        <button class="w-full py-5 bg-slate-900 hover:bg-emerald-600 text-white font-black rounded-3xl transition-all shadow-xl hover:shadow-emerald-200 uppercase tracking-widest text-xs btn-open-recipe"
+                                data-recipe='${JSON.stringify(r).replace(/'/g, "&apos;")}'>
+                            Receta Master
+                        </button>
                     </div>
                 </div>
             `).join('');
-            grid.querySelectorAll('.open-btn').forEach(b => b.onclick = () => this.openModal(this.recipes.find(x => x.id == b.dataset.id)));
-        }
 
-        openModal(r) {
-            const host = this.shadowRoot.getElementById('modal-host');
-            host.innerHTML = `
-                <div class="n-modal-overlay">
-                    <div class="n-modal-container animate-fade-in">
-                        <div class="n-modal-left">
-                            <img src="${r.image_url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800'}" class="n-modal-img">
-                            <div class="n-modal-img-overlay">
-                                <span class="n-modal-badge">${r.category}</span>
-                                <h2 class="n-modal-title">${r.title}</h2>
+            this.shadowRoot.innerHTML = `
+                <style>${COMMON_STYLE}</style>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+                    ${gridHTML}
+                </div>
+                <div id="recipe-modal" class="fixed inset-0 bg-slate-950/95 z-[100] hidden items-center justify-center p-4 backdrop-blur-2xl">
+                    <div class="bg-white w-full max-w-6xl max-h-[95vh] rounded-[60px] overflow-hidden shadow-2xl flex flex-col xl:flex-row border border-white/10 relative animate-fade-in">
+                         <button id="close-modal" class="absolute top-8 right-8 text-slate-200 hover:text-emerald-500 transition-all text-3xl z-50"><i class="fas fa-times-circle"></i></button>
+                         <div class="xl:w-5/12 h-80 xl:h-auto relative">
+                            <img id="modal-image" src="" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-12">
+                                <span id="modal-diet-badge" class="bg-emerald-500 text-white text-[10px] font-black uppercase tracking-[0.2em] px-5 py-2 rounded-2xl w-fit shadow-xl shadow-emerald-900/40 mb-4"></span>
+                                <h2 id="modal-title" class="text-5xl font-black text-white leading-[0.9] tracking-tighter"></h2>
                             </div>
                         </div>
-                        <div class="n-modal-right">
-                            <div class="n-modal-header">
-                                <div class="n-modal-macros">
-                                    <div class="n-macro-box"><span class="n-macro-val">${r.calories || 0}</span><span class="n-macro-label">Kcal</span></div>
-                                    <div class="n-macro-box"><span class="n-macro-val n-macro-val-dark">${r.protein || 0}</span><span class="n-macro-label">Proteínas</span></div>
-                                    <div class="n-macro-box"><span class="n-macro-val n-macro-val-dark">${r.carbs || 0}</span><span class="n-macro-label">Carbs</span></div>
-                                    <div class="n-macro-box"><span class="n-macro-val n-macro-val-dark">${r.fats || 0}</span><span class="n-macro-label">Grasas</span></div>
-                                </div>
-                                <button class="n-close-btn m-close"><i class="fas fa-times-circle"></i></button>
-                            </div>
-                            <div class="n-section-grid">
-                                <div>
-                                    <h4 class="n-sec-title"><span class="n-sec-num">01</span> Ingredientes</h4>
-                                    <div class="n-ingredients">${ensureArray(r.ingredients).join('\n') || r.ingredients}</div>
-                                </div>
-                                <div>
-                                    <h4 class="n-sec-title"><span class="n-sec-num">02</span> Bio-Datos</h4>
-                                    <div class="n-biodata">
-                                        <div class="n-bio-row"><span class="n-bio-label">⏱ Tiempo</span><span class="n-bio-val">${r.prep_time || '20 min'}</span></div>
-                                        <div class="n-bio-row"><span class="n-bio-label">🔪 Dificultad</span><span class="n-bio-val n-bio-val-accent">${r.difficulty || 'Media'}</span></div>
-                                        <div class="n-bio-row"><span class="n-bio-label">🥗 Estilo</span><span class="n-bio-val">${r.diet_type || 'Equilibrada'}</span></div>
+                        <div class="xl:w-7/12 p-8 xl:p-16 overflow-y-auto bg-white flex flex-col">
+                            <div class="flex justify-between items-start mb-12">
+                                <div class="grid grid-cols-4 gap-4 w-full mr-12">
+                                    <div class="bg-slate-50 p-6 rounded-[35px] text-center border border-slate-100 transition-all hover:bg-emerald-50 group">
+                                        <span id="modal-calories" class="block text-3xl font-black text-emerald-600 group-hover:scale-110 transition-transform"></span>
+                                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Kcal</span>
+                                    </div>
+                                    <div class="bg-slate-50 p-6 rounded-[35px] text-center border border-slate-100 transition-all hover:bg-emerald-50 group">
+                                        <span id="modal-protein" class="block text-3xl font-black text-slate-800 group-hover:scale-110 transition-transform"></span>
+                                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Proteínas</span>
+                                    </div>
+                                    <div class="bg-slate-50 p-6 rounded-[35px] text-center border border-slate-100 transition-all hover:bg-emerald-50 group">
+                                        <span id="modal-carbs" class="block text-3xl font-black text-slate-800 group-hover:scale-110 transition-transform"></span>
+                                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Carbs</span>
+                                    </div>
+                                    <div class="bg-slate-50 p-6 rounded-[35px] text-center border border-slate-100 transition-all hover:bg-emerald-50 group">
+                                        <span id="modal-fats" class="block text-3xl font-black text-slate-800 group-hover:scale-110 transition-transform"></span>
+                                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Grasas</span>
                                     </div>
                                 </div>
                             </div>
-                            <div>
-                                <h4 class="n-sec-title"><span class="n-sec-num">03</span> Preparación Master</h4>
-                                <div class="n-instructions-box">${ensureArray(r.instructions).join('\n') || r.instructions}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            host.querySelector('.m-close').onclick = () => { host.innerHTML = ''; document.body.style.overflow = 'auto'; };
-            document.body.style.overflow = 'hidden';
-        }
-    }
-
-    class WisbeRutinas extends WisbeBase {
-        async loadData() {
-            const { data, error } = await this.supabase.from('gym_routines').select('*').eq('owner_id', this.ownerId).order('created_at', { ascending: false });
-            if (error) return this.renderError('Fallo rutinas.');
-            this.routines = data || [];
-            this.render();
-        }
-
-        render() {
-            if (this.routines.length === 0) { this.shadowRoot.innerHTML = `<style>${BASE_STYLES}</style><div class="loader">Sin planes activos.</div>`; return; }
-            this.shadowRoot.innerHTML = `
-                <style>${BASE_STYLES}</style>
-                <div class="container">
-                    <div id="grid" class="grid r-grid">
-                        ${this.routines.map((r, i) => `
-                            <div class="r-card animate-fade-in open-btn" style="animation-delay:${i*0.1}s" data-id="${r.id}">
-                                <div class="r-icon"><i class="fas fa-dumbbell"></i></div>
-                                <h3 class="r-title">${r.title}</h3>
-                                <div class="r-meta">
-                                    <span class="r-badge">${r.difficulty_level}</span>
-                                    <span><i class="far fa-calendar-alt"></i> ${r.plan_duration_weeks} SEMANAS</span>
-                                </div>
-                                <div class="r-footer">Explorar Plan <i class="fas fa-arrow-right"></i></div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-                <div id="modal-host"></div>
-            `;
-            this.shadowRoot.querySelectorAll('.open-btn').forEach(b => b.onclick = () => this.openModal(this.routines.find(x => x.id == b.dataset.id)));
-        }
-
-        openModal(r) {
-            const host = this.shadowRoot.getElementById('modal-host');
-            const exData = ensureArray(r.exercises);
-            host.innerHTML = `
-                <div class="r-modal-overlay">
-                    <div class="r-modal-container animate-fade-in">
-                        <button class="r-modal-close m-close"><i class="fas fa-times"></i></button>
-                        <div class="r-modal-header">
-                            <span class="r-modal-subtitle">${r.difficulty_level}</span>
-                            <h2 class="r-modal-title">${r.title}</h2>
-                            <div class="r-modal-meta">
-                                <div class="r-meta-box"><p class="r-meta-label">Duración</p><p class="r-meta-val">${r.plan_duration_weeks} Semanas</p></div>
-                                <div class="r-meta-box"><p class="r-meta-label">Público</p><p class="r-meta-val">${r.target_gender}</p></div>
-                            </div>
-                        </div>
-                        <div class="r-modal-body">
-                            ${exData.map((d, i) => `
-                                <div class="r-day-section">
-                                    <div class="r-day-header"><span class="r-day-badge">${d.day}</span><div class="r-day-line"></div></div>
-                                    <div class="r-exercises-grid">
-                                        ${ensureArray(d.exercises).map(ex => `
-                                            <div class="r-ex-card">
-                                                <div><p class="r-ex-name">${ex.name}</p><p class="r-ex-stats"><span class="r-ex-accent">${ex.sets}</span> Series &times; <span class="r-ex-accent">${ex.reps}</span> Reps</p></div>
-                                                ${ex.video ? `<a href="${ex.video}" target="_blank" class="r-video-btn"><i class="fas fa-play" style="font-size:10px;"></i></a>` : ''}
+                            <div class="space-y-16">
+                                <div class="grid md:grid-cols-2 gap-12">
+                                    <div>
+                                        <h4 class="text-xl font-black text-slate-800 mb-6 flex items-center uppercase tracking-tighter">
+                                            <span class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-xs mr-3 font-black">01</span> Ingredientes
+                                        </h4>
+                                        <div id="modal-ingredients" class="text-slate-600 leading-loose whitespace-pre-wrap pl-6 border-l-2 border-emerald-50 text-sm italic"></div>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xl font-black text-slate-800 mb-6 flex items-center uppercase tracking-tighter">
+                                            <span class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-xs mr-3 font-black">02</span> Bio-Datos
+                                        </h4>
+                                        <div class="space-y-4">
+                                            <div class="bg-slate-50 p-4 rounded-2xl flex justify-between items-center text-xs font-bold uppercase tracking-widest text-slate-400 border border-slate-100">
+                                                <span>⏱ Tiempo</span> <span id="modal-time" class="text-slate-900 font-black"></span>
                                             </div>
-                                        `).join('')}
+                                            <div class="bg-slate-50 p-4 rounded-2xl flex justify-between items-center text-xs font-bold uppercase tracking-widest text-slate-400 border border-slate-100">
+                                                <span>🔪 Dificultad</span> <span id="modal-difficulty" class="text-emerald-600 font-black"></span>
+                                            </div>
+                                            <div class="bg-slate-50 p-4 rounded-2xl flex justify-between items-center text-xs font-bold uppercase tracking-widest text-slate-400 border border-slate-100">
+                                                <span>🥗 Estilo</span> <span id="modal-diet" class="text-slate-900 font-black"></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            `).join('')}
+                                <div>
+                                    <h4 class="text-xl font-black text-slate-800 mb-8 flex items-center uppercase tracking-tighter">
+                                        <span class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-xs mr-3 font-black">03</span> Preparación Master
+                                    </h4>
+                                    <div id="modal-instructions" class="text-slate-600 leading-relaxed whitespace-pre-wrap text-sm bg-slate-50 p-10 rounded-[40px] border border-dashed border-slate-200 border-2"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             `;
-            host.querySelector('.m-close').onclick = () => { host.innerHTML = ''; document.body.style.overflow = 'auto'; };
-            document.body.style.overflow = 'hidden';
+
+            this.shadowRoot.querySelectorAll('.btn-open-recipe').forEach(btn => {
+                btn.onclick = () => {
+                    const r = JSON.parse(btn.dataset.recipe);
+                    this.openModal(r);
+                };
+            });
+
+            this.shadowRoot.getElementById('close-modal').onclick = () => this.closeModal();
+        }
+
+        openModal(r) {
+            const modal = this.shadowRoot.getElementById('recipe-modal');
+            this.shadowRoot.getElementById('modal-title').innerText = r.title;
+            this.shadowRoot.getElementById('modal-diet-badge').innerText = r.diet_type || 'Equilibrada';
+            this.shadowRoot.getElementById('modal-calories').innerText = r.calories || 0;
+            this.shadowRoot.getElementById('modal-protein').innerText = r.protein || 0;
+            this.shadowRoot.getElementById('modal-carbs').innerText = r.carbs || 0;
+            this.shadowRoot.getElementById('modal-fats').innerText = r.fats || 0;
+            this.shadowRoot.getElementById('modal-time').innerText = r.prep_time ? r.prep_time + ' min' : '20 min';
+            this.shadowRoot.getElementById('modal-difficulty').innerText = r.difficulty || 'Media';
+            this.shadowRoot.getElementById('modal-diet').innerText = r.diet_type || 'Equilibrada';
+            this.shadowRoot.getElementById('modal-ingredients').innerText = cleanData(r.ingredients);
+            this.shadowRoot.getElementById('modal-instructions').innerText = cleanData(r.instructions);
+            this.shadowRoot.getElementById('modal-image').src = r.image_url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800';
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        closeModal() {
+            const modal = this.shadowRoot.getElementById('recipe-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
     }
 
-    class WisbeEntrenadores extends WisbeBase {
-        async loadData() {
-            const { data, error } = await this.supabase.from('gym_trainers').select('*').eq('owner_id', this.ownerId).order('created_at', { ascending: false });
-            if (error) return this.renderError('Fallo equipo.');
-            this.trainers = data || [];
-            this.render();
+    class WisbeGymRutinas extends HTMLElement {
+        constructor() {
+            super();
+            this.attachShadow({ mode: 'open' });
         }
 
-        render() {
-            if (this.trainers.length === 0) { this.shadowRoot.innerHTML = `<style>${BASE_STYLES}</style><div class="loader">Equipo en actualización.</div>`; return; }
+        async connectedCallback() {
+            const domain = this.getAttribute('domain');
+            this.renderLoading();
+
+            const checkSupabase = setInterval(async () => {
+                if (window.supabase) {
+                    clearInterval(checkSupabase);
+                    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                    const ownerId = await getOwnerIdByDomain(supabaseClient, domain);
+
+                    if (!ownerId) {
+                        this.renderError('Dominio no configurado.');
+                        return;
+                    }
+
+                    const { data: routines, error } = await supabaseClient
+                        .from('gym_routines')
+                        .select('*')
+                        .eq('owner_id', ownerId)
+                        .order('created_at', { ascending: false });
+
+                    if (error) {
+                        this.renderError('Error al cargar las rutinas.');
+                        return;
+                    }
+
+                    this.render(routines);
+                }
+            }, 100);
+        }
+
+        renderLoading() {
             this.shadowRoot.innerHTML = `
-                <style>${BASE_STYLES}</style>
-                <div class="container"><div class="grid t-grid">
-                    ${this.trainers.map((t, i) => `
-                        <div class="t-card animate-fade-in" style="animation-delay:${i*0.1}s">
-                            <div class="t-avatar"><img src="${t.image_url || 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80'}" class="t-img"></div>
-                            <span class="t-specialty">${t.specialty}</span>
-                            <h3 class="t-name">${t.full_name}</h3>
-                            <p class="t-bio">${t.bio || 'Sin descripción.'}</p>
-                            <div class="t-actions">
-                                ${t.whatsapp_url ? `<a href="${t.whatsapp_url}" target="_blank" class="t-wa-btn">Contactar <i class="fab fa-whatsapp"></i></a>` : ''}
-                                ${t.instagram_url ? `<a href="https://instagram.com/${t.instagram_url.replace('@','')}" target="_blank" class="t-ig-btn"><i class="fab fa-instagram"></i></a>` : ''}
+                <style>${COMMON_STYLE}</style>
+                <div class="flex flex-col items-center justify-center py-20 text-slate-400">
+                    <i class="fas fa-spinner fa-spin text-2xl mb-4 text-blue-500"></i>
+                    <span class="text-sm font-black uppercase tracking-widest">Sincronizando Planes de Entrenamiento...</span>
+                </div>
+            `;
+        }
+
+        renderError(msg) {
+            this.shadowRoot.innerHTML = `
+                <style>${COMMON_STYLE}</style>
+                <div class="py-20 text-center text-slate-500 font-bold">${msg}</div>
+            `;
+        }
+
+        render(routines) {
+            if (routines.length === 0) {
+                this.renderError('No se han publicado rutinas todavía.');
+                return;
+            }
+
+            const gridHTML = routines.map(r => `
+                <div class="card group hover:border-blue-500 transition-all cursor-pointer flex flex-col p-8 bg-white border border-slate-200 rounded-3xl btn-open-routine animate-fade" data-routine='${JSON.stringify(r).replace(/'/g, "&apos;")}'>
+                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-blue-600 group-hover:text-white transition-colors border border-blue-100">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2 uppercase tracking-tight">${r.title}</h3>
+                    <div class="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-8">
+                        <span class="px-2 py-0.5 bg-slate-50 rounded border border-slate-100">${r.difficulty_level}</span>
+                        <span class="flex items-center"><i class="far fa-calendar-alt mr-2"></i> ${r.plan_duration_weeks} Semanas</span>
+                    </div>
+                    <div class="mt-auto pt-6 border-t border-slate-100 flex items-center text-blue-600 text-[10px] font-black uppercase tracking-widest">
+                        Explorar Plan <i class="fas fa-arrow-right ml-2 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+            `).join('');
+
+            this.shadowRoot.innerHTML = `
+                <style>${COMMON_STYLE}</style>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    ${gridHTML}
+                </div>
+                <div id="routine-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[100] hidden items-center justify-center p-4 overflow-y-auto">
+                    <div class="bg-white w-full max-w-5xl rounded-[40px] shadow-2xl relative my-10 min-h-[80vh] flex flex-col animate-fade">
+                        <button id="close-modal" class="absolute top-8 right-8 w-12 h-12 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all z-50">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                        <div id="modal-header" class="p-10 lg:p-16 border-b border-slate-100 bg-slate-50"></div>
+                        <div id="modal-body" class="p-10 lg:p-16 flex-grow overflow-y-auto"></div>
+                    </div>
+                </div>
+            `;
+
+            this.shadowRoot.querySelectorAll('.btn-open-routine').forEach(btn => {
+                btn.onclick = () => {
+                    const r = JSON.parse(btn.dataset.routine);
+                    this.openModal(r);
+                };
+            });
+
+            this.shadowRoot.getElementById('close-modal').onclick = () => this.closeModal();
+        }
+
+        openModal(r) {
+            const modal = this.shadowRoot.getElementById('routine-modal');
+            const header = this.shadowRoot.getElementById('modal-header');
+            const body = this.shadowRoot.getElementById('modal-body');
+
+            header.innerHTML = `
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div>
+                        <span class="text-blue-600 text-[10px] font-black uppercase tracking-widest block mb-2">${r.difficulty_level}</span>
+                        <h2 class="text-4xl font-black text-slate-900 tracking-tight uppercase">${r.title}</h2>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="bg-white px-6 py-3 rounded-2xl border border-slate-200">
+                            <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">Duración</p>
+                            <p class="text-slate-700 font-bold">${r.plan_duration_weeks} Semanas</p>
+                        </div>
+                        ${r.target_gender ? `
+                            <div class="bg-white px-6 py-3 rounded-2xl border border-slate-200">
+                                <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">Público</p>
+                                <p class="text-slate-700 font-bold">${r.target_gender}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            body.innerHTML = `
+                <div class="space-y-12">
+                    ${(r.exercises || []).map((day, idx) => `
+                        <div class="animate-fade" style="animation-delay: ${idx * 0.1}s">
+                            <div class="flex items-center gap-4 mb-8">
+                                <h4 class="text-sm font-black text-slate-900 uppercase tracking-widest bg-slate-100 px-6 py-2 rounded-full border border-slate-200">${day.day}</h4>
+                                <div class="h-px bg-slate-100 flex-grow"></div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                ${day.exercises.map(ex => `
+                                    <div class="card bg-slate-50 border border-slate-200 flex items-center justify-between p-6 rounded-2xl">
+                                        <div>
+                                            <p class="text-slate-900 font-bold uppercase tracking-tight text-sm mb-1">${ex.name}</p>
+                                            <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">
+                                                <span class="text-blue-500">${ex.sets}</span> Series &times; <span class="text-blue-500">${ex.reps}</span> Repeticiones
+                                            </p>
+                                        </div>
+                                        ${ex.video ? `
+                                            <a href="${ex.video}" target="_blank" class="w-10 h-10 bg-white text-blue-500 rounded-full flex items-center justify-center border border-slate-200 hover:bg-blue-500 hover:text-white transition-all shadow-sm no-underline">
+                                                <i class="fas fa-play text-xs ml-0.5"></i>
+                                            </a>
+                                        ` : ''}
+                                    </div>
+                                `).join('')}
                             </div>
                         </div>
                     `).join('')}
-                </div></div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        closeModal() {
+            const modal = this.shadowRoot.getElementById('routine-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    }
+
+    class WisbeGymEntrenadores extends HTMLElement {
+        constructor() {
+            super();
+            this.attachShadow({ mode: 'open' });
+        }
+
+        async connectedCallback() {
+            const domain = this.getAttribute('domain');
+            this.renderLoading();
+
+            const checkSupabase = setInterval(async () => {
+                if (window.supabase) {
+                    clearInterval(checkSupabase);
+                    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                    const ownerId = await getOwnerIdByDomain(supabaseClient, domain);
+
+                    if (!ownerId) {
+                        this.renderError('Dominio no configurado.');
+                        return;
+                    }
+
+                    const { data: trainers, error } = await supabaseClient
+                        .from('gym_trainers')
+                        .select('*')
+                        .eq('owner_id', ownerId)
+                        .order('created_at', { ascending: false });
+
+                    if (error) {
+                        this.renderError('Error al cargar equipo.');
+                        return;
+                    }
+
+                    this.render(trainers);
+                }
+            }, 100);
+        }
+
+        renderLoading() {
+            this.shadowRoot.innerHTML = `
+                <style>${COMMON_STYLE}</style>
+                <div class="flex flex-col items-center justify-center py-20 text-slate-400">
+                    <i class="fas fa-spinner fa-spin text-2xl mb-4 text-blue-500"></i>
+                    <span class="text-sm font-black uppercase tracking-widest">Sincronizando Perfiles Profesionales...</span>
+                </div>
+            `;
+        }
+
+        renderError(msg) {
+            this.shadowRoot.innerHTML = `
+                <style>${COMMON_STYLE}</style>
+                <div class="py-20 text-center text-slate-500 font-bold">${msg}</div>
+            `;
+        }
+
+        render(trainers) {
+            if (trainers.length === 0) {
+                this.renderError('No hay entrenadores registrados.');
+                return;
+            }
+
+            const gridHTML = trainers.map(t => `
+                <div class="card bg-white group hover:border-blue-500 transition-all flex flex-col items-center text-center p-10 border border-slate-200 rounded-3xl animate-fade">
+                    <div class="w-28 h-28 rounded-full border-4 border-slate-50 overflow-hidden mb-8 shadow-sm group-hover:scale-105 transition-transform duration-500">
+                        <img src="${t.image_url || 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80'}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="mb-6">
+                        <span class="text-blue-600 text-[10px] font-black uppercase tracking-widest block mb-2 px-3 py-1 bg-blue-50 rounded-full inline-block border border-blue-100">${t.specialty}</span>
+                        <h3 class="text-xl font-bold text-slate-900 tracking-tight uppercase">${t.full_name}</h3>
+                    </div>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-8 line-clamp-3">${t.bio || 'Sin descripción adicional.'}</p>
+                    <div class="mt-auto w-full pt-8 border-t border-slate-100 flex gap-4">
+                        ${t.whatsapp_url ? `
+                            <a href="${t.whatsapp_url}" target="_blank" class="flex-grow btn btn-primary py-3 text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-600/20 bg-blue-600 text-white rounded-xl text-center no-underline">
+                                Contactar <i class="fab fa-whatsapp ml-2"></i>
+                            </a>
+                        ` : ''}
+                        ${t.instagram_url ? `
+                            <a href="https://instagram.com/${t.instagram_url.replace('@','')}" target="_blank" class="w-12 h-12 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center hover:bg-slate-200 hover:text-blue-500 transition-all no-underline">
+                                <i class="fab fa-instagram text-xl"></i>
+                            </a>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            this.shadowRoot.innerHTML = `
+                <style>${COMMON_STYLE}</style>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
+                    ${gridHTML}
+                </div>
             `;
         }
     }
 
-    if (!customElements.get('wisbe-gymnutricion')) customElements.define('wisbe-gymnutricion', WisbeNutricion);
-    if (!customElements.get('wisbe-gymrutinas')) customElements.define('wisbe-gymrutinas', WisbeRutinas);
-    if (!customElements.get('wisbe-gymentrenadores')) customElements.define('wisbe-gymentrenadores', WisbeEntrenadores);
+    if (!customElements.get('wisbe-gymnutricion')) customElements.define('wisbe-gymnutricion', WisbeGymNutricion);
+    if (!customElements.get('wisbe-gymrutinas')) customElements.define('wisbe-gymrutinas', WisbeGymRutinas);
+    if (!customElements.get('wisbe-gymentrenadores')) customElements.define('wisbe-gymentrenadores', WisbeGymEntrenadores);
+
 })();
