@@ -5,39 +5,349 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wisbe - Pricing</title>
     <meta name="description" content="It is a company in constant development of software, at the forefront, committed to provide innovations to the different business models of our clients, through solutions that increase their productivity, scope and potential.">
-    
     <link rel="icon" type="image/png" sizes="1662x604" href="./assets/img/iconwisbe.png">
     
-    <link href="./assets/css/estilos.css" rel="stylesheet" />
-    <link href="./assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i" rel="stylesheet" />
-    <link href="./assets/fonts/font-awesome.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
-    <link href="./assets/fonts/simple-line-icons.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.1.1/aos.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" rel="stylesheet" />
-    <link href="./assets/css/Map-Clean.css" rel="stylesheet" />
-    <link rel="stylesheet" href="./assets/css/Lightbox-Gallery-baguetteBox.min.css?h=3175ea2a373db4ce2aec072db96e7473">
-    <link href="./assets/css/smoothproducts.css" rel="stylesheet" />
-    
+    <!-- External CSS (CDNs) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./assets/css/Abril%20Fatface.css">
-    <link rel="stylesheet" href="./assets/css/Montserrat.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="./assets/css/styles.css">
+    <style>
+/* --- LUXURY VARIABLES --- */
+:root {
+    --bg-dark: #0a0a0a;
+    --bg-darker: #050505;
+    --bg-lighter: #222222;
+    --accent-orange: #ff6b00;
+    --accent-gold: #cfaa6e;
+    --text-white: #ffffff;
+    --text-gray: #b0b0b0;
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'Raleway', sans-serif;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+}
+
+.text-gradient {
+    background: linear-gradient(45deg, var(--accent-orange), var(--accent-gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.navbar {
+    padding: 20px 0;
+    background: transparent;
+    transition: all 0.4s ease;
+}
+
+.navbar.scrolled {
+    background: var(--bg-lighter);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 15px 0;
+}
+
+.nav-link {
+    color: var(--text-white) !important;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin: 0 10px;
+    opacity: 0.9;
+    transition: opacity 0.3s;
+}
+
+.nav-link:hover, .nav-link.active-link {
+    opacity: 1;
+    color: var(--accent-orange) !important;
+}
+
+.navbar-logo {
+    width: 140px;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+}
+
+.glass-menu {
+    background: var(--bg-lighter);
+    border: 1px solid var(--glass-border);
+}
+
+.dropdown-item {
+    color: white;
+    padding: 12px 20px;
+    transition: all 0.3s;
+}
+
+.dropdown-item:hover {
+    background: var(--accent-orange);
+    color: white;
+}
+
+.btn-luxury {
+    background: var(--text-white);
+    color: black;
+    border: none;
+    padding: 12px 30px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    transition: all 0.4s ease;
+}
+
+.btn-luxury:hover {
+    background: var(--accent-orange);
+    color: white;
+}
+
+.btn-luxury-outline {
+    background: transparent;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 30px;
+    font-weight: 700;
+    transition: all 0.4s ease;
+}
+
+.btn-luxury-outline:hover {
+    border-color: var(--accent-orange);
+    color: var(--accent-orange);
+}
+
+.page-hero {
+    height: 60vh;
+    min-height: 400px;
+    position: relative;
+    background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(20,20,20,0.9) 100%), url('./assets/img/wisbe1.jpg') no-repeat center center/cover;
+}
+
+.hero-bg-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(10,10,10,1) 100%);
+}
+
+.clean-block.clean-pricing.dark {
+    background-color: var(--bg-dark) !important;
+    padding-bottom: 100px;
+}
+
+.text-orange { color: var(--accent-orange) !important; }
+
+/* --- Unified Comparison Grid --- */
+.comparison-wrapper {
+    width: 100%;
+    position: relative;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    overflow: hidden;
+}
+
+.sync-grid {
+    display: grid;
+    grid-template-columns: 40% 20% 20% 20%;
+    width: 100%;
+}
+
+.row-cards {
+    position: sticky;
+    top: 80px;
+    z-index: 100;
+    background: var(--bg-dark);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.sync-grid > :first-child {
+    background: var(--bg-dark);
+    border-right: 1px solid var(--glass-border);
+    padding-left: 20px;
+}
+
+.card-header-sync {
+    padding: 30px 15px;
+    text-align: center;
+    border-left: 1px solid var(--glass-border);
+    position: relative;
+}
+
+.card-header-sync h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.price-sync .setup {
+    display: block;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.price-sync .monthly {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-orange);
+}
+
+/* Popular Badge */
+.popular-badge-sync {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent-orange);
+    color: white;
+    padding: 4px 15px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 20px;
+    text-transform: uppercase;
+    z-index: 11;
+    white-space: nowrap;
+}
+
+/* Rows */
+.feature-row {
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.feature-cell {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid var(--glass-border);
+}
+
+.feature-label {
+    justify-content: flex-start !important;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Promo inputs */
+.header-form .input-group {
+    max-width: 160px;
+    margin: 10px auto;
+}
+
+.header-form .form-control {
+    font-size: 0.8rem;
+    background: #222 !important;
+    border-color: #444 !important;
+    color: var(--accent-orange) !important;
+}
+
+/* Footer / Form */
+.glass-form {
+    background: var(--bg-darker);
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.8);
+}
+
+.footer-link {
+    color: var(--text-gray);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    transition: 0.3s;
+}
+
+.footer-link:hover { color: var(--accent-orange); }
+
+/* --- Mobile Fit --- */
+@media (max-width: 991px) {
+    .navbar { background: var(--bg-lighter); }
+    .row-cards { top: 70px; }
+}
+
+@media (max-width: 767px) {
+    .sync-grid {
+        grid-template-columns: 31% 23% 23% 23%;
+    }
+
+    .sync-grid > :first-child {
+        padding-left: 8px;
+    }
+
+    .feature-label {
+        font-size: 0.65rem;
+        padding: 8px 4px;
+        line-height: 1.1;
+    }
+
+    .feature-cell {
+        padding: 8px 2px;
+    }
+
+    .feature-cell i {
+        font-size: 0.75rem;
+    }
+
+    .card-header-sync {
+        padding: 12px 2px;
+    }
+
+    .card-header-sync h3 {
+        font-size: 0.75rem;
+        margin-bottom: 2px;
+    }
+
+    .price-sync .monthly {
+        font-size: 0.7rem;
+        display: block;
+    }
+
+    .price-sync .setup {
+        font-size: 0.55rem;
+        margin-bottom: 2px;
+    }
+
+    .popular-badge-sync {
+        font-size: 0.45rem;
+        padding: 2px 4px;
+        top: -10px;
+        max-width: 90%;
+    }
+
+    .header-form .input-group {
+        display: none;
+    }
+
+    .header-form .btn-luxury {
+        padding: 4px 6px;
+        font-size: 0.55rem;
+        letter-spacing: 0;
+    }
+
+    .btn-view {
+        font-size: 0.5rem !important;
+        padding: 2px 4px !important;
+    }
+}
+    </style>
 </head>
 
 <body class="luxury-theme">
 
-    <nav class="navbar navbar-expand-lg fixed-top transition-all" id="mainNav">
+    <nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="./index.html">
                 <img src="./assets/img/wisbelogo.png" alt="Wisbe" class="navbar-logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navcol-1">
@@ -55,7 +365,7 @@
                             <li><a class="dropdown-item" href="./websitedesing.html">Premium Web Design</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="./proyects.html">PROJECTS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./track.html">PROJECTS</a></li>
                     <li class="nav-item"><a class="nav-link active-link" href="./pricing.html">PRICING</a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="contact.html" role="button" data-bs-toggle="dropdown">CONTACT</a>
@@ -71,7 +381,7 @@
         </div>
     </nav>
 
-    <header class="page-hero page-hero-pricing">
+    <header class="page-hero">
         <div class="hero-bg-overlay"></div>
         <div class="container position-relative z-2 h-100 d-flex flex-column justify-content-center text-center">
             <h1 class="display-3 mb-3" data-aos="fade-up">Transparent <span class="text-gradient">Pricing</span></h1>
@@ -82,301 +392,268 @@
     <main class="page pricing-table-page">
         <section class="clean-block clean-pricing dark">
             <div class="container">
-                <div class="block-heading">
-                    <h2 data-aos="zoom-out-right" class="text-orange">Just a few steps to grow your Business</h2>
-                    <p data-aos="zoom-out-left" class="text-white-50">Our experts have prepared ideal packages to boost any business, according to your needs.</p>
+                <div class="block-heading text-center mb-5" data-aos="fade-up">
+                    <h2 class="text-orange">Just a few steps to grow your Business</h2>
+                    <p class="text-white-50">Our experts have prepared ideal packages to boost any business.</p>
                 </div>
 
-                <div class="pricing-cards">
-                    <div class="row g-4">
-                        <div class="col-lg-4 col-md-6">
-                            <div class="pricing-card" data-aos="fade-up" data-aos-delay="100">
-                                <div class="card-header">
-                                    <h3>Starter</h3>
-                                    <div class="price">
-                                        <span class="setup">Setup: $602.64</span>
-                                        <span class="monthly text-orange">$181.44 <small>/mo</small></span>
+                <div class="comparison-wrapper shadow-lg" data-aos="fade-up">
+                    <!-- Column Headers (Sticky) -->
+                    <div class="sync-grid row-cards">
+                        <div class="feature-cell feature-label">
+                            <h4 class="mb-0 text-orange" style="font-size: 1.1rem;">Plan Features</h4>
+                        </div>
+
+                        <!-- Starter -->
+                        <div class="card-header-sync">
+                            <h3>Starter</h3>
+                            <div class="price-sync">
+                                <span class="setup">Setup: $602.64</span>
+                                <span class="monthly">$181.44 <small>/mo</small></span>
+                            </div>
+                            <div class="package-image mt-2">
+                                <a href="./assets/img/packageslide.png" data-bss-baguettebox>
+                                    <button class="btn btn-sm btn-luxury-outline btn-view">View Item</button>
+                                </a>
+                            </div>
+                            <div class="header-form">
+                                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                                    <input name="cmd" type="hidden" value="_s-xclick" />
+                                    <input name="hosted_button_id" type="hidden" value="KMVMSV7NEQBL8" />
+                                    <input name="on0" type="hidden" value="Starter Package" />
+                                    <input id="osStarter" name="os0" type="hidden" value="386.00" />
+                                    <div class="input-group input-group-sm">
+                                        <input class="form-control" id="promoStarter" placeholder="Promo" type="password" />
+                                        <button class="btn btn-outline-orange" type="button" onclick="applyPromo('Starter')">OK</button>
                                     </div>
-                                    <div class="package-image">
-                                        <a href="./assets/img/packageslide.png" data-bss-baguettebox>
-                                            <button class="btn-view btn btn-sm btn-luxury-outline mt-2">View Item</button>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                                        <input name="cmd" type="hidden" value="_s-xclick" />
-                                        <input name="hosted_button_id" type="hidden" value="KMVMSV7NEQBL8" />
-                                        <input name="on0" type="hidden" value="Starter Package" />
-                                        <input id="os2" name="os0" type="hidden" value="386.00" />
-                                        <div class="form-group mb-3">
-                                            <div class="input-group">
-                                                <input class="form-control" id="dpc" placeholder="Promotion Code" type="password" />
-                                                <button class="btn btn-outline-secondary" id="dpcb" type="button">Apply</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <a href="starterForm">
-                                        <button class="btn-start btn btn-luxury w-100">START NOW</button>
-                                    </a>
-                                </div>
+                                    <button type="submit" class="btn btn-luxury w-100 mt-2">START</button>
+                                </form>
                             </div>
                         </div>
 
-                        <div class="col-lg-4 col-md-6">
-                            <div class="pricing-card featured" data-aos="fade-up" data-aos-delay="200">
-                                <div class="popular-badge">Most Popular</div>
-                                <div class="card-header">
-                                    <h3>Premium</h3>
-                                    <div class="price">
-                                        <span class="setup">Setup: $848.88</span>
-                                        <span class="monthly text-orange">$293.76 <small>/mo</small></span>
+                        <!-- Premium -->
+                        <div class="card-header-sync">
+                            <div class="popular-badge-sync">Most Popular</div>
+                            <h3>Premium</h3>
+                            <div class="price-sync">
+                                <span class="setup">Setup: $848.88</span>
+                                <span class="monthly">$293.76 <small>/mo</small></span>
+                            </div>
+                            <div class="package-image mt-2">
+                                <a href="./assets/img/packageslide.png" data-bss-baguettebox>
+                                    <button class="btn btn-sm btn-luxury-outline btn-view">View Item</button>
+                                </a>
+                            </div>
+                            <div class="header-form">
+                                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                                    <input name="cmd" type="hidden" value="_s-xclick" />
+                                    <input name="hosted_button_id" type="hidden" value="F63C37P4A669A" />
+                                    <input name="on0" type="hidden" value="Premium Package" />
+                                    <input id="osPremium" name="os0" type="hidden" value="227.00" />
+                                    <div class="input-group input-group-sm">
+                                        <input class="form-control" id="promoPremium" placeholder="Promo" type="password" />
+                                        <button class="btn btn-outline-orange" type="button" onclick="applyPromo('Premium')">OK</button>
                                     </div>
-                                    <div class="package-image">
-                                        <a href="./assets/img/packageslide.png" data-bss-baguettebox>
-                                            <button class="btn-view btn btn-sm btn-luxury-outline mt-2">View Item</button>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                                        <input name="cmd" type="hidden" value="_s-xclick" />
-                                        <input name="hosted_button_id" type="hidden" value="F63C37P4A669A" />
-                                        <input name="on0" type="hidden" value="Starter Package" />
-                                        <input id="os1" name="os0" type="hidden" value="227.00" />
-                                        <div class="form-group mb-3">
-                                            <div class="input-group">
-                                                <input class="form-control" id="ppc" placeholder="Promotion Code" type="password" />
-                                                <button class="btn btn-outline-secondary" id="ppcb" type="button">Apply</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <a href="premiumForm">
-                                        <button class="btn-start btn btn-luxury w-100">START NOW</button>
-                                    </a>
-                                </div>
+                                    <button type="submit" class="btn btn-luxury w-100 mt-2">START</button>
+                                </form>
                             </div>
                         </div>
 
-                        <div class="col-lg-4 col-md-6 mx-auto">
-                            <div class="pricing-card" data-aos="fade-up" data-aos-delay="300">
-                                <div class="card-header">
-                                    <h3>Deluxe</h3>
-                                    <div class="price">
-                                        <span class="setup">Setup: $4971.2</span>
-                                        <span class="monthly text-orange">$806.76 <small>/mo</small></span>
+                        <!-- Deluxe -->
+                        <div class="card-header-sync">
+                            <h3>Deluxe</h3>
+                            <div class="price-sync">
+                                <span class="setup">Setup: $4971.2</span>
+                                <span class="monthly">$806.76 <small>/mo</small></span>
+                            </div>
+                            <div class="package-image mt-2">
+                                <a href="./assets/img/packageslide.png" data-bss-baguettebox>
+                                    <button class="btn btn-sm btn-luxury-outline btn-view">View Item</button>
+                                </a>
+                            </div>
+                            <div class="header-form">
+                                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                                    <input name="cmd" type="hidden" value="_s-xclick" />
+                                    <input name="hosted_button_id" type="hidden" value="KMVMSV7NEQBL8" />
+                                    <input name="on0" type="hidden" value="Deluxe Package" />
+                                    <input id="osDeluxe" name="os0" type="hidden" value="386.00" />
+                                    <div class="input-group input-group-sm">
+                                        <input class="form-control" id="promoDeluxe" placeholder="Promo" type="password" />
+                                        <button class="btn btn-outline-orange" type="button" onclick="applyPromo('Deluxe')">OK</button>
                                     </div>
-                                    <div class="package-image">
-                                        <a href="./assets/img/packageslide.png" data-bss-baguettebox>
-                                            <button class="btn-view btn btn-sm btn-luxury-outline mt-2">View Item</button>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                                        <input name="cmd" type="hidden" value="_s-xclick" />
-                                        <input name="hosted_button_id" type="hidden" value="KMVMSV7NEQBL8" />
-                                        <input name="on0" type="hidden" value="Starter Package" />
-                                        <input id="os2" name="os0" type="hidden" value="386.00" />
-                                        <div class="form-group mb-3">
-                                            <div class="input-group">
-                                                <input class="form-control" id="dpc2" placeholder="Promotion Code" type="password" />
-                                                <button class="btn btn-outline-secondary" id="dpcb2" type="button">Apply</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <a href="deluxeForm">
-                                        <button class="btn-start btn btn-luxury w-100">START NOW</button>
-                                    </a>
-                                </div>
+                                    <button type="submit" class="btn btn-luxury w-100 mt-2">START</button>
+                                </form>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Comparison Rows -->
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">Basic website template</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">Local Listings Setup ($279.72)</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">Google My Business Listing</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">Apple iMap Listing</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">Food Booking Listing</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">Tripadvisor Local Listing</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">Facebook Local Listing</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">Instagram Listing</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">More Listings</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">Full Support</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">Duration (30 Days)</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">10 Integrated promotions</div>
+                        <div class="feature-cell text-muted">-</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">Social Media (4 posts)</div>
+                        <div class="feature-cell text-muted">-</div>
+                        <div class="feature-cell text-muted">-</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">Marketing Blast (Email/SMS)</div>
+                        <div class="feature-cell text-muted">-</div>
+                        <div class="feature-cell text-muted">-</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">Website package integration</div>
+                        <div class="feature-cell text-muted">-</div>
+                        <div class="feature-cell text-muted">-</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">Personalized Hosting + SEO</div>
+                        <div class="feature-cell text-muted">-</div>
+                        <div class="feature-cell text-muted">-</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">Domain registry</div>
+                        <div class="feature-cell text-muted">-</div>
+                        <div class="feature-cell text-muted">-</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
+                    </div>
+                    <div class="sync-grid feature-row">
+                        <div class="feature-cell feature-label">Physical Marketing kit (Posters/Stickers/Flyers)</div>
+                        <div class="feature-cell text-muted">-</div>
+                        <div class="feature-cell text-muted">-</div>
+                        <div class="feature-cell"><i class="fas fa-check text-orange"></i></div>
                     </div>
                 </div>
 
-                <div class="features-table mt-5" data-aos="fade-up" data-aos-delay="400">
-                    <div class="table-responsive glass-table-container">
-                        <table class="table table-dark table-hover mb-0 luxury-table">
-                            <thead>
-                                <tr>
-                                    <th class="w-40">Features</th>
-                                    <th class="w-20 text-center">Starter</th>
-                                    <th class="w-20 text-center">Premium</th>
-                                    <th class="w-20 text-center">Deluxe</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Basic website template</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>$279.72 Set up / $85.32 Monthly Local Listings</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>Google My Business Listing</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>Apple iMap Listing</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>Food Booking Listing</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>Tripadvisor Local Listing</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>Facebook Local Listing</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>Instagram Listing</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>More Listings</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><span>Full Support: </span>Yes</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td><span>Duration: </span>30 Days</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>$139.32 Set up / $63.72 Monthly 10 Integrated promotions</td>
-                                    <td class="text-center text-muted">-</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>$214.92 Set up / $52.92 Monthly Social Media (4 posts)</td>
-                                    <td class="text-center text-muted">-</td>
-                                    <td class="text-center text-muted">-</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>$106.92 Set up / $33.48 Monthly Marketing Blast (Email/SMS)</td>
-                                    <td class="text-center text-muted">-</td>
-                                    <td class="text-center text-muted">-</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>$366.12 Set up / $85.32 Monthly Website package</td>
-                                    <td class="text-center text-muted">-</td>
-                                    <td class="text-center text-muted">-</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>Personalized website (Hosting + SEO)</td>
-                                    <td class="text-center text-muted">-</td>
-                                    <td class="text-center text-muted">-</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>Domain registry</td>
-                                    <td class="text-center text-muted">-</td>
-                                    <td class="text-center text-muted">-</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>$399 Physical Marketing kit<br>Sheet size Posters 2<br>Stickers 360<br>Flyers 100</td>
-                                    <td class="text-center text-muted">-</td>
-                                    <td class="text-center text-muted">-</td>
-                                    <td class="text-center"><i class="fas fa-check text-orange"></i></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="text-center mt-5">
-                        <a href="https://wisbe.xyz/track" class="btn btn-luxury-outline">See More Details</a>
-                    </div>
+                <div class="text-center mt-5">
+                    <a href="https://wisbe.xyz/track" class="btn btn-luxury-outline">See More Details</a>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="page-footer dark" data-aos="zoom-in" id="mainFooter">
+    <footer class="page-footer dark" id="mainFooter">
         <section class="clean-block clean-form dark">
-            <div class="container">
-                <div class="block-heading">
-                    <h2 data-aos="zoom-out-right" class="text-orange">Custom Package</h2>
-                    <p data-aos="zoom-out-left" class="text-white-50">Wishing to increase your opportunity in the market, ask for our personalized services, where the business knows no boundaries or limits.</p>
+            <div class="container py-5">
+                <div class="block-heading text-center mb-5">
+                    <h2 class="text-orange">Custom Package</h2>
+                    <p class="text-white-50">Wishing to increase your opportunity in the market, ask for our personalized services.</p>
                 </div>
 
-                <form class="glass-form p-4" data-aos="zoom-out-up" data-bss-recipient="4f3471ce4fa615a2ca9bb13afdf3b2d5" data-bss-subject="Menutech Custom Package Client">
-                    <div class="form-group mb-3"><label class="text-white">Representative</label><input class="form-control" required="" type="text" /></div>
-                    <div class="form-group mb-3"><label class="text-white">Company</label><input class="form-control" required="" type="text" /></div>
-                    <div class="form-group mb-3"><label class="text-white">Phone</label><input class="form-control" maxlength="10" minlength="10" required="" type="tel" /></div>
-                    <div class="form-group mb-3"><label class="text-white">Email</label><input class="form-control" required="" type="email" /></div>
-                    <div class="form-group mb-3"><label class="text-white">Message</label><textarea class="form-control" rows="4"></textarea></div>
-                    <div class="form-group mb-3"><button class="btn btn-luxury w-100" type="submit">Send</button></div>
-                    <label class="text-secondary" style="font-size: 12px;">*Our representatives will contact you as soon as possible</label>
-                </form>
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6">
+                        <form class="glass-form p-4" data-bss-recipient="4f3471ce4fa615a2ca9bb13afdf3b2d5" data-bss-subject="Menutech Custom Package Client">
+                            <div class="mb-3"><label class="form-label text-white">Representative</label><input class="form-control" name="representative" required="" type="text" /></div>
+                            <div class="mb-3"><label class="form-label text-white">Company</label><input class="form-control" name="company" required="" type="text" /></div>
+                            <div class="mb-3"><label class="form-label text-white">Phone</label><input class="form-control" name="phone" maxlength="10" minlength="10" required="" type="tel" /></div>
+                            <div class="mb-3"><label class="form-label text-white">Email</label><input class="form-control" name="email" required="" type="email" /></div>
+                            <div class="mb-3"><label class="form-label text-white">Message</label><textarea class="form-control" name="message" rows="4"></textarea></div>
+                            <button class="btn btn-luxury w-100" type="submit">Send</button>
+                            <div class="mt-2 text-center"><small class="text-secondary">*Our representatives will contact you as soon as possible</small></div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </section>
 
-           <footer class="text-center py-5" id="mainFooter">
-        <div class="container">
-            <img src="./assets/img/wisbelogo.png" alt="Wisbe" class="footer-logo mb-4 navbar-logo" style="width: 100px;">
-            <ul class="list-inline mb-4">
-                <li class="list-inline-item mx-3"><a class="footer-link" href="#">Web Design</a></li>
-                <li class="list-inline-item mx-3"><a class="footer-link" href="#">Development</a></li>
-                <li class="list-inline-item mx-3"><a class="footer-link" href="#">Hosting</a></li>
-            </ul>
-
-            <p class="text-secondary small mb-0">Copyright © 2025 Wisbe. All rights reserved.</p>
+        <div class="text-center py-5 border-top border-secondary-subtle" style="background: #222;">
+            <div class="container">
+                <img src="./assets/img/wisbelogo.png" alt="Wisbe" class="footer-logo mb-4" style="width: 100px;">
+                <ul class="list-inline mb-4">
+                    <li class="list-inline-item mx-3"><a class="footer-link" href="#">Web Design</a></li>
+                    <li class="list-inline-item mx-3"><a class="footer-link" href="#">Development</a></li>
+                    <li class="list-inline-item mx-3"><a class="footer-link" href="#">Hosting</a></li>
+                </ul>
+                <p class="text-secondary small mb-0">Copyright © 2025 Wisbe. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 
+    <!-- Scripts (External CDNs) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script src="./assets/js/bs-init.js"></script>
-    <script src="./assets/js/jquery.min.js"></script>
-    <script src="./assets/js/smart-forms.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
-    <script src="./assets/js/smoothproducts.min.js"></script>
-    <script src="./assets/js/theme.js"></script>
-    <script src="./assets/js/bs-animation.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.1.1/aos.js"></script>
-    <script src="./assets/js/Lightbox-Gallery-baguetteBox.min.js?h=add865daffd8b6e10264279f48d8ac50"></script>
-    <script src="./assets/js/Lightbox-Gallery.js?h=64eb55ccbc6ead5e91ebe308caacba6e"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <script>
-       
+        // Inlined logic
         document.addEventListener('DOMContentLoaded', function() {
-         
             if(typeof AOS !== 'undefined') AOS.init({ duration: 1000, once: true });
-            
+            if(typeof baguetteBox !== 'undefined') baguetteBox.run('.comparison-wrapper');
+
             const navbar = document.getElementById('mainNav');
             window.addEventListener('scroll', function() {
                 if (window.scrollY > 50) {
@@ -386,6 +663,21 @@
                 }
             });
         });
+
+        function applyPromo(pkg) {
+            const promoInput = document.getElementById('promo' + pkg);
+            const osField = document.getElementById('os' + pkg);
+            const originalValues = { 'Starter': '386.00', 'Premium': '227.00', 'Deluxe': '386.00' };
+            const discountedValues = { 'Starter': '300.00', 'Premium': '200.00', 'Deluxe': '300.00' };
+
+            if (promoInput.value === 'WISBE2024') {
+                osField.value = discountedValues[pkg];
+                alert('Promotion code applied successfully!');
+            } else {
+                osField.value = originalValues[pkg];
+                alert('Invalid promotion code.');
+            }
+        }
     </script>
 </body>
 </html>
