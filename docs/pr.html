@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Profesional - Servicios</title>
+    <link rel="icon" type="image/png" sizes="1662x604" href="./assets/img/iconwisbe.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./assets/css/styleGYM.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            background-color: #f8fafc;
+        }
+
+        /* Sidebar override to match styleGYM.css and user request */
+        #admin-sidebar {
+            top: 20px; /* Adjusting for no-navbar view */
+            height: calc(100vh - 40px);
+        }
+
+        .service-content {
+            display: none;
+            height: 100%;
+        }
+
+        .service-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Sidebar Link Styles to match project */
+        .sidebar-item {
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 0.75rem;
+        }
+
+        .sidebar-item:hover {
+            border-color: #3b82f6;
+        }
+
+        .sidebar-item.active {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            border-width: 2px;
+        }
+
+        .sub-tab.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        /* Language Switch Styles - Top Right Toggle */
+        .top-lang-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #f1f5f9;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #3b82f6;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #3b82f6;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #3b82f6;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .lang-label {
+            font-size: 11px;
+            font-weight: 900;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .lang-label.active {
+            color: #3b82f6;
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                overflow: auto;
+            }
+            #admin-sidebar {
+                position: fixed;
+                top: 0;
+                height: 100vh;
+                z-index: 100;
+            }
+            .content-area {
+                padding-left: 0 !important;
+            }
+        }
+
+        /* Main content needs to move when sidebar is open on desktop */
+        .content-area {
+            transition: padding-left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar-open .content-area {
+            padding-left: 380px;
+        }
+    </style>
+</head>
+<body class="sidebar-open">
+
+    <!-- Top Language Toggle -->
+    <div class="top-lang-toggle">
+        <span class="lang-label" id="label-en">EN</span>
+        <label class="toggle-switch">
+            <input type="checkbox" id="langToggle" onchange="toggleLanguage()">
+            <span class="slider"></span>
+        </label>
+        <span class="lang-label" id="label-es">ES</span>
+    </div>
+
+    <!-- Collapsible Sidebar -->
+    <div id="admin-sidebar" class="admin-sidebar-open">
+        <div class="admin-sidebar-tab" id="sidebar-tab">
+            <span class="uppercase font-black tracking-widest">SERVICIOS</span>
+        </div>
+        <div class="admin-sidebar-content flex flex-col h-full">
+            <div class="mb-8 flex flex-col items-center gap-4">
+                <a href="index.html">
+                    <img src="https://wisbe.xyz/assets/img/wisbelogo.png" class="h-10 mx-auto" alt="Wisbe Logo">
+                </a>
+            </div>
+
+            <h3 class="text-blue-600 font-black text-[10px] uppercase tracking-widest mb-6" data-t="sidebar-title">Our Services</h3>
+
+            <div id="services-list" class="space-y-1 overflow-y-auto flex-grow mb-6 pr-2 custom-scroll">
+                <div onclick="switchTab('listados')" class="sidebar-item active" data-tab="listados">
+                    <span class="block font-bold text-slate-800 text-sm" data-t="tab-listings">Local Listings</span>
+                    <span class="block text-[10px] text-slate-400 font-medium uppercase" data-t="tab-listings-sub">Regional Visibility</span>
+                </div>
+                <div onclick="switchTab('ads')" class="sidebar-item" data-tab="ads">
+                    <span class="block font-bold text-slate-800 text-sm" data-t="tab-ads">Facebook / Instagram</span>
+                    <span class="block text-[10px] text-slate-400 font-medium uppercase" data-t="tab-ads-sub">Ads & Meta Business</span>
+                </div>
+                <div onclick="switchTab('web')" class="sidebar-item" data-tab="web">
+                    <span class="block font-bold text-slate-800 text-sm" data-t="tab-web">Website / SEO / Google Ads</span>
+                    <span class="block text-[10px] text-slate-400 font-medium uppercase" data-t="tab-web-sub">Development & Ranking</span>
+                </div>
+                <div onclick="switchTab('social')" class="sidebar-item" data-tab="social">
+                    <span class="block font-bold text-slate-800 text-sm" data-t="tab-social">Social Media Marketing</span>
+                    <span class="block text-[10px] text-slate-400 font-medium uppercase" data-t="tab-social-sub">Content & Strategy</span>
+                </div>
+                <div onclick="switchTab('kit')" class="sidebar-item" data-tab="kit">
+                    <span class="block font-bold text-slate-800 text-sm" data-t="tab-kit">Marketing Kit</span>
+                    <span class="block text-[10px] text-slate-400 font-medium uppercase" data-t="tab-kit-sub">Corporate Material</span>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-slate-100 mt-auto text-center pb-4">
+                <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest">Wisbe Portfolio Pro</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="h-screen content-area relative overflow-hidden">
+
+        <!-- Local Listings -->
+        <section id="content-listados" class="service-content active p-6 md:p-20 overflow-y-auto h-full custom-scroll">
+            <div class="max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-12 h-full lg:justify-center">
+                <div class="w-full lg:w-1/2 space-y-6">
+                    <span class="inline-block px-4 py-1.5 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-blue-100" data-t="listings-badge">Local Visibility</span>
+                    <h2 class="text-4xl md:text-5xl font-black text-slate-900 leading-tight" data-t="listings-title">Local Listings for your Business</h2>
+                    <p class="text-slate-600 text-lg leading-relaxed" data-t="listings-desc">
+                        We boost your presence in the most important directories, ensuring your business is visible to all your local customers across all major platforms.
+                    </p>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2" id="listings-list">
+                        <li class="flex items-center text-slate-700 font-medium text-sm"><i class="fas fa-check-circle text-blue-500 mr-3"></i> Google My Business listing</li>
+                        <li class="flex items-center text-slate-700 font-medium text-sm"><i class="fas fa-check-circle text-blue-500 mr-3"></i> Apple iMaps Listings</li>
+                        <li class="flex items-center text-slate-700 font-medium text-sm"><i class="fas fa-check-circle text-blue-500 mr-3"></i> Yelp Listings</li>
+                        <li class="flex items-center text-slate-700 font-medium text-sm"><i class="fas fa-check-circle text-blue-500 mr-3"></i> Bing Listings</li>
+                        <li class="flex items-center text-slate-700 font-medium text-sm"><i class="fas fa-check-circle text-blue-500 mr-3"></i> TripAdvisor Listings</li>
+                        <li class="flex items-center text-slate-700 font-medium text-sm"><i class="fas fa-check-circle text-blue-500 mr-3"></i> All Menu Listings</li>
+                        <li class="flex items-center text-slate-700 font-medium text-sm"><i class="fas fa-check-circle text-blue-500 mr-3"></i> Food Booking Listings</li>
+                        <li class="flex items-center text-slate-700 font-medium text-sm"><i class="fas fa-check-circle text-blue-500 mr-3"></i> Other listings for businesses</li>
+                    </ul>
+                </div>
+                <div class="w-full lg:w-1/2">
+                    <div class="aspect-video rounded-[40px] overflow-hidden shadow-2xl border-8 border-white">
+                        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800" alt="Local Listings" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Facebook / Instagram -->
+        <section id="content-ads" class="service-content p-6 md:p-20 overflow-y-auto h-full custom-scroll">
+            <div class="max-w-5xl mx-auto flex flex-col items-center justify-center h-full">
+                <div class="p-20 border-2 border-dashed border-slate-200 rounded-[40px] text-center text-slate-400 font-bold uppercase tracking-widest" data-t="coming-soon">
+                    Content Coming Soon
+                </div>
+            </div>
+        </section>
+
+        <!-- Website / SEO -->
+        <section id="content-web" class="service-content p-6 md:p-20 overflow-y-auto h-full custom-scroll">
+            <div class="max-w-6xl mx-auto h-full flex flex-col justify-center">
+                <div class="text-center mb-12 space-y-4">
+                    <span class="inline-block px-4 py-1.5 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-emerald-100" data-t="web-badge">Digital Domain</span>
+                    <h2 class="text-4xl md:text-5xl font-black text-slate-900" data-t="web-title">Website, SEO & Google Ads</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-xl shadow-slate-200/50 space-y-4">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3 class="text-xl font-bold" data-t="web-card-1-title">Web Design</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed" data-t="web-card-1-desc">Deluxe website, hosting and domain.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-xl shadow-slate-200/50 space-y-4">
+                        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3 class="text-xl font-bold" data-t="web-card-2-title">SEO Ranking</h3>
+                        <ul class="text-sm text-slate-500 leading-relaxed list-disc list-inside" id="seo-list">
+                            <li>Keyword Research</li>
+                            <li>SEO</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-xl shadow-slate-200/50 space-y-4">
+                        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-xl">
+                            <i class="fab fa-google"></i>
+                        </div>
+                        <h3 class="text-xl font-bold" data-t="web-card-3-title">Google Ads</h3>
+                        <ul class="text-sm text-slate-500 leading-relaxed list-disc list-inside" id="google-ads-list">
+                            <li>Account setup and structuring</li>
+                            <li>Creation of campaigns and ads</li>
+                            <li>Continuous optimization of campaigns and ads</li>
+                            <li>Unlimited investment in Adwords and Ads</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Media Marketing -->
+        <section id="content-social" class="service-content p-6 md:p-20 overflow-y-auto h-full custom-scroll">
+            <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center h-full">
+                <div class="order-2 lg:order-1">
+                    <div class="grid grid-cols-2 gap-4">
+                        <img src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&q=80&w=400" class="rounded-3xl shadow-lg mt-8" alt="SM 1">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=400" class="rounded-3xl shadow-lg" alt="SM 2">
+                    </div>
+                </div>
+                <div class="space-y-6 order-1 lg:order-2">
+                    <span class="inline-block px-4 py-1.5 bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-100" data-t="social-badge">Social Content</span>
+                    <h2 class="text-4xl md:text-5xl font-black text-slate-900 leading-tight" data-t="social-title">Social Media Marketing</h2>
+                    <p class="text-slate-600 text-lg" data-t="social-desc">
+                        We create strategic content that connects with your audience.
+                    </p>
+                    <div class="space-y-4" id="social-points">
+                        <div class="flex items-start gap-4">
+                            <div class="mt-1 w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[10px] flex-shrink-0">1</div>
+                            <p class="text-slate-600 font-medium">4 monthly posts to promote your online ordering solution.</p>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="mt-1 w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[10px] flex-shrink-0">2</div>
+                            <p class="text-slate-600 font-medium">Creation of new design content to post on social media or print.</p>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="mt-1 w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[10px] flex-shrink-0">3</div>
+                            <p class="text-slate-600 font-medium">30-second video with all your promotions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Marketing Kit -->
+        <section id="content-kit" class="service-content p-6 md:p-20 overflow-y-auto h-full custom-scroll">
+            <div class="max-w-6xl mx-auto h-full flex flex-col">
+                <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div>
+                        <span class="inline-block px-4 py-1.5 bg-amber-50 text-amber-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-amber-100 mb-4" data-t="kit-badge">Physical Material</span>
+                        <h2 class="text-4xl font-black text-slate-900" data-t="kit-title">Marketing Kit</h2>
+                    </div>
+
+                    <!-- Sub-menu -->
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="switchSubTab('camisetas')" class="sub-tab px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border border-slate-200 text-slate-500 hover:bg-slate-100 transition-all active" data-sub="camisetas" data-t="sub-camisetas">Camisetas</button>
+                        <button onclick="switchSubTab('flyers')" class="sub-tab px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border border-slate-200 text-slate-500 hover:bg-slate-100 transition-all" data-sub="flyers" data-t="sub-flyers">Flyers</button>
+                        <button onclick="switchSubTab('posters')" class="sub-tab px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border border-slate-200 text-slate-500 hover:bg-slate-100 transition-all" data-sub="posters" data-t="sub-posters">Posters</button>
+                        <button onclick="switchSubTab('stickers')" class="sub-tab px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border border-slate-200 text-slate-500 hover:bg-slate-100 transition-all" data-sub="stickers" data-t="sub-stickers">Stickers</button>
+                    </div>
+                </div>
+
+                <div id="sub-content-container" class="flex-grow">
+                    <!-- Camisetas -->
+                    <div id="sub-camisetas" class="sub-content py-8">
+                        <div class="p-20 border-2 border-dashed border-slate-200 rounded-[40px] text-center text-slate-400 font-bold uppercase tracking-widest" data-t="coming-soon">
+                            Content Coming Soon
+                        </div>
+                    </div>
+
+                    <!-- Flyers (Containing Kits) -->
+                    <div id="sub-flyers" class="sub-content hidden py-8 space-y-12">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <!-- Starter -->
+                            <div class="space-y-4">
+                                <h3 class="text-xl font-bold text-slate-800" id="kit-starter-title">Starter Marketing Kit <span class="text-amber-600">$399</span></h3>
+                                <ul class="space-y-2 text-sm text-slate-600 font-medium" id="kit-starter-list">
+                                    <li>- 2 Sheet Posters (7.12x10.27")</li>
+                                    <li>- 25 Table QR Codes (5.08x7.83")</li>
+                                    <li>- 25 Flyers (3.96x5.15")</li>
+                                    <li>- 360 Stickers (2x2" - 15 sheets)</li>
+                                </ul>
+                            </div>
+                            <!-- Premium -->
+                            <div class="space-y-4">
+                                <h3 class="text-xl font-bold text-slate-800" id="kit-premium-title">Premium Marketing Kit <span class="text-amber-600">$555.04</span></h3>
+                                <ul class="space-y-2 text-sm text-slate-600 font-medium" id="kit-premium-list">
+                                    <li>- 35 Table QR Codes (5.08x7.83")</li>
+                                    <li>- 2 Door Posters (27x40")</li>
+                                    <li>- 4 Sheet Posters (7.12x10.27")</li>
+                                    <li>- 480 Stickers (20 sheets)</li>
+                                    <li>- 50 Promotional Cards (3.5x2")</li>
+                                </ul>
+                            </div>
+                            <!-- Deluxe -->
+                            <div class="space-y-4">
+                                <h3 class="text-xl font-bold text-slate-800" id="kit-deluxe-title">Deluxe Marketing Kit <span class="text-amber-600">$1372.48</span></h3>
+                                <ul class="space-y-2 text-sm text-slate-600 font-medium" id="kit-deluxe-list">
+                                    <li>- 100 Promotional Cards (3.5x2")</li>
+                                    <li>- 100 Flyers (3.96x5.15")</li>
+                                    <li>- 2 Door Posters (27x40")</li>
+                                    <li>- 6 Sheet Posters (7.12x10.27")</li>
+                                    <li>- 40 Table QR Codes (5.08x7.83")</li>
+                                    <li>- 600 Stickers (20 sheets)</li>
+                                    <li>- 15 Physical Menus (8.5x14" - 8.5x11")</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Other subtabs -->
+                    <div id="sub-posters" class="sub-content hidden py-8">
+                        <div class="p-20 border-2 border-dashed border-slate-200 rounded-[40px] text-center text-slate-400 font-bold uppercase tracking-widest" data-t="coming-soon">
+                            Content Coming Soon
+                        </div>
+                    </div>
+                    <div id="sub-stickers" class="sub-content hidden py-8">
+                        <div class="p-20 border-2 border-dashed border-slate-200 rounded-[40px] text-center text-slate-400 font-bold uppercase tracking-widest" data-t="coming-soon">
+                            Content Coming Soon
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const translations = {
+            es: {
+                'sidebar-title': 'Nuestros Servicios',
+                'tab-listings': 'Listados Locales',
+                'tab-listings-sub': 'Visibilidad Regional',
+                'tab-ads': 'Facebook / Instagram',
+                'tab-ads-sub': 'Ads & Meta Business',
+                'tab-web': 'Website / SEO / Google Ads',
+                'tab-web-sub': 'Desarrollo & Ranking',
+                'tab-social': 'Marketing Redes Sociales',
+                'tab-social-sub': 'Contenido & Estrategia',
+                'tab-kit': 'Marketing Kit',
+                'tab-kit-sub': 'Material Corporativo',
+
+                'listings-badge': 'Visibilidad Local',
+                'listings-title': 'Listados Locales para tu Negocio',
+                'listings-desc': 'Potenciamos tu presencia en los directorios más importantes, asegurando que tu negocio sea visible para todos tus clientes locales en todas las plataformas principales.',
+                'listings-list': [
+                    'Google My Business listado',
+                    'Apple iMaps Listados',
+                    'Yelp Listados',
+                    'Bing Listados',
+                    'TripAdvisor Listados',
+                    'All Menu Listados',
+                    'Food Booking Listados',
+                    'Otros listados para negocios'
+                ],
+
+                'ads-badge': 'Publicidad Social',
+                'ads-title': 'Facebook & Instagram Ads',
+                'ads-desc': 'Potenciamos tu marca con campañas de publicidad pagada y estrategias avanzadas en Meta Business para maximizar tu impacto.',
+                'ads-card-1': 'Publicidad Pagada',
+                'ads-card-2': 'Meta Business',
+
+                'web-badge': 'Dominio Digital',
+                'web-title': 'Website, SEO & Google Ads',
+                'web-card-1-title': 'Web Design',
+                'web-card-1-desc': 'Sitio web deluxe, hosting y dominio.',
+                'web-card-2-title': 'SEO Ranking',
+                'seo-list': [
+                    'Investigación de palabras clave',
+                    'SEO'
+                ],
+                'web-card-3-title': 'Google Ads',
+                'google-ads-list': [
+                    'Configuración y estructuración de la cuenta',
+                    'Creación de campañas y anuncios',
+                    'Optimización continua de campañas y anuncios',
+                    'Inversión ilimitada en Adwords y Ads'
+                ],
+
+                'social-badge': 'Contenido Social',
+                'social-title': 'Marketing de Redes Sociales',
+                'social-desc': 'Creamos contenido estratégico que conecta con tu audiencia.',
+                'social-points': [
+                    '4 publicaciones mensuales para promocionar tu solución de pedidos en línea.',
+                    'Creación de nuevo contenido de diseño para publicar en redes sociales o imprimir.',
+                    'Video de 30 segundos con todas tus promociones.'
+                ],
+
+                'kit-badge': 'Material Físico',
+                'kit-title': 'Marketing Kit',
+                'sub-camisetas': 'Camisetas',
+                'sub-flyers': 'Flyers',
+                'sub-posters': 'Posters',
+                'sub-stickers': 'Stickers',
+                'coming-soon': 'Contenido Próximamente',
+
+                'kit-starter-title': 'Starter Marketing Kit <span class="text-amber-600">$399</span>',
+                'kit-starter-list': [
+                    '- 2 Sheet Posters (7.12x10.27")',
+                    '- 25 Table QR Codes (5.08x7.83")',
+                    '- 25 Flyers (3.96x5.15")',
+                    '- 360 Stickers (2x2" - 15 hojas)'
+                ],
+                'kit-premium-title': 'Premium Marketing Kit <span class="text-amber-600">$555.04</span>',
+                'kit-premium-list': [
+                    '- 35 Table QR Codes (5.08x7.83")',
+                    '- 2 Door Posters (27x40")',
+                    '- 4 Sheet Posters (7.12x10.27")',
+                    '- 480 Stickers (20 hojas)',
+                    '- 50 Promotional Cards (3.5x2")'
+                ],
+                'kit-deluxe-title': 'Deluxe Marketing Kit <span class="text-amber-600">$1372.48</span>',
+                'kit-deluxe-list': [
+                    '- 100 Promotional Cards (3.5x2")',
+                    '- 100 Flyers (3.96x5.15")',
+                    '- 2 Door Posters (27x40")',
+                    '- 6 Sheet Posters (7.12x10.27")',
+                    '- 40 Table QR Codes (5.08x7.83")',
+                    '- 600 Stickers (20 hojas)',
+                    '- 15 Menús Físicos (8.5x14" - 8.5x11")'
+                ]
+            },
+            en: {
+                'sidebar-title': 'Our Services',
+                'tab-listings': 'Local Listings',
+                'tab-listings-sub': 'Regional Visibility',
+                'tab-ads': 'Facebook / Instagram',
+                'tab-ads-sub': 'Ads & Meta Business',
+                'tab-web': 'Website / SEO / Google Ads',
+                'tab-web-sub': 'Development & Ranking',
+                'tab-social': 'Social Media Marketing',
+                'tab-social-sub': 'Content & Strategy',
+                'tab-kit': 'Marketing Kit',
+                'tab-kit-sub': 'Corporate Material',
+
+                'listings-badge': 'Local Visibility',
+                'listings-title': 'Local Listings for your Business',
+                'listings-desc': 'We boost your presence in the most important directories, ensuring your business is visible to all your local customers across all major platforms.',
+                'listings-list': [
+                    'Google My Business listing',
+                    'Apple iMaps Listings',
+                    'Yelp Listings',
+                    'Bing Listings',
+                    'TripAdvisor Listings',
+                    'All Menu Listings',
+                    'Food Booking Listings',
+                    'Other listings for businesses'
+                ],
+
+                'ads-badge': 'Social Advertising',
+                'ads-title': 'Facebook & Instagram Ads',
+                'ads-desc': 'We boost your brand with paid advertising campaigns and advanced strategies in Meta Business to maximize your impact.',
+                'ads-card-1': 'Paid Ads',
+                'ads-card-2': 'Meta Business',
+
+                'web-badge': 'Digital Domain',
+                'web-title': 'Website, SEO & Google Ads',
+                'web-card-1-title': 'Web Design',
+                'web-card-1-desc': 'Deluxe website, hosting and domain.',
+                'web-card-2-title': 'SEO Ranking',
+                'seo-list': [
+                    'Keyword Research',
+                    'SEO'
+                ],
+                'web-card-3-title': 'Google Ads',
+                'google-ads-list': [
+                    'Account setup and structuring',
+                    'Creation of campaigns and ads',
+                    'Continuous optimization of campaigns and ads',
+                    'Unlimited investment in Adwords and Ads'
+                ],
+
+                'social-badge': 'Social Content',
+                'social-title': 'Social Media Marketing',
+                'social-desc': 'We create strategic content that connects with your audience.',
+                'social-points': [
+                    '4 monthly posts to promote your online ordering solution.',
+                    'Creation of new design content to post on social media or print.',
+                    '30-second video with all your promotions.'
+                ],
+
+                'kit-badge': 'Physical Material',
+                'kit-title': 'Marketing Kit',
+                'sub-camisetas': 'Camisetas',
+                'sub-flyers': 'Flyers',
+                'sub-posters': 'Posters',
+                'sub-stickers': 'Stickers',
+                'coming-soon': 'Content Coming Soon',
+
+                'kit-starter-title': 'Starter Marketing Kit <span class="text-amber-600">$399</span>',
+                'kit-starter-list': [
+                    '- 2 Sheet Posters (7.12x10.27")',
+                    '- 25 Table QR Codes (5.08x7.83")',
+                    '- 25 Flyers (3.96x5.15")',
+                    '- 360 Stickers (2x2" - 15 sheets)'
+                ],
+                'kit-premium-title': 'Premium Marketing Kit <span class="text-amber-600">$555.04</span>',
+                'kit-premium-list': [
+                    '- 35 Table QR Codes (5.08x7.83")',
+                    '- 2 Door Posters (27x40")',
+                    '- 4 Sheet Posters (7.12x10.27")',
+                    '- 480 Stickers (20 sheets)',
+                    '- 50 Promotional Cards (3.5x2")'
+                ],
+                'kit-deluxe-title': 'Deluxe Marketing Kit <span class="text-amber-600">$1372.48</span>',
+                'kit-deluxe-list': [
+                    '- 100 Promotional Cards (3.5x2")',
+                    '- 100 Flyers (3.96x5.15")',
+                    '- 2 Door Posters (27x40")',
+                    '- 6 Sheet Posters (7.12x10.27")',
+                    '- 40 Table QR Codes (5.08x7.83")',
+                    '- 600 Stickers (20 sheets)',
+                    '- 15 Physical Menus (8.5x14" - 8.5x11")'
+                ]
+            }
+        };
+
+        let currentLang = 'en';
+
+        function toggleLanguage() {
+            const isChecked = document.getElementById('langToggle').checked;
+            setLanguage(isChecked ? 'es' : 'en');
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+
+            // Update Toggle UI
+            const toggle = document.getElementById('langToggle');
+            const labelEn = document.getElementById('label-en');
+            const labelEs = document.getElementById('label-es');
+
+            if (lang === 'es') {
+                toggle.checked = true;
+                labelEn.classList.remove('active');
+                labelEs.classList.add('active');
+            } else {
+                toggle.checked = false;
+                labelEn.classList.add('active');
+                labelEs.classList.remove('active');
+            }
+
+            // Update simple text fields
+            document.querySelectorAll('[data-t]').forEach(el => {
+                const key = el.getAttribute('data-t');
+                if (translations[lang][key]) {
+                    el.innerText = translations[lang][key];
+                }
+            });
+
+            // Update lists
+            const t = translations[lang];
+
+            // Local Listings
+            const listingsUl = document.getElementById('listings-list');
+            if (listingsUl) {
+                listingsUl.innerHTML = t['listings-list'].map(item =>
+                    `<li class="flex items-center text-slate-700 font-medium text-sm"><i class="fas fa-check-circle text-blue-500 mr-3"></i> ${item}</li>`
+                ).join('');
+            }
+
+            // SEO List
+            const seoUl = document.getElementById('seo-list');
+            if (seoUl) {
+                seoUl.innerHTML = t['seo-list'].map(item => `<li>${item}</li>`).join('');
+            }
+
+            // Google Ads List
+            const gadsUl = document.getElementById('google-ads-list');
+            if (gadsUl) {
+                gadsUl.innerHTML = t['google-ads-list'].map(item => `<li>${item}</li>`).join('');
+            }
+
+            // Social Points
+            const socialPoints = document.getElementById('social-points');
+            if (socialPoints) {
+                socialPoints.innerHTML = t['social-points'].map((item, index) => `
+                    <div class="flex items-start gap-4">
+                        <div class="mt-1 w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[10px] flex-shrink-0">${index + 1}</div>
+                        <p class="text-slate-600 font-medium">${item}</p>
+                    </div>
+                `).join('');
+            }
+
+            // Marketing Kit Details
+            document.getElementById('kit-starter-title').innerHTML = t['kit-starter-title'];
+            document.getElementById('kit-premium-title').innerHTML = t['kit-premium-title'];
+            document.getElementById('kit-deluxe-title').innerHTML = t['kit-deluxe-title'];
+
+            document.getElementById('kit-starter-list').innerHTML = t['kit-starter-list'].map(item => `<li>${item}</li>`).join('');
+            document.getElementById('kit-premium-list').innerHTML = t['kit-premium-list'].map(item => `<li>${item}</li>`).join('');
+            document.getElementById('kit-deluxe-list').innerHTML = t['kit-deluxe-list'].map(item => `<li>${item}</li>`).join('');
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.service-content').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            const target = document.getElementById('content-' + tabId);
+            if (target) {
+                target.classList.add('active');
+                target.scrollTop = 0;
+            }
+
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-tab') === tabId) {
+                    item.classList.add('active');
+                }
+            });
+
+            // Auto-collapse on mobile after selection
+            if (window.innerWidth < 768) {
+                toggleSidebar();
+            }
+        }
+
+        function switchSubTab(subId) {
+            document.querySelectorAll('.sub-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            const target = document.getElementById('sub-' + subId);
+            if (target) {
+                target.classList.remove('hidden');
+            }
+
+            document.querySelectorAll('.sub-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('data-sub') === subId) {
+                    tab.classList.add('active');
+                }
+            });
+        }
+
+        const sidebar = document.getElementById('admin-sidebar');
+        const tab = document.getElementById('sidebar-tab');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('admin-sidebar-open');
+            sidebar.classList.toggle('admin-sidebar-closed');
+            document.body.classList.toggle('sidebar-open');
+        }
+
+        tab.onclick = toggleSidebar;
+
+        // Start closed on small screens
+        if (window.innerWidth < 1024) {
+            toggleSidebar();
+        }
+
+        // Initialize language
+        setLanguage('en');
+    </script>
+</body>
+</html>
