@@ -403,13 +403,12 @@
                         <!-- Left Side: Videos (Col span 2) -->
                         <div class="lg:col-span-2 space-y-6">
                             <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                                <h3 class="text-xl font-black uppercase tracking-tight text-white flex items-center gap-2">
-                                    <i class="fas fa-video text-blue-500 animate-pulse"></i> Videoteca de Entrenamiento
+                                <h3 class="text-xl font-black uppercase tracking-tight text-white">
+                                    multimedia
                                 </h3>
-                                <span class="text-xs font-black text-slate-400 uppercase tracking-widest bg-slate-900 border border-slate-800 px-3 py-1 rounded-full">Exclusivo</span>
                             </div>
 
-                            <div id="landing-videos-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div id="landing-videos-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                                 <!-- Videos render dynamically -->
                             </div>
                         </div>
@@ -417,13 +416,12 @@
                         <!-- Right Side: Routines (Col span 1) -->
                         <div class="space-y-6">
                             <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                                <h3 class="text-xl font-black uppercase tracking-tight text-white flex items-center gap-2">
-                                    <i class="fas fa-running text-emerald-500"></i> Rutinas y Planes
+                                <h3 class="text-xl font-black uppercase tracking-tight text-white">
+                                    Rutinas
                                 </h3>
-                                <span class="text-xs font-black text-slate-400 uppercase tracking-widest bg-slate-900 border border-slate-800 px-3 py-1 rounded-full">PDF</span>
                             </div>
 
-                            <div id="landing-routines-list" class="space-y-4">
+                            <div id="landing-routines-list" class="space-y-4 mt-6">
                                 <!-- Routines render dynamically -->
                             </div>
                         </div>
@@ -493,6 +491,49 @@
         let loadedTrainers = [];
 
         async function initPage() {
+            const params = new URLSearchParams(window.location.search);
+            const trainerId = params.get('trainer');
+
+            if (trainerId) {
+                // Public landing page view
+                const { data, error } = await supabase.from('gym_trainers').select('*').eq('id', trainerId).maybeSingle();
+                if (data) {
+                    loadedTrainers = [data];
+                    openLandingPage(data.id);
+
+                    // Hide elements that are part of the admin panel
+                    const mainNav = document.getElementById('main-nav');
+                    if (mainNav) mainNav.style.display = 'none';
+
+                    const adminHeader = document.querySelector('main > header');
+                    if (adminHeader) adminHeader.style.display = 'none';
+
+                    const trainersGrid = document.getElementById('trainers-grid');
+                    if (trainersGrid) trainersGrid.style.display = 'none';
+
+                    const widgetSection = document.querySelector('main > section');
+                    if (widgetSection) widgetSection.style.display = 'none';
+
+                    const closeLandingBtn = document.getElementById('close-landing-preview');
+                    if (closeLandingBtn) closeLandingBtn.classList.add('hidden');
+                } else {
+                    console.error("Trainer not found or error loading trainer", error);
+                    renderNavbar();
+                    currentUser = await Auth.checkAccess(['gym-admin', 'gym-owner']);
+                    if (!currentUser) return;
+                    isAdmin = currentUser.role === 'gym-admin';
+                    if (isAdmin) {
+                        renderAdminSidebar(() => {
+                            loadTrainers();
+                            updateWidgetCode();
+                        });
+                    }
+                    await loadTrainers();
+                    updateWidgetCode();
+                }
+                return;
+            }
+
             renderNavbar();
             currentUser = await Auth.checkAccess(['gym-admin', 'gym-owner']);
             if (!currentUser) return;
@@ -609,15 +650,15 @@
                     <!-- Action Menus -->
                     <div class="mt-auto space-y-2.5 pt-4 border-t border-slate-100 w-full">
                         <button onclick="openLandingPage('${t.id}')" class="w-full btn bg-slate-900 text-white hover:bg-blue-600 transition-all text-[10px] font-black uppercase tracking-widest py-3 rounded-xl flex items-center justify-center gap-2 shadow-sm">
-                            <i class="fas fa-magic text-blue-400"></i> Ver Landing Page
+                            Ver Landing Page
                         </button>
 
                         <div class="grid grid-cols-3 gap-2">
-                            <button onclick="openLandingEditor('${t.id}')" class="btn bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all text-[9px] font-black uppercase tracking-widest py-2 rounded-xl flex items-center justify-center gap-1" title="Gestionar Videos, Rutinas y Contenido">
-                                <i class="fas fa-folder-open"></i> Contenido
+                            <button onclick="openLandingEditor('${t.id}')" class="btn bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all text-[9px] font-black uppercase tracking-widest py-2 rounded-xl flex items-center justify-center" title="Gestionar Videos, Rutinas y Contenido">
+                                Contenido
                             </button>
-                            <button onclick="editTrainer('${t.id}')" class="btn bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all text-[9px] font-black uppercase tracking-widest py-2 rounded-xl flex items-center justify-center gap-1">
-                                <i class="fas fa-edit"></i> Datos
+                            <button onclick="editTrainer('${t.id}')" class="btn bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all text-[9px] font-black uppercase tracking-widest py-2 rounded-xl flex items-center justify-center">
+                                Datos
                             </button>
                             <button onclick="deleteTrainer('${t.id}')" class="btn bg-red-50 text-red-500 hover:bg-red-100 transition-all text-[9px] font-black uppercase tracking-widest py-2 rounded-xl flex items-center justify-center">
                                 <i class="fas fa-trash-alt"></i>
