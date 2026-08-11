@@ -1,0 +1,157 @@
+===============================================================================
+    GUÍA DE INTEGRACIÓN DE ACCESO AUTOMATIZADO NFC 100% AUTÓNOMO
+                      PROYECTO: MI GYM / WISBE
+===============================================================================
+
+Esta guía técnica describe detalladamente el equipamiento, funcionamiento y el
+código necesario para implementar un sistema de control de accesos autónomo
+por hardware, de modo que cuando un socio pase su botella NFC por el escáner
+físico de la recepción, se registre su asistencia automáticamente en Supabase
+sin necesidad de personal de recepción ni interacción con la web.
+
+-------------------------------------------------------------------------------
+1. EQUIPAMIENTO REQUERIDO (QUÉ ADQUIRIR)
+-------------------------------------------------------------------------------
+Para operar de forma 100% autónoma sin depender de que un navegador esté abierto
+o que un humano dé clics, necesitas montar un "Tótem Inteligente de Entrada":
+
+1. RECEPTOR INTELIGENTE (RASPBERRY PI):
+   - Adquiere una placa "Raspberry Pi Zero 2 W" (muy económica y pequeña) o una
+     "Raspberry Pi 4 / 5".
+   - Este mini-ordenador se monta detrás del torniquete o puerta y se conecta
+     al Wi-Fi del gimnasio.
+2. LECTOR NFC USB:
+   - Compra un lector NFC USB estándar de 13.56 MHz como el "ACR122U" (el más
+     confiable y estándar de la industria). Se conecta directamente por USB a la
+     Raspberry Pi.
+3. PEGATINAS NFC PARA BOTELLAS (ANTI-METAL):
+   - Muy importante: Las botellas de los clientes suelen ser de aluminio o metal.
+     El metal interfiere y anula las ondas NFC normales. Por tanto, debes comprar
+     "Pegatinas NFC Anti-Metal" (On-Metal NFC tags) con chip NTAG213 o NTAG215.
+4. (OPCIONAL) RELÉ/RELEVADOR DE APERTURA:
+   - Un relé de 5V conectado a los pines GPIO de la Raspberry Pi. Sirve para enviar
+     el pulso eléctrico que libera la cerradura magnética o el torniquete físico.
+
+-------------------------------------------------------------------------------
+2. FLUJO DE OPERACIÓN (CÓMO SE REGISTRA)
+-------------------------------------------------------------------------------
+1. ENROLAMIENTO (DESDE LA WEB):
+   - Al registrar a un nuevo socio en el panel "Mi Gym", el administrador escribe
+     el UID de la botella (leído una única vez) en el campo "Código de Botella NFC / UID".
+   - Esto guarda el valor directamente en la columna `nfc_uid` en Supabase.
+2. PASO POR RECEPCIÓN (100% AUTOMÁTICO):
+   - El cliente aproxima su botella al lector USB conectado a la Raspberry Pi.
+   - El script Python que corre en la Raspberry Pi captura el UID de la botella,
+     realiza una consulta directa a la base de datos de Supabase buscando el socio,
+     verifica si su membresía está "Activa" y automáticamente inserta el registro
+     en la tabla `gym_attendance` (marcando "Permitido" o "Denegado").
+   - Si la membresía está activa, la Raspberry activa el relevador y abre la puerta.
+
+-------------------------------------------------------------------------------
+3. SCRIPT PYTHON PARA LA RASPBERRY PI
+-------------------------------------------------------------------------------
+Instala en tu Raspberry Pi las dependencias ejecutando:
+`pip install pyscard requests`
+
+Guarda el siguiente código como `control_acceso.py` y configúralo para que se
+ejecute automáticamente al encender la Raspberry Pi:
+
+```python
+import sys
+import time
+import requests
+from smartcard.System import readers
+from smartcard.util import toHexString
+
+# Credenciales de Supabase del gimnasio
+SUPABASE_URL = "https://wwcmtqqbxdamxebkfsqk.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." # Tu clave API anon
+HEADERS = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": f"Bearer {SUPABASE_KEY}",
+    "Content-Type": "application/json",
+    "Prefer": "return=representation"
+}
+
+def obtener_uid_nfc(connection):
+    # APDU comando para leer el identificador único (UID) físico de tags Mifare
+    GET_UID_CMD = [0xFF, 0xCA, 0x00, 0x00, 0x00]
+    data, sw1, sw2 = connection.transmit(GET_UID_CMD)
+    if sw1 == 0x90 and sw2 == 0x00:
+        return toHexString(data).replace(" ", "").upper()
+    return None
+
+def registrar_asistencia(uid):
+    print(f"\n[NFC] Botella escaneada físicamente. UID: {uid}")
+
+    # 1. Consultar el cliente correspondiente en Supabase
+    url_consulta = f"{SUPABASE_URL}/rest/v1/gym_clients?nfc_uid=eq.{uid}&select=id,full_name,membership_status,owner_id"
+    response = requests.get(url_consulta, headers=HEADERS)
+
+    if response.status_code == 200 and response.json():
+        cliente = response.json()[0]
+        cliente_id = cliente["id"]
+        nombre = cliente["full_name"]
+        estado_membresia = cliente["membership_status"]
+        owner_id = cliente["owner_id"]
+
+        status_acceso = "Permitido" if estado_membresia == "Activa" else "Denegado"
+        notas = "Check-in automático autónomo por hardware (Botella NFC)"
+
+        # 2. Insertar el registro de asistencia en la base de datos de manera autónoma
+        url_asistencia = f"{SUPABASE_URL}/rest/v1/gym_attendance"
+        payload_asistencia = {
+            "client_id": cliente_id,
+            "status": status_acceso,
+            "notes": notes,
+            "owner_id": owner_id
+        }
+
+        res_post = requests.post(url_asistencia, headers=HEADERS, json=payload_asistencia)
+
+        if res_post.status_code == 201:
+            if status_acceso == "Permitido":
+                print(f"[CONCEDIDO] Bienvenido, {nombre}. Registro guardado y puerta liberada.")
+                # Aquí añadirías la línea para activar el pin GPIO que abre la puerta/torniquete:
+                # p.ej: GPIO.output(PIN_RELE, GPIO.HIGH); time.sleep(1); GPIO.output(PIN_RELE, GPIO.LOW)
+            else:
+                print(f"[RECHAZADO] {nombre} tiene membresía VENCIDA/INACTIVA. Acceso bloqueado.")
+        else:
+            print("[ERROR] No se pudo escribir la asistencia en Supabase.")
+    else:
+        print("[ALERTA] UID NFC no asociado a ningún cliente activo en el sistema.")
+
+def main():
+    print("Iniciando Escáner NFC de Recepción Autónomo... Esperando botellas...")
+    r = readers()
+    if len(r) == 0:
+        print("Error: No se encontró ningún lector NFC USB conectado.")
+        sys.exit(1)
+
+    reader = r[0]
+    print(f"Lector NFC listo: {reader}")
+
+    while True:
+        try:
+            connection = reader.createConnection()
+            connection.connect()
+            uid = obtener_uid_nfc(connection)
+            if uid:
+                registrar_asistencia(uid)
+                time.sleep(2) # Anti-rebote para evitar dobles check-ins de la misma botella
+        except Exception:
+            time.sleep(0.5) # Reintentar lectura en bucle pasivo
+
+if __name__ == "__main__":
+    main()
+```
+
+-------------------------------------------------------------------------------
+4. CONFIGURACIÓN DEL SISTEMA
+-------------------------------------------------------------------------------
+1. BASE DE DATOS (docs/migym.sql):
+   - Al ejecutar el script SQL, se creará la columna `nfc_uid` en la tabla `gym_clients`.
+2. GESTIÓN DE SOCIOS (docs/adminMiGym.html):
+   - Cuando agregues un socio nuevo o edites uno actual, introduce el UID en el campo
+     "Código de Botella NFC / UID". Listo. No se requieren más clics.
+===============================================================================
