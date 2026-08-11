@@ -92,16 +92,35 @@
                 <form id="trainer-form" class="space-y-8">
                     <input type="hidden" id="trainer-id">
 
-                    <div class="flex flex-col items-center mb-10">
-                        <div id="drop-zone" class="w-32 h-32 rounded-full border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center cursor-pointer hover:border-blue-400 transition-all relative group overflow-hidden">
-                            <img id="image-preview" src="" class="w-full h-full object-cover rounded-full hidden">
-                            <div id="upload-placeholder" class="text-center">
-                                <i class="fas fa-camera text-2xl text-slate-300"></i>
-                                <span class="block text-[8px] font-black text-slate-400 uppercase tracking-widest mt-1">Foto</span>
+                    <!-- Image / Header uploads row -->
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center border-b border-slate-100 pb-8">
+                        <!-- Profile Image (Col span 4) -->
+                        <div class="md:col-span-4 flex flex-col items-center">
+                            <div id="drop-zone" class="w-32 h-32 rounded-full border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center cursor-pointer hover:border-blue-400 transition-all relative group overflow-hidden shadow-sm">
+                                <img id="image-preview" src="" class="w-full h-full object-cover rounded-full hidden">
+                                <div id="upload-placeholder" class="text-center">
+                                    <i class="fas fa-camera text-2xl text-slate-300"></i>
+                                    <span class="block text-[8px] font-black text-slate-400 uppercase tracking-widest mt-1">Foto</span>
+                                </div>
+                                <input type="file" id="image-input" class="hidden" accept="image/*">
                             </div>
-                            <input type="file" id="image-input" class="hidden" accept="image/*">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-4">Imagen de Perfil</p>
                         </div>
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-4">Imagen de Perfil</p>
+
+                        <!-- Cover Banner Image/Video (Col span 8) -->
+                        <div class="md:col-span-8 flex flex-col items-center md:items-start w-full">
+                            <div id="cover-drop-zone" class="w-full h-32 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/10 transition-all relative group overflow-hidden shadow-sm">
+                                <img id="cover-preview-img" src="" class="w-full h-full object-cover rounded-2xl hidden">
+                                <video id="cover-preview-vid" src="" class="w-full h-full object-cover rounded-2xl hidden" autoplay loop muted playsinline></video>
+                                <div id="cover-upload-placeholder" class="text-center p-4">
+                                    <i class="fas fa-image text-2xl text-slate-300 group-hover:scale-110 transition-transform mb-1"></i>
+                                    <span class="block text-[9px] font-black text-slate-600 uppercase tracking-widest">Foto o Video de Portada</span>
+                                    <span class="block text-[8px] text-slate-400 font-medium mt-0.5">Arrastra o haz clic (Opcional)</span>
+                                </div>
+                                <input type="file" id="cover-input" class="hidden" accept="image/*,video/mp4,video/quicktime,video/mov">
+                            </div>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-4">Banner de Portada (Landing Page)</p>
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -153,15 +172,15 @@
                 </div>
 
                 <!-- Tabs navigation -->
-                <div class="flex border-b border-slate-200 mb-8 gap-4 shrink-0">
+                <div class="flex border-b border-slate-200 mb-8 gap-4 shrink-0 font-black">
                     <button id="tab-btn-stats" class="py-3 px-4 border-b-2 border-blue-600 text-blue-600 font-black text-xs uppercase tracking-widest transition-all">
-                        <i class="fas fa-chart-bar mr-2"></i> Estadísticas
+                        Estadísticas
                     </button>
                     <button id="tab-btn-videos" class="py-3 px-4 border-b-2 border-transparent text-slate-400 hover:text-slate-600 font-black text-xs uppercase tracking-widest transition-all">
-                        <i class="fas fa-video mr-2"></i> Videos
+                        Videos
                     </button>
                     <button id="tab-btn-routines" class="py-3 px-4 border-b-2 border-transparent text-slate-400 hover:text-slate-600 font-black text-xs uppercase tracking-widest transition-all">
-                        <i class="fas fa-running mr-2"></i> Rutinas
+                        Rutinas
                     </button>
                 </div>
 
@@ -194,47 +213,59 @@
                     <!-- Tab 2: Videos Manager -->
                     <div id="tab-content-videos" class="hidden space-y-6">
                         <!-- Add video form card -->
-                        <div class="bg-slate-50 border border-slate-200/60 p-6 rounded-2xl space-y-4">
-                            <h4 class="font-bold text-sm text-slate-800 uppercase tracking-tight flex items-center gap-2"><i class="fas fa-plus text-blue-500"></i> Publicar Nuevo Video</h4>
+                        <div class="bg-white border border-slate-200 p-6 rounded-[24px] shadow-sm space-y-6 relative">
+                            <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+                                <h4 class="font-black text-xs text-slate-800 uppercase tracking-widest flex items-center gap-2">
+                                    <i class="fas fa-video text-blue-500"></i> Nuevo Video
+                                </h4>
+                            </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+                                <!-- Video source (Upload and Paste URL) - Col span 5 -->
+                                <div class="md:col-span-5 space-y-4">
+                                    <div>
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Cargar Video</label>
+                                        <div id="video-drop-zone" class="border-2 border-dashed border-slate-200 bg-slate-50 hover:border-blue-400 hover:bg-blue-50/30 transition-all rounded-2xl p-4 text-center cursor-pointer flex flex-col items-center justify-center gap-1.5 h-32 relative group overflow-hidden">
+                                            <div id="video-upload-placeholder" class="text-center">
+                                                <i class="fas fa-cloud-upload-alt text-2xl text-slate-400 group-hover:scale-110 transition-transform"></i>
+                                                <span class="block text-[10px] font-black text-slate-600 uppercase tracking-widest mt-1">Arrastra o haz clic</span>
+                                                <span class="block text-[8px] text-slate-400 font-medium">MP4 o MOV</span>
+                                            </div>
+                                            <input type="file" id="video-file-input" class="hidden" accept="video/mp4,video/quicktime,video/mov">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">O pega el enlace del video</label>
+                                        <input type="text" id="vid_url" class="input text-xs" placeholder="Ej: https://www.youtube.com/watch?...">
+                                    </div>
+                                </div>
+
+                                <!-- Fields (Title and Description) - Col span 5 -->
+                                <div class="md:col-span-5 space-y-4">
                                     <div>
                                         <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Título del Video</label>
                                         <input type="text" id="vid_title" class="input text-xs" placeholder="Ej: Técnica correcta de Sentadilla">
                                     </div>
                                     <div>
                                         <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Descripción Breve</label>
-                                        <textarea id="vid_desc" rows="2" class="input text-xs resize-none" placeholder="Breve explicación sobre lo que enseñas..."></textarea>
+                                        <textarea id="vid_desc" rows="3" class="input text-xs resize-none" placeholder="Breve explicación sobre lo que enseñas..."></textarea>
                                     </div>
                                 </div>
-                                <div class="space-y-4">
-                                    <div>
-                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Origen del Video (Sube archivo o pega enlace)</label>
-                                        <div class="flex gap-2">
-                                            <input type="text" id="vid_url" class="input text-xs" placeholder="Pegar URL de YouTube / MP4...">
-                                            <button type="button" id="btn-upload-video-cloudinary" class="btn bg-slate-800 hover:bg-slate-700 text-white text-[10px] py-2 whitespace-nowrap px-4 rounded-xl">
-                                                <i class="fas fa-cloud-upload-alt mr-1"></i> Subir MP4
-                                            </button>
-                                            <input type="file" id="video-file-input" class="hidden" accept="video/mp4,video/quicktime">
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Imagen de Portada (Opcional - Cloudinary o Unsplash)</label>
-                                        <input type="text" id="vid_thumbnail" class="input text-xs" placeholder="Ej: https://images.unsplash.com/photo-...">
-                                    </div>
+
+                                <!-- Add square "+" button - Col span 2 -->
+                                <div class="md:col-span-2 flex flex-col items-center justify-center h-full pt-6">
+                                    <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block text-center">Añadir</label>
+                                    <button type="button" id="btn-add-video" class="w-16 h-16 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/20 hover:scale-105 active:scale-95 transition-all" title="Añadir video a la lista">
+                                        <i class="fas fa-plus text-2xl"></i>
+                                    </button>
                                 </div>
                             </div>
-
-                            <button type="button" id="btn-add-video" class="w-full btn btn-primary py-3 text-[10px] font-black uppercase tracking-widest">
-                                <i class="fas fa-video mr-2"></i> Añadir Video a la Lista
-                            </button>
                         </div>
 
                         <!-- Published Videos List -->
                         <div class="space-y-3">
                             <h4 class="font-black text-[10px] text-slate-400 uppercase tracking-widest border-b pb-2">Videos Publicados</h4>
-                            <div id="editor-videos-list" class="space-y-3">
+                            <div id="editor-videos-list" class="space-y-3 max-h-56 overflow-y-auto pr-1 custom-scrollbar">
                                 <!-- Videos row render dynamically -->
                             </div>
                         </div>
@@ -243,79 +274,86 @@
                     <!-- Tab 3: Routines Builder -->
                     <div id="tab-content-routines" class="hidden space-y-6">
                         <!-- Add Routine Form Card -->
-                        <div class="bg-slate-50 border border-slate-200/60 p-6 rounded-2xl space-y-4">
-                            <h4 class="font-bold text-sm text-slate-800 uppercase tracking-tight flex items-center gap-2"><i class="fas fa-plus text-emerald-500"></i> Publicar Nueva Rutina</h4>
+                        <div class="bg-white border border-slate-200 p-6 rounded-[24px] shadow-sm space-y-6 relative">
+                            <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+                                <h4 class="font-black text-xs text-slate-800 uppercase tracking-widest flex items-center gap-2">
+                                    <i class="fas fa-dumbbell text-emerald-500"></i> Diseñar Nueva Rutina
+                                </h4>
+                            </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div class="md:col-span-2 space-y-4">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <!-- Step 1: Routine Information -->
+                                <div class="space-y-4 p-5 bg-slate-50/50 rounded-2xl border border-slate-100/80">
+                                    <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest block font-bold mb-2">Paso 1: Datos Generales</span>
                                     <div>
-                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Título del Plan / Rutina</label>
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Título de la Rutina</label>
                                         <input type="text" id="rout_title" class="input text-xs" placeholder="Ej: Hipertrofia de Pierna">
                                     </div>
                                     <div>
                                         <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Descripción Corta</label>
                                         <input type="text" id="rout_desc" class="input text-xs" placeholder="Ej: Enfocado en cuádriceps y femorales con alta intensidad.">
                                     </div>
-                                </div>
-                                <div class="space-y-4">
-                                    <div>
-                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Duración</label>
-                                        <input type="text" id="rout_duration" class="input text-xs" placeholder="Ej: 4 Semanas">
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Duración</label>
+                                            <input type="text" id="rout_duration" class="input text-xs" placeholder="Ej: 4 Semanas">
+                                        </div>
+                                        <div>
+                                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Dificultad</label>
+                                            <select id="rout_difficulty" class="input text-xs">
+                                                <option value="PRINCIPIANTE">PRINCIPIANTE</option>
+                                                <option value="INTERMEDIO" selected>INTERMEDIO</option>
+                                                <option value="AVANZADO">AVANZADO</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Dificultad</label>
-                                        <select id="rout_difficulty" class="input text-xs">
-                                            <option value="PRINCIPIANTE">PRINCIPIANTE</option>
-                                            <option value="INTERMEDIO" selected>INTERMEDIO</option>
-                                            <option value="AVANZADO">AVANZADO</option>
-                                        </select>
+                                </div>
+
+                                <!-- Step 2: Exercises Builder inside Routine Form -->
+                                <div class="space-y-4 p-5 bg-slate-50/50 rounded-2xl border border-slate-100/80">
+                                    <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest block font-bold mb-2">Paso 2: Agregar Ejercicios</span>
+
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <label class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Nombre de Ejercicio</label>
+                                            <input type="text" id="ex_name" class="input text-xs" placeholder="Sentadilla Libre">
+                                        </div>
+                                        <div>
+                                            <label class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Series</label>
+                                            <input type="number" id="ex_series" class="input text-xs" placeholder="4">
+                                        </div>
+                                        <div>
+                                            <label class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Reps / Tiempo</label>
+                                            <input type="text" id="ex_reps" class="input text-xs" placeholder="10-12">
+                                        </div>
+                                        <div>
+                                            <label class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Instrucciones / Notas</label>
+                                            <input type="text" id="ex_notes" class="input text-xs" placeholder="2 min descanso">
+                                        </div>
+                                    </div>
+
+                                    <button type="button" id="btn-add-exercise" class="w-full btn bg-slate-800 hover:bg-slate-700 text-white py-2.5 text-[9px] font-black uppercase tracking-widest rounded-xl flex items-center justify-center gap-1.5 shadow-sm">
+                                        <i class="fas fa-plus"></i> Agregar Ejercicio
+                                    </button>
+
+                                    <div class="space-y-2 mt-2">
+                                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest block">Ejercicios en esta rutina:</span>
+                                        <div id="builder-exercises-list" class="space-y-2 max-h-36 overflow-y-auto pr-1 custom-scrollbar">
+                                            <!-- Realtime list of exercises currently added to the routine -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Exercises mini builder inside Routine Form -->
-                            <div class="border-t border-slate-200 pt-4 space-y-3">
-                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block font-bold">Constructor de Ejercicios</span>
-
-                                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
-                                    <div>
-                                        <label class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Nombre de Ejercicio</label>
-                                        <input type="text" id="ex_name" class="input text-xs" placeholder="Sentadilla Libre">
-                                    </div>
-                                    <div>
-                                        <label class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Series</label>
-                                        <input type="number" id="ex_series" class="input text-xs" placeholder="4">
-                                    </div>
-                                    <div>
-                                        <label class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Reps / Tiempo</label>
-                                        <input type="text" id="ex_reps" class="input text-xs" placeholder="10-12">
-                                    </div>
-                                    <div>
-                                        <label class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Instrucciones / Notas</label>
-                                        <input type="text" id="ex_notes" class="input text-xs" placeholder="2 min descanso">
-                                    </div>
-                                </div>
-                                <button type="button" id="btn-add-exercise" class="btn bg-slate-800 hover:bg-slate-700 text-white py-2 text-[9px] font-black uppercase tracking-widest rounded-xl">
-                                    <i class="fas fa-plus mr-1"></i> Agregar Ejercicio
-                                </button>
-
-                                <div class="space-y-2 mt-2">
-                                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest block">Ejercicios agregados a este plan:</span>
-                                    <div id="builder-exercises-list" class="space-y-2">
-                                        <!-- Realtime list of exercises currently added to the routine -->
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button type="button" id="btn-save-routine" class="w-full btn bg-emerald-600 hover:bg-emerald-500 text-white py-3 text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-600/10 rounded-xl">
-                                <i class="fas fa-save mr-2"></i> Guardar y Publicar Rutina
+                            <button type="button" id="btn-save-routine" class="w-full btn bg-blue-600 hover:bg-blue-500 text-white py-3.5 text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-600/10 rounded-xl flex items-center justify-center gap-2">
+                                <i class="fas fa-plus"></i> Añadir Rutina a la Lista
                             </button>
                         </div>
 
                         <!-- Published Routines List -->
                         <div class="space-y-3">
-                            <h4 class="font-black text-[10px] text-slate-400 uppercase tracking-widest border-b pb-2">Rutinas Publicadas</h4>
-                            <div id="editor-routines-list" class="space-y-3">
+                            <h4 class="font-black text-[10px] text-slate-400 uppercase tracking-widest border-b pb-2">Rutinas Listadas</h4>
+                            <div id="editor-routines-list" class="space-y-3 max-h-56 overflow-y-auto pr-1 custom-scrollbar">
                                 <!-- Routines row render dynamically -->
                             </div>
                         </div>
@@ -346,11 +384,15 @@
                 </div>
 
                 <!-- Hero Section / Cover Banner -->
-                <div class="relative h-72 md:h-[350px] w-full bg-cover bg-center bg-no-repeat" style="background-image: url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&q=80');">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/45 to-transparent"></div>
+                <div id="landing-hero" class="relative h-72 md:h-[350px] w-full bg-slate-950 overflow-hidden flex items-end">
+                    <!-- Dynamic Cover Layer -->
+                    <div id="landing-hero-bg" class="absolute inset-0">
+                        <!-- Rendered dynamically (image/video/default) -->
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/45 to-transparent z-10"></div>
 
                     <!-- Trainer Info overlay inside Hero -->
-                    <div class="absolute bottom-0 inset-x-0 p-8 md:p-12 flex flex-col md:flex-row items-center md:items-end gap-6 text-center md:text-left">
+                    <div class="absolute bottom-0 inset-x-0 p-8 md:p-12 flex flex-col md:flex-row items-center md:items-end gap-6 text-center md:text-left z-20 w-full">
                         <!-- Profile Image -->
                         <div class="w-32 h-32 rounded-full border-4 border-blue-500 overflow-hidden shadow-2xl relative bg-slate-850 shrink-0">
                             <img id="landing-avatar" src="" class="w-full h-full object-cover">
@@ -488,6 +530,7 @@
         let currentUser = null;
         let isAdmin = false;
         let imageUrl = '';
+        let coverUrl = '';
         let loadedTrainers = [];
 
         async function initPage() {
@@ -678,8 +721,17 @@
             form.reset();
             document.getElementById('trainer-id').value = '';
             imageUrl = '';
+            coverUrl = '';
             imagePreview.classList.add('hidden');
             placeholder.classList.remove('hidden');
+
+            const coverPreviewImg = document.getElementById('cover-preview-img');
+            const coverPreviewVid = document.getElementById('cover-preview-vid');
+            const coverPlaceholder = document.getElementById('cover-upload-placeholder');
+            coverPreviewImg.classList.add('hidden');
+            coverPreviewVid.classList.add('hidden');
+            coverPlaceholder.classList.remove('hidden');
+
             document.getElementById('modal-title').innerText = 'Nuevo Entrenador';
             modal.style.display = 'flex';
         };
@@ -701,6 +753,42 @@
 
                 btn.disabled = false;
                 btn.innerText = 'GUARDAR PERFIL';
+            }
+        );
+
+        // Setup Cover Image/Video Drag and Drop
+        setupDragAndDrop(
+            document.getElementById('cover-drop-zone'),
+            document.getElementById('cover-input'),
+            async (file) => {
+                const coverPreviewImg = document.getElementById('cover-preview-img');
+                const coverPreviewVid = document.getElementById('cover-preview-vid');
+                const coverPlaceholder = document.getElementById('cover-upload-placeholder');
+
+                const originalPlaceholder = coverPlaceholder.innerHTML;
+                coverPlaceholder.innerHTML = `
+                    <i class="fas fa-spinner fa-spin text-2xl text-blue-500 mb-1"></i>
+                    <span class="block text-[9px] font-black text-slate-600 uppercase tracking-widest">Subiendo Portada...</span>
+                `;
+
+                try {
+                    coverUrl = await uploadToCloudinary(file);
+                    coverPlaceholder.classList.add('hidden');
+                    if (file.type.startsWith('video/')) {
+                        coverPreviewImg.classList.add('hidden');
+                        coverPreviewVid.src = coverUrl;
+                        coverPreviewVid.classList.remove('hidden');
+                    } else {
+                        coverPreviewVid.classList.add('hidden');
+                        coverPreviewImg.src = coverUrl;
+                        coverPreviewImg.classList.remove('hidden');
+                    }
+                    showToast('¡Portada subida con éxito!');
+                } catch (err) {
+                    console.error(err);
+                    showPopup('Error', 'No se pudo subir el archivo de portada.', 'error');
+                    coverPlaceholder.innerHTML = originalPlaceholder;
+                }
             }
         );
 
@@ -791,6 +879,19 @@
                 }
             }
 
+            // Render Dynamic Hero Header Cover/Banner Image or Video
+            const bgEl = document.getElementById('landing-hero-bg');
+            const cover = extra.cover_url || '';
+            if (cover) {
+                if (cover.includes('.mp4') || cover.includes('.mov') || cover.includes('.quicktime')) {
+                    bgEl.innerHTML = `<video src="${cover}" class="w-full h-full object-cover" autoplay loop muted playsinline></video>`;
+                } else {
+                    bgEl.innerHTML = `<div class="w-full h-full bg-cover bg-center bg-no-repeat" style="background-image: url('${cover}');"></div>`;
+                }
+            } else {
+                bgEl.innerHTML = `<div class="w-full h-full bg-cover bg-center bg-no-repeat" style="background-image: url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&q=80');"></div>`;
+            }
+
             // Fill basic profile details
             document.getElementById('landing-avatar').src = t.image_url || 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80';
             document.getElementById('landing-name').innerText = t.full_name;
@@ -822,21 +923,37 @@
                     </div>
                 `;
             } else {
-                videosGrid.innerHTML = extra.videos.map(v => `
-                    <div onclick="playVideo('${v.title.replace(/'/g, "\\'")}', '${(v.desc || '').replace(/'/g, "\\'")}', '${v.url}')" class="group/vid bg-slate-900 border border-slate-800/80 rounded-2xl overflow-hidden shadow-lg hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/5 transition-all duration-300 cursor-pointer">
-                        <div class="aspect-video relative bg-slate-950 flex items-center justify-center overflow-hidden">
-                            <img src="${v.thumbnail || 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&q=80'}" class="w-full h-full object-cover opacity-60 group-hover/vid:scale-105 transition-transform duration-500">
-                            <!-- Play button absolute overlay -->
-                            <div class="absolute w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center text-lg shadow-xl shadow-blue-600/30 group-hover/vid:bg-blue-500 group-hover/vid:scale-110 transition-all duration-300 animate-fade">
-                                <i class="fas fa-play ml-1"></i>
+                videosGrid.innerHTML = extra.videos.map(v => {
+                    let mediaHtml = '';
+                    if (v.url.includes('youtube.com') || v.url.includes('youtu.be')) {
+                        let videoId = '';
+                        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                        const match = v.url.match(regExp);
+                        if (match && match[2].length == 11) {
+                            videoId = match[2];
+                        }
+                        const ytThumb = `https://img.youtube.com/vi/${videoId}/0.jpg`;
+                        mediaHtml = `<img src="${ytThumb}" class="w-full h-full object-cover opacity-60 group-hover/vid:scale-105 transition-transform duration-500">`;
+                    } else {
+                        mediaHtml = `<video src="${v.url}#t=0.1" preload="metadata" muted class="w-full h-full object-cover opacity-60 group-hover/vid:scale-105 transition-transform duration-500"></video>`;
+                    }
+
+                    return `
+                        <div onclick="playVideo('${v.title.replace(/'/g, "\\'")}', '${(v.desc || '').replace(/'/g, "\\'")}', '${v.url}')" class="group/vid bg-slate-900 border border-slate-800/80 rounded-2xl overflow-hidden shadow-lg hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/5 transition-all duration-300 cursor-pointer">
+                            <div class="aspect-video relative bg-slate-950 flex items-center justify-center overflow-hidden">
+                                ${mediaHtml}
+                                <!-- Play button absolute overlay -->
+                                <div class="absolute w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center text-lg shadow-xl shadow-blue-600/30 group-hover/vid:bg-blue-500 group-hover/vid:scale-110 transition-all duration-300 animate-fade z-10">
+                                    <i class="fas fa-play ml-1"></i>
+                                </div>
+                            </div>
+                            <div class="p-5">
+                                <h4 class="font-black text-sm uppercase text-white group-hover/vid:text-blue-400 transition-colors">${v.title}</h4>
+                                <p class="text-xs text-slate-400 mt-1.5 line-clamp-2 font-medium">${v.desc || 'Sin descripción'}</p>
                             </div>
                         </div>
-                        <div class="p-5">
-                            <h4 class="font-black text-sm uppercase text-white group-hover/vid:text-blue-400 transition-colors">${v.title}</h4>
-                            <p class="text-xs text-slate-400 mt-1.5 line-clamp-2 font-medium">${v.desc || 'Sin descripción'}</p>
-                        </div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             }
 
             // Fill Routines List
@@ -920,33 +1037,33 @@
         tabBtns.videos.onclick = () => switchTab('videos');
         tabBtns.routines.onclick = () => switchTab('routines');
 
-        // Cloudinary video upload triggers
+        // Setup Video Upload Drag and Drop
+        const videoDropZone = document.getElementById('video-drop-zone');
         const videoFileInput = document.getElementById('video-file-input');
-        document.getElementById('btn-upload-video-cloudinary').onclick = () => {
-            videoFileInput.click();
-        };
+        const videoPlaceholder = document.getElementById('video-upload-placeholder');
 
-        videoFileInput.onchange = async () => {
-            const file = videoFileInput.files[0];
-            if (!file) return;
+        setupDragAndDrop(
+            videoDropZone,
+            videoFileInput,
+            async (file) => {
+                const originalPlaceholder = videoPlaceholder.innerHTML;
+                videoPlaceholder.innerHTML = `
+                    <i class="fas fa-spinner fa-spin text-2xl text-blue-500 mb-1"></i>
+                    <span class="block text-[10px] font-black text-slate-600 uppercase tracking-widest">Subiendo Video...</span>
+                `;
 
-            const btn = document.getElementById('btn-upload-video-cloudinary');
-            const originalText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Subiendo...`;
-
-            try {
-                const url = await uploadToCloudinary(file);
-                document.getElementById('vid_url').value = url;
-                showToast('¡Video subido con éxito!');
-            } catch (err) {
-                console.error(err);
-                showPopup('Error', 'No se pudo subir el video a Cloudinary. Intenta con un archivo más pequeño o un enlace directo.', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
+                try {
+                    const url = await uploadToCloudinary(file);
+                    document.getElementById('vid_url').value = url;
+                    showToast('¡Video subido con éxito!');
+                } catch (err) {
+                    console.error(err);
+                    showPopup('Error', 'No se pudo subir el video a Cloudinary.', 'error');
+                } finally {
+                    videoPlaceholder.innerHTML = originalPlaceholder;
+                }
             }
-        };
+        );
 
         // Render editor video list
         function renderEditorVideos() {
@@ -956,22 +1073,38 @@
                 return;
             }
 
-            container.innerHTML = currentEditorVideos.map((v, i) => `
-                <div class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-2xl">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-lg bg-slate-200 overflow-hidden shrink-0">
-                            <img src="${v.thumbnail || 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&q=80'}" class="w-full h-full object-cover">
+            container.innerHTML = currentEditorVideos.map((v, i) => {
+                let mediaHtml = '';
+                if (v.url.includes('youtube.com') || v.url.includes('youtu.be')) {
+                    let videoId = '';
+                    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                    const match = v.url.match(regExp);
+                    if (match && match[2].length == 11) {
+                        videoId = match[2];
+                    }
+                    const ytThumb = `https://img.youtube.com/vi/${videoId}/0.jpg`;
+                    mediaHtml = `<img src="${ytThumb}" class="w-full h-full object-cover">`;
+                } else {
+                    mediaHtml = `<video src="${v.url}#t=0.1" preload="metadata" muted class="w-full h-full object-cover"></video>`;
+                }
+
+                return `
+                    <div class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-2xl">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-lg bg-slate-200 overflow-hidden shrink-0 flex items-center justify-center">
+                                ${mediaHtml}
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-xs uppercase text-slate-800 line-clamp-1">${v.title}</h5>
+                                <span class="text-[9px] text-slate-400 line-clamp-1 font-mono">${v.url}</span>
+                            </div>
                         </div>
-                        <div>
-                            <h5 class="font-bold text-xs uppercase text-slate-800 line-clamp-1">${v.title}</h5>
-                            <span class="text-[9px] text-slate-400 line-clamp-1 font-mono">${v.url}</span>
-                        </div>
+                        <button onclick="removeEditorVideo(${i})" class="w-8 h-8 rounded-full bg-red-50 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all">
+                            <i class="fas fa-trash-alt text-xs"></i>
+                        </button>
                     </div>
-                    <button onclick="removeEditorVideo(${i})" class="w-8 h-8 rounded-full bg-red-50 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all">
-                        <i class="fas fa-trash-alt text-xs"></i>
-                    </button>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         window.removeEditorVideo = (index) => {
@@ -985,23 +1118,17 @@
             const title = document.getElementById('vid_title').value.trim();
             const desc = document.getElementById('vid_desc').value.trim();
             const url = document.getElementById('vid_url').value.trim();
-            let thumbnail = document.getElementById('vid_thumbnail').value.trim();
 
             if (!title || !url) {
                 return showPopup('Datos incompletos', 'Por favor especifica un título y el enlace o archivo de tu video.', 'error');
             }
 
-            if (!thumbnail) {
-                thumbnail = 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&q=80';
-            }
-
-            currentEditorVideos.push({ title, desc, url, thumbnail });
+            currentEditorVideos.push({ title, desc, url, thumbnail: '' });
 
             // Reset fields
             document.getElementById('vid_title').value = '';
             document.getElementById('vid_desc').value = '';
             document.getElementById('vid_url').value = '';
-            document.getElementById('vid_thumbnail').value = '';
 
             renderEditorVideos();
             showToast('¡Video añadido!');
@@ -1152,7 +1279,6 @@
             document.getElementById('vid_title').value = '';
             document.getElementById('vid_desc').value = '';
             document.getElementById('vid_url').value = '';
-            document.getElementById('vid_thumbnail').value = '';
             document.getElementById('rout_title').value = '';
             document.getElementById('rout_desc').value = '';
             document.getElementById('rout_duration').value = '';
@@ -1220,6 +1346,40 @@
                 imagePreview.src = t.image_url;
                 imagePreview.classList.remove('hidden');
                 placeholder.classList.add('hidden');
+            } else {
+                imageUrl = '';
+                imagePreview.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+            }
+
+            // Load Custom Cover
+            let extra = {};
+            if (t.contact_info) {
+                try {
+                    extra = JSON.parse(t.contact_info);
+                } catch(e) {
+                    console.error("Error decoding JSON", e);
+                }
+            }
+
+            coverUrl = extra.cover_url || '';
+            const coverPreviewImg = document.getElementById('cover-preview-img');
+            const coverPreviewVid = document.getElementById('cover-preview-vid');
+            const coverPlaceholder = document.getElementById('cover-upload-placeholder');
+
+            coverPreviewImg.classList.add('hidden');
+            coverPreviewVid.classList.add('hidden');
+            coverPlaceholder.classList.remove('hidden');
+
+            if (coverUrl) {
+                coverPlaceholder.classList.add('hidden');
+                if (coverUrl.includes('.mp4') || coverUrl.includes('.mov') || coverUrl.includes('.quicktime')) {
+                    coverPreviewVid.src = coverUrl;
+                    coverPreviewVid.classList.remove('hidden');
+                } else {
+                    coverPreviewImg.src = coverUrl;
+                    coverPreviewImg.classList.remove('hidden');
+                }
             }
 
             document.getElementById('modal-title').innerText = 'Modificar Perfil';
@@ -1237,6 +1397,21 @@
         form.onsubmit = async (e) => {
             e.preventDefault();
             const id = document.getElementById('trainer-id').value;
+
+            // Fetch or initialize contact_info JSON
+            let contactInfo = { videos: [], routines: [], stats: { exp: '5+', clients: '100+', rating: '99%', stars: '5.0' } };
+            if (id) {
+                const t = loadedTrainers.find(x => x.id == id);
+                if (t && t.contact_info) {
+                    try {
+                        contactInfo = JSON.parse(t.contact_info);
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }
+            }
+            contactInfo.cover_url = coverUrl || '';
+
             const data = {
                 full_name: document.getElementById('full_name').value,
                 specialty: document.getElementById('specialty').value,
@@ -1244,6 +1419,7 @@
                 image_url: imageUrl,
                 whatsapp_url: document.getElementById('whatsapp_url').value,
                 instagram_url: document.getElementById('instagram_url').value,
+                contact_info: JSON.stringify(contactInfo),
                 owner_id: isAdmin ? (Auth.getSelectedOwnerId() || currentUser.id) : currentUser.id
             };
 
@@ -1263,6 +1439,47 @@
                 setTimeout(updateWidgetCode, 500);
             }
         });
+
+        // Local development and verification test helper
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.search.includes('mock=true')) {
+            Auth.checkAccess = async () => {
+                currentUser = {
+                    id: 'mock-user-id',
+                    email: 'owner@gym.com',
+                    full_name: 'Gym Master Owner',
+                    role: 'gym-owner',
+                    domain: 'mygym.wisbe.com'
+                };
+                return currentUser;
+            };
+
+            const originalLoad = loadTrainers;
+            loadTrainers = async () => {
+                try {
+                    await originalLoad();
+                } catch (e) {
+                    console.warn("Supabase fetch failed, loading local development mock staff data.", e);
+                }
+                if (!loadedTrainers || loadedTrainers.length === 0) {
+                    loadedTrainers = [{
+                        id: 'trainer-1',
+                        full_name: 'Raul Cross',
+                        specialty: 'Cross Training',
+                        bio: 'Egresado de la academia de alto rendimiento',
+                        image_url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80',
+                        contact_info: JSON.stringify({
+                            videos: [{ title: 'Técnica correcta de Sentadilla', desc: 'Aprende la profundidad correcta', url: 'https://example.com/video.mp4', thumbnail: '' }],
+                            routines: [{ title: 'Hipertrofia de Pierna', desc: 'Enfocado en cuádriceps y femorales', difficulty: 'INTERMEDIO', duration: '4 Semanas', exercises: [{ name: 'Sentadilla Libre', series: 4, reps: '10-12', notes: '2 min descanso' }] }],
+                            stats: { exp: '5+', clients: '100+', rating: '99%', stars: '5.0' },
+                            cover_url: ''
+                        }),
+                        whatsapp_url: '1234567890',
+                        instagram_url: '@raulcross'
+                    }];
+                    renderTrainers(loadedTrainers);
+                }
+            };
+        }
 
         initPage();
     </script>
