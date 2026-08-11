@@ -138,6 +138,350 @@
                 </form>
             </div>
         </div>
+
+        <!-- Trainer Landing Content Editor Modal -->
+        <div id="modal-landing-editor" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[110] hidden items-center justify-center p-4 overflow-y-auto">
+            <div class="card bg-white w-full max-w-4xl p-8 md:p-10 shadow-2xl animate-fade my-10 max-h-[90vh] flex flex-col rounded-[32px] border border-slate-200">
+                <div class="flex justify-between items-center mb-8 shrink-0">
+                    <div>
+                        <h2 class="text-2xl font-black text-slate-900 tracking-tight uppercase">Gestor de Contenido y Landing Page</h2>
+                        <p class="text-xs text-slate-500 font-medium mt-1">Sube videos, crea rutinas y personaliza las estadísticas de <span id="editor-trainer-name" class="font-bold text-blue-600">...</span></p>
+                    </div>
+                    <button id="close-landing-editor" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-colors border border-slate-200/50">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Tabs navigation -->
+                <div class="flex border-b border-slate-200 mb-8 gap-4 shrink-0">
+                    <button id="tab-btn-stats" class="py-3 px-4 border-b-2 border-blue-600 text-blue-600 font-black text-xs uppercase tracking-widest transition-all">
+                        <i class="fas fa-chart-bar mr-2"></i> Estadísticas
+                    </button>
+                    <button id="tab-btn-videos" class="py-3 px-4 border-b-2 border-transparent text-slate-400 hover:text-slate-600 font-black text-xs uppercase tracking-widest transition-all">
+                        <i class="fas fa-video mr-2"></i> Videos
+                    </button>
+                    <button id="tab-btn-routines" class="py-3 px-4 border-b-2 border-transparent text-slate-400 hover:text-slate-600 font-black text-xs uppercase tracking-widest transition-all">
+                        <i class="fas fa-running mr-2"></i> Rutinas
+                    </button>
+                </div>
+
+                <!-- Tab Contents Container (Scrollable) -->
+                <div class="flex-grow overflow-y-auto pr-2 custom-scrollbar space-y-6">
+                    <input type="hidden" id="editor-trainer-id">
+
+                    <!-- Tab 1: Stats -->
+                    <div id="tab-content-stats" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                            <div>
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Años de Experiencia</label>
+                                <input type="text" id="stat_exp" class="input" placeholder="Ej: 5+">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Alumnos Activos</label>
+                                <input type="text" id="stat_clients" class="input" placeholder="Ej: 100+">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Porcentaje Satisfacción</label>
+                                <input type="text" id="stat_rating" class="input" placeholder="Ej: 99%">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">Rating de Estrellas (1-5)</label>
+                                <input type="number" step="0.1" min="1" max="5" id="stat_stars" class="input" placeholder="Ej: 4.9">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Videos Manager -->
+                    <div id="tab-content-videos" class="hidden space-y-6">
+                        <!-- Add video form card -->
+                        <div class="bg-slate-50 border border-slate-200/60 p-6 rounded-2xl space-y-4">
+                            <h4 class="font-bold text-sm text-slate-800 uppercase tracking-tight flex items-center gap-2"><i class="fas fa-plus text-blue-500"></i> Publicar Nuevo Video</h4>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Título del Video</label>
+                                        <input type="text" id="vid_title" class="input text-xs" placeholder="Ej: Técnica correcta de Sentadilla">
+                                    </div>
+                                    <div>
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Descripción Breve</label>
+                                        <textarea id="vid_desc" rows="2" class="input text-xs resize-none" placeholder="Breve explicación sobre lo que enseñas..."></textarea>
+                                    </div>
+                                </div>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Origen del Video (Sube archivo o pega enlace)</label>
+                                        <div class="flex gap-2">
+                                            <input type="text" id="vid_url" class="input text-xs" placeholder="Pegar URL de YouTube / MP4...">
+                                            <button type="button" id="btn-upload-video-cloudinary" class="btn bg-slate-800 hover:bg-slate-700 text-white text-[10px] py-2 whitespace-nowrap px-4 rounded-xl">
+                                                <i class="fas fa-cloud-upload-alt mr-1"></i> Subir MP4
+                                            </button>
+                                            <input type="file" id="video-file-input" class="hidden" accept="video/mp4,video/quicktime">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Imagen de Portada (Opcional - Cloudinary o Unsplash)</label>
+                                        <input type="text" id="vid_thumbnail" class="input text-xs" placeholder="Ej: https://images.unsplash.com/photo-...">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" id="btn-add-video" class="w-full btn btn-primary py-3 text-[10px] font-black uppercase tracking-widest">
+                                <i class="fas fa-video mr-2"></i> Añadir Video a la Lista
+                            </button>
+                        </div>
+
+                        <!-- Published Videos List -->
+                        <div class="space-y-3">
+                            <h4 class="font-black text-[10px] text-slate-400 uppercase tracking-widest border-b pb-2">Videos Publicados</h4>
+                            <div id="editor-videos-list" class="space-y-3">
+                                <!-- Videos row render dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Routines Builder -->
+                    <div id="tab-content-routines" class="hidden space-y-6">
+                        <!-- Add Routine Form Card -->
+                        <div class="bg-slate-50 border border-slate-200/60 p-6 rounded-2xl space-y-4">
+                            <h4 class="font-bold text-sm text-slate-800 uppercase tracking-tight flex items-center gap-2"><i class="fas fa-plus text-emerald-500"></i> Publicar Nueva Rutina</h4>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="md:col-span-2 space-y-4">
+                                    <div>
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Título del Plan / Rutina</label>
+                                        <input type="text" id="rout_title" class="input text-xs" placeholder="Ej: Hipertrofia de Pierna">
+                                    </div>
+                                    <div>
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Descripción Corta</label>
+                                        <input type="text" id="rout_desc" class="input text-xs" placeholder="Ej: Enfocado en cuádriceps y femorales con alta intensidad.">
+                                    </div>
+                                </div>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Duración</label>
+                                        <input type="text" id="rout_duration" class="input text-xs" placeholder="Ej: 4 Semanas">
+                                    </div>
+                                    <div>
+                                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Dificultad</label>
+                                        <select id="rout_difficulty" class="input text-xs">
+                                            <option value="PRINCIPIANTE">PRINCIPIANTE</option>
+                                            <option value="INTERMEDIO" selected>INTERMEDIO</option>
+                                            <option value="AVANZADO">AVANZADO</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Exercises mini builder inside Routine Form -->
+                            <div class="border-t border-slate-200 pt-4 space-y-3">
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block font-bold">Constructor de Ejercicios</span>
+
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+                                    <div>
+                                        <label class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Nombre de Ejercicio</label>
+                                        <input type="text" id="ex_name" class="input text-xs" placeholder="Sentadilla Libre">
+                                    </div>
+                                    <div>
+                                        <label class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Series</label>
+                                        <input type="number" id="ex_series" class="input text-xs" placeholder="4">
+                                    </div>
+                                    <div>
+                                        <label class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Reps / Tiempo</label>
+                                        <input type="text" id="ex_reps" class="input text-xs" placeholder="10-12">
+                                    </div>
+                                    <div>
+                                        <label class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Instrucciones / Notas</label>
+                                        <input type="text" id="ex_notes" class="input text-xs" placeholder="2 min descanso">
+                                    </div>
+                                </div>
+                                <button type="button" id="btn-add-exercise" class="btn bg-slate-800 hover:bg-slate-700 text-white py-2 text-[9px] font-black uppercase tracking-widest rounded-xl">
+                                    <i class="fas fa-plus mr-1"></i> Agregar Ejercicio
+                                </button>
+
+                                <div class="space-y-2 mt-2">
+                                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest block">Ejercicios agregados a este plan:</span>
+                                    <div id="builder-exercises-list" class="space-y-2">
+                                        <!-- Realtime list of exercises currently added to the routine -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" id="btn-save-routine" class="w-full btn bg-emerald-600 hover:bg-emerald-500 text-white py-3 text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-600/10 rounded-xl">
+                                <i class="fas fa-save mr-2"></i> Guardar y Publicar Rutina
+                            </button>
+                        </div>
+
+                        <!-- Published Routines List -->
+                        <div class="space-y-3">
+                            <h4 class="font-black text-[10px] text-slate-400 uppercase tracking-widest border-b pb-2">Rutinas Publicadas</h4>
+                            <div id="editor-routines-list" class="space-y-3">
+                                <!-- Routines row render dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Save Action -->
+                <div class="pt-6 border-t border-slate-100 mt-8 shrink-0 flex gap-4">
+                    <button id="btn-save-landing-all" class="w-full btn btn-primary py-4 text-xs font-black uppercase tracking-widest shadow-xl shadow-blue-600/25 rounded-xl">
+                        Guardar Todos los Cambios del Perfil
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trainer Landing Page Preview Modal -->
+        <div id="modal-landing-preview" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[120] hidden flex-col overflow-y-auto p-0 md:p-6">
+            <div class="bg-slate-950 min-h-screen w-full max-w-5xl mx-auto rounded-none md:rounded-[40px] shadow-2xl border border-slate-800 flex flex-col relative overflow-hidden text-slate-100">
+
+                <!-- Floating close & share action buttons -->
+                <div class="absolute top-6 right-6 z-[130] flex gap-3">
+                    <button id="btn-share-landing" class="w-12 h-12 rounded-full bg-slate-800/80 backdrop-blur text-white flex items-center justify-center hover:bg-slate-700 hover:scale-105 transition-all border border-slate-700">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                    <button id="close-landing-preview" class="w-12 h-12 rounded-full bg-slate-800/80 backdrop-blur text-white flex items-center justify-center hover:bg-red-600 hover:scale-105 transition-all border border-slate-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <!-- Hero Section / Cover Banner -->
+                <div class="relative h-72 md:h-[350px] w-full bg-cover bg-center bg-no-repeat" style="background-image: url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&q=80');">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/45 to-transparent"></div>
+
+                    <!-- Trainer Info overlay inside Hero -->
+                    <div class="absolute bottom-0 inset-x-0 p-8 md:p-12 flex flex-col md:flex-row items-center md:items-end gap-6 text-center md:text-left">
+                        <!-- Profile Image -->
+                        <div class="w-32 h-32 rounded-full border-4 border-blue-500 overflow-hidden shadow-2xl relative bg-slate-850 shrink-0">
+                            <img id="landing-avatar" src="" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-2">
+                                <span id="landing-specialty" class="px-4 py-1.5 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg shadow-blue-600/30">ESPECIALIDAD</span>
+                                <div class="flex items-center gap-1 bg-slate-800 border border-slate-700 px-3 py-1 rounded-full text-amber-400 text-xs font-black">
+                                    <i class="fas fa-star"></i>
+                                    <span>5.0</span>
+                                </div>
+                            </div>
+                            <h2 id="landing-name" class="text-3xl md:text-5xl font-black text-white tracking-tight uppercase">COACH NAME</h2>
+                            <p id="landing-bio-short" class="text-slate-400 mt-2 font-medium max-w-xl text-sm leading-relaxed">BIOGRAPHY</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <a id="landing-whatsapp" href="#" target="_blank" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black uppercase tracking-widest rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-emerald-600/20">
+                                <i class="fab fa-whatsapp text-lg"></i> Asesoría Gratis
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Body -->
+                <div class="p-8 md:p-12 space-y-12 bg-slate-950">
+
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-slate-900 border border-slate-800/80 p-6 rounded-2xl text-center shadow-lg">
+                            <span class="block text-3xl font-black text-blue-500 mb-1" id="landing-stat-exp">5+</span>
+                            <span class="text-[10px] text-slate-400 font-black uppercase tracking-wider">Años de Exp.</span>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800/80 p-6 rounded-2xl text-center shadow-lg">
+                            <span class="block text-3xl font-black text-emerald-500 mb-1" id="landing-stat-clients">120+</span>
+                            <span class="text-[10px] text-slate-400 font-black uppercase tracking-wider">Alumnos Activos</span>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800/80 p-6 rounded-2xl text-center shadow-lg">
+                            <span class="block text-3xl font-black text-purple-500 mb-1" id="landing-stat-videos">8+</span>
+                            <span class="text-[10px] text-slate-400 font-black uppercase tracking-wider">Videos de Técnica</span>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800/80 p-6 rounded-2xl text-center shadow-lg">
+                            <span class="block text-3xl font-black text-pink-500 mb-1" id="landing-stat-rating">99%</span>
+                            <span class="text-[10px] text-slate-400 font-black uppercase tracking-wider">Satisfacción</span>
+                        </div>
+                    </div>
+
+                    <!-- Layout: Videos & Routines -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                        <!-- Left Side: Videos (Col span 2) -->
+                        <div class="lg:col-span-2 space-y-6">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                                <h3 class="text-xl font-black uppercase tracking-tight text-white flex items-center gap-2">
+                                    <i class="fas fa-video text-blue-500 animate-pulse"></i> Videoteca de Entrenamiento
+                                </h3>
+                                <span class="text-xs font-black text-slate-400 uppercase tracking-widest bg-slate-900 border border-slate-800 px-3 py-1 rounded-full">Exclusivo</span>
+                            </div>
+
+                            <div id="landing-videos-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Videos render dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Right Side: Routines (Col span 1) -->
+                        <div class="space-y-6">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                                <h3 class="text-xl font-black uppercase tracking-tight text-white flex items-center gap-2">
+                                    <i class="fas fa-running text-emerald-500"></i> Rutinas y Planes
+                                </h3>
+                                <span class="text-xs font-black text-slate-400 uppercase tracking-widest bg-slate-900 border border-slate-800 px-3 py-1 rounded-full">PDF</span>
+                            </div>
+
+                            <div id="landing-routines-list" class="space-y-4">
+                                <!-- Routines render dynamically -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Video Player Overlay Modal -->
+        <div id="modal-video-player" class="fixed inset-0 bg-slate-950/95 z-[150] hidden items-center justify-center p-4">
+            <div class="bg-slate-900 w-full max-w-4xl rounded-3xl border border-slate-800 overflow-hidden shadow-2xl relative">
+                <button id="close-video-player" class="absolute top-4 right-4 z-[160] w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center hover:bg-red-600 transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div id="video-container" class="aspect-video w-full bg-black">
+                    <!-- Dynamic Video Element or Iframe -->
+                </div>
+                <div class="p-6 bg-slate-900 text-white border-t border-slate-800">
+                    <h4 id="player-video-title" class="text-xl font-black uppercase text-blue-400">Video Title</h4>
+                    <p id="player-video-desc" class="text-slate-400 text-sm mt-1">Video description</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Routine Details Modal -->
+        <div id="modal-routine-details" class="fixed inset-0 bg-slate-950/90 z-[140] hidden items-center justify-center p-4 overflow-y-auto">
+            <div class="bg-slate-900 w-full max-w-2xl rounded-3xl border border-slate-800 overflow-hidden shadow-2xl relative my-8">
+                <button id="close-routine-details" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center hover:bg-red-600 transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="p-8 md:p-10 space-y-6 text-white">
+                    <div class="flex items-center gap-3">
+                        <span class="p-3 rounded-2xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"><i class="fas fa-dumbbell text-xl"></i></span>
+                        <div>
+                            <span id="detail-routine-level" class="text-[9px] font-black text-emerald-500 uppercase tracking-widest">NIVEL</span>
+                            <h3 id="detail-routine-title" class="text-2xl font-black uppercase tracking-tight text-white">Routine Title</h3>
+                        </div>
+                    </div>
+                    <p id="detail-routine-desc" class="text-slate-400 text-sm leading-relaxed">Description...</p>
+
+                    <div class="border-t border-slate-800 pt-6">
+                        <h4 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Ejercicios Incluidos</h4>
+                        <div id="detail-exercises-list" class="space-y-3">
+                            <!-- Exercises list -->
+                        </div>
+                    </div>
+
+                    <div class="pt-6 flex gap-4">
+                        <button id="btn-print-routine" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all">
+                            <i class="fas fa-print mr-2"></i> Imprimir Plan de Entrenamiento
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script type="module">
@@ -222,22 +566,63 @@
             }
 
             grid.innerHTML = trainers.map(t => `
-                <div class="card group hover:border-blue-500 transition-all text-center flex flex-col items-center py-10 animate-fade">
-                    <div class="w-24 h-24 rounded-full border-4 border-slate-50 overflow-hidden mb-6 bg-slate-100 shadow-sm relative">
-                        <img src="${t.image_url || 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80'}"
-                             class="w-full h-full object-cover">
+                <div class="card group relative bg-white rounded-[32px] border border-slate-200 shadow-md hover:shadow-2xl hover:border-blue-500 hover:-translate-y-1.5 transition-all duration-300 flex flex-col p-6 animate-fade">
+                    <!-- Rating Overlay -->
+                    <div class="absolute top-4 right-4 flex items-center gap-1 bg-amber-50/90 backdrop-blur-sm border border-amber-200 px-3 py-1 rounded-full text-amber-500 text-xs font-black">
+                        <i class="fas fa-star text-[10px]"></i>
+                        <span>5.0</span>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-1">${t.full_name}</h3>
-                    <p class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-4">${t.specialty}</p>
-                    <p class="text-xs text-slate-500 mb-8 line-clamp-2 px-4">${t.bio || 'Sin descripción'}</p>
 
-                    <div class="mt-auto flex gap-3 pt-6 border-t border-slate-100 w-full px-6">
-                        <button onclick="editTrainer('${t.id}')" class="flex-grow btn bg-slate-50 text-slate-600 hover:bg-blue-600 hover:text-white transition-all text-[10px] font-black uppercase tracking-widest py-2">
-                            EDITAR
+                    <!-- Decorative Banner Pattern -->
+                    <div class="w-full h-20 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 rounded-2xl mb-12 relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 w-16 h-16 bg-blue-500/20 rounded-full blur-xl"></div>
+                        <div class="absolute -left-4 -bottom-4 w-12 h-12 bg-indigo-500/20 rounded-full blur-lg"></div>
+                    </div>
+
+                    <!-- Profile Avatar Container -->
+                    <div class="absolute top-10 left-1/2 -translate-x-1/2 w-24 h-24 rounded-full p-1 bg-white shadow-md border-2 border-blue-500/30 overflow-hidden group-hover:scale-105 group-hover:border-blue-500 transition-all duration-300">
+                        <img src="${t.image_url || 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80'}" class="w-full h-full object-cover rounded-full">
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="text-center mt-4 mb-6 flex-grow flex flex-col">
+                        <h3 class="text-xl font-black text-slate-900 tracking-tight group-hover:text-blue-600 transition-colors uppercase">${t.full_name}</h3>
+                        <span class="inline-block mx-auto mt-2 px-3 py-1 bg-blue-50 text-blue-600 text-[9px] font-black uppercase tracking-widest rounded-full border border-blue-100">${t.specialty}</span>
+
+                        <p class="text-xs text-slate-500 mt-4 leading-relaxed line-clamp-3 font-medium px-2 flex-grow">${t.bio || 'Sin biografía disponible. ¡Completa su perfil para inspirar a más alumnos!'}</p>
+
+                        <!-- Social Media Quick Badges -->
+                        <div class="flex justify-center gap-3 mt-4">
+                            ${t.whatsapp_url ? `
+                                <a href="${t.whatsapp_url.startsWith('http') ? t.whatsapp_url : 'https://wa.me/' + t.whatsapp_url}" target="_blank" class="w-8 h-8 rounded-full bg-emerald-50 hover:bg-emerald-500 hover:text-white text-emerald-600 flex items-center justify-center text-xs transition-all border border-emerald-100" title="WhatsApp">
+                                    <i class="fab fa-whatsapp"></i>
+                                </a>
+                            ` : ''}
+                            ${t.instagram_url ? `
+                                <a href="https://instagram.com/${t.instagram_url.replace('@','')}" target="_blank" class="w-8 h-8 rounded-full bg-pink-50 hover:bg-pink-500 hover:text-white text-pink-600 flex items-center justify-center text-xs transition-all border border-pink-100" title="Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Action Menus -->
+                    <div class="mt-auto space-y-2.5 pt-4 border-t border-slate-100 w-full">
+                        <button onclick="openLandingPage('${t.id}')" class="w-full btn bg-slate-900 text-white hover:bg-blue-600 transition-all text-[10px] font-black uppercase tracking-widest py-3 rounded-xl flex items-center justify-center gap-2 shadow-sm">
+                            <i class="fas fa-magic text-blue-400"></i> Ver Landing Page
                         </button>
-                        <button onclick="deleteTrainer('${t.id}')" class="btn bg-slate-50 text-slate-400 hover:bg-red-50 hover:text-red-500 transition-all w-10 h-10">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
+
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="openLandingEditor('${t.id}')" class="btn bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all text-[9px] font-black uppercase tracking-widest py-2 rounded-xl flex items-center justify-center gap-1" title="Gestionar Videos, Rutinas y Contenido">
+                                <i class="fas fa-folder-open"></i> Contenido
+                            </button>
+                            <button onclick="editTrainer('${t.id}')" class="btn bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all text-[9px] font-black uppercase tracking-widest py-2 rounded-xl flex items-center justify-center gap-1">
+                                <i class="fas fa-edit"></i> Datos
+                            </button>
+                            <button onclick="deleteTrainer('${t.id}')" class="btn bg-red-50 text-red-500 hover:bg-red-100 transition-all text-[9px] font-black uppercase tracking-widest py-2 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             `).join('');
@@ -277,6 +662,506 @@
                 btn.innerText = 'GUARDAR PERFIL';
             }
         );
+
+        // Close modals on clicks
+        document.getElementById('close-landing-preview').onclick = () => {
+            document.getElementById('modal-landing-preview').style.display = 'none';
+        };
+        document.getElementById('close-video-player').onclick = () => {
+            document.getElementById('modal-video-player').style.display = 'none';
+            document.getElementById('video-container').innerHTML = '';
+        };
+        document.getElementById('close-routine-details').onclick = () => {
+            document.getElementById('modal-routine-details').style.display = 'none';
+        };
+
+        window.playVideo = (title, desc, url) => {
+            const container = document.getElementById('video-container');
+            document.getElementById('player-video-title').innerText = title;
+            document.getElementById('player-video-desc').innerText = desc || 'Sin descripción adicional.';
+
+            let html = '';
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                let videoId = '';
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                const match = url.match(regExp);
+                if (match && match[2].length == 11) {
+                    videoId = match[2];
+                }
+                html = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            } else {
+                html = `<video class="w-full h-full animate-fade" controls autoplay src="${url}"></video>`;
+            }
+
+            container.innerHTML = html;
+            document.getElementById('modal-video-player').style.display = 'flex';
+        };
+
+        window.viewRoutineDetails = (title, desc, level, exercisesJsonStr) => {
+            document.getElementById('detail-routine-title').innerText = title;
+            document.getElementById('detail-routine-desc').innerText = desc || 'Sin descripción para esta rutina.';
+            document.getElementById('detail-routine-level').innerText = level || 'INTERMEDIO';
+
+            let exercises = [];
+            try {
+                exercises = JSON.parse(decodeURIComponent(exercisesJsonStr));
+            } catch (e) {
+                console.error("Error parsing exercises", e);
+            }
+
+            const list = document.getElementById('detail-exercises-list');
+            if (exercises.length === 0) {
+                list.innerHTML = `<div class="text-slate-500 text-center py-4 italic">No hay ejercicios registrados en esta rutina.</div>`;
+            } else {
+                list.innerHTML = exercises.map((ex, i) => `
+                    <div class="p-4 bg-slate-800/50 border border-slate-850 rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="w-6 h-6 rounded-full bg-blue-500/10 text-blue-400 text-xs font-black flex items-center justify-center border border-blue-400/20">${i+1}</span>
+                            <div>
+                                <h5 class="font-bold text-sm uppercase text-white">${ex.name}</h5>
+                                <span class="text-[10px] text-slate-400 font-medium block mt-0.5">Instrucciones: ${ex.notes || 'Ninguna'}</span>
+                            </div>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <span class="block text-xs font-black text-blue-400 uppercase tracking-widest">${ex.series} series</span>
+                            <span class="block text-[10px] text-slate-400 font-bold">${ex.reps} reps</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('btn-print-routine').onclick = () => {
+                window.print();
+            };
+
+            document.getElementById('modal-routine-details').style.display = 'flex';
+        };
+
+        window.openLandingPage = (id) => {
+            const t = loadedTrainers.find(x => x.id == id);
+            if (!t) return;
+
+            let extra = { videos: [], routines: [], stats: { exp: '5+', clients: '100+', workouts: '12+', rating: '99%' } };
+            if (t.contact_info) {
+                try {
+                    extra = JSON.parse(t.contact_info);
+                } catch(e) {
+                    console.error("Error decoding contact_info JSON", e);
+                }
+            }
+
+            // Fill basic profile details
+            document.getElementById('landing-avatar').src = t.image_url || 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80';
+            document.getElementById('landing-name').innerText = t.full_name;
+            document.getElementById('landing-specialty').innerText = t.specialty;
+            document.getElementById('landing-bio-short').innerText = t.bio || '¡Instructor certificado enfocado en potenciar tu nivel y resultados de manera profesional!';
+
+            const whatsappEl = document.getElementById('landing-whatsapp');
+            if (t.whatsapp_url) {
+                whatsappEl.href = t.whatsapp_url.startsWith('http') ? t.whatsapp_url : 'https://wa.me/' + t.whatsapp_url;
+                whatsappEl.classList.remove('hidden');
+            } else {
+                whatsappEl.classList.add('hidden');
+            }
+
+            // Fill statistics
+            document.getElementById('landing-stat-exp').innerText = extra.stats?.exp || '5+';
+            document.getElementById('landing-stat-clients').innerText = extra.stats?.clients || '100+';
+            document.getElementById('landing-stat-videos').innerText = extra.videos?.length || '0';
+            document.getElementById('landing-stat-rating').innerText = extra.stats?.rating || '99%';
+
+            // Fill Videos Gallery
+            const videosGrid = document.getElementById('landing-videos-grid');
+            if (!extra.videos || extra.videos.length === 0) {
+                videosGrid.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">
+                        <i class="fas fa-video-slash text-3xl mb-3 block text-slate-600"></i>
+                        <span class="text-xs font-bold uppercase tracking-wider block">Sin videos publicados</span>
+                        <span class="text-[10px] text-slate-500 block mt-1">Sube videos desde el Gestor de Contenido</span>
+                    </div>
+                `;
+            } else {
+                videosGrid.innerHTML = extra.videos.map(v => `
+                    <div onclick="playVideo('${v.title.replace(/'/g, "\\'")}', '${(v.desc || '').replace(/'/g, "\\'")}', '${v.url}')" class="group/vid bg-slate-900 border border-slate-800/80 rounded-2xl overflow-hidden shadow-lg hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/5 transition-all duration-300 cursor-pointer">
+                        <div class="aspect-video relative bg-slate-950 flex items-center justify-center overflow-hidden">
+                            <img src="${v.thumbnail || 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&q=80'}" class="w-full h-full object-cover opacity-60 group-hover/vid:scale-105 transition-transform duration-500">
+                            <!-- Play button absolute overlay -->
+                            <div class="absolute w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center text-lg shadow-xl shadow-blue-600/30 group-hover/vid:bg-blue-500 group-hover/vid:scale-110 transition-all duration-300 animate-fade">
+                                <i class="fas fa-play ml-1"></i>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <h4 class="font-black text-sm uppercase text-white group-hover/vid:text-blue-400 transition-colors">${v.title}</h4>
+                            <p class="text-xs text-slate-400 mt-1.5 line-clamp-2 font-medium">${v.desc || 'Sin descripción'}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Fill Routines List
+            const routinesList = document.getElementById('landing-routines-list');
+            if (!extra.routines || extra.routines.length === 0) {
+                routinesList.innerHTML = `
+                    <div class="py-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-2xl">
+                        <i class="fas fa-dumbbell text-2xl mb-3 block text-slate-600"></i>
+                        <span class="text-xs font-bold uppercase tracking-wider block">Sin rutinas publicadas</span>
+                        <span class="text-[10px] text-slate-500 block mt-1">Crea rutinas desde el Gestor de Contenido</span>
+                    </div>
+                `;
+            } else {
+                routinesList.innerHTML = extra.routines.map(r => {
+                    const exercisesStr = encodeURIComponent(JSON.stringify(r.exercises || []));
+                    return `
+                        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl hover:border-emerald-500/50 transition-all shadow-md group/rout">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-2.5 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[9px] font-black uppercase tracking-widest rounded-full">${r.difficulty || 'INTERMEDIO'}</span>
+                                <span class="text-[10px] text-slate-400 font-bold"><i class="far fa-clock mr-1"></i> ${r.duration || '4 Semanas'}</span>
+                            </div>
+                            <h4 class="font-black text-sm text-white uppercase tracking-tight group-hover/rout:text-emerald-400 transition-colors">${r.title}</h4>
+                            <p class="text-xs text-slate-400 mt-1 line-clamp-2 font-medium">${r.desc || 'Plan estructurado.'}</p>
+
+                            <button onclick="viewRoutineDetails('${r.title.replace(/'/g, "\\'")}', '${(r.desc || '').replace(/'/g, "\\'")}', '${r.difficulty}', '${exercisesStr}')" class="w-full mt-4 py-2 bg-slate-800 hover:bg-emerald-600 hover:text-white text-slate-300 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-1.5">
+                                Ver Plan Completo <i class="fas fa-chevron-right text-[8px]"></i>
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Copy Link / Share Toast setup
+            document.getElementById('btn-share-landing').onclick = () => {
+                const url = window.location.origin + window.location.pathname + `?trainer=${t.id}`;
+                navigator.clipboard.writeText(url).then(() => {
+                    showToast('¡Enlace de landing page copiado!');
+                });
+            };
+
+            document.getElementById('modal-landing-preview').style.display = 'flex';
+        };
+
+        // CONTENT MANAGER FOR TRAINER LANDING PAGES
+        let currentEditorVideos = [];
+        let currentEditorRoutines = [];
+        let currentBuilderExercises = [];
+
+        // Close editor
+        document.getElementById('close-landing-editor').onclick = () => {
+            document.getElementById('modal-landing-editor').style.display = 'none';
+        };
+
+        // Tab switches
+        const tabBtns = {
+            stats: document.getElementById('tab-btn-stats'),
+            videos: document.getElementById('tab-btn-videos'),
+            routines: document.getElementById('tab-btn-routines')
+        };
+        const tabContents = {
+            stats: document.getElementById('tab-content-stats'),
+            videos: document.getElementById('tab-content-videos'),
+            routines: document.getElementById('tab-content-routines')
+        };
+
+        function switchTab(activeTab) {
+            Object.keys(tabBtns).forEach(k => {
+                if (k === activeTab) {
+                    tabBtns[k].classList.add('border-blue-600', 'text-blue-600');
+                    tabBtns[k].classList.remove('border-transparent', 'text-slate-400');
+                    tabContents[k].classList.remove('hidden');
+                } else {
+                    tabBtns[k].classList.remove('border-blue-600', 'text-blue-600');
+                    tabBtns[k].classList.add('border-transparent', 'text-slate-400');
+                    tabContents[k].classList.add('hidden');
+                }
+            });
+        }
+
+        tabBtns.stats.onclick = () => switchTab('stats');
+        tabBtns.videos.onclick = () => switchTab('videos');
+        tabBtns.routines.onclick = () => switchTab('routines');
+
+        // Cloudinary video upload triggers
+        const videoFileInput = document.getElementById('video-file-input');
+        document.getElementById('btn-upload-video-cloudinary').onclick = () => {
+            videoFileInput.click();
+        };
+
+        videoFileInput.onchange = async () => {
+            const file = videoFileInput.files[0];
+            if (!file) return;
+
+            const btn = document.getElementById('btn-upload-video-cloudinary');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Subiendo...`;
+
+            try {
+                const url = await uploadToCloudinary(file);
+                document.getElementById('vid_url').value = url;
+                showToast('¡Video subido con éxito!');
+            } catch (err) {
+                console.error(err);
+                showPopup('Error', 'No se pudo subir el video a Cloudinary. Intenta con un archivo más pequeño o un enlace directo.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        };
+
+        // Render editor video list
+        function renderEditorVideos() {
+            const container = document.getElementById('editor-videos-list');
+            if (currentEditorVideos.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic py-4 text-center border border-dashed rounded-2xl">No hay videos publicados aún.</p>`;
+                return;
+            }
+
+            container.innerHTML = currentEditorVideos.map((v, i) => `
+                <div class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-2xl">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-lg bg-slate-200 overflow-hidden shrink-0">
+                            <img src="${v.thumbnail || 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&q=80'}" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-xs uppercase text-slate-800 line-clamp-1">${v.title}</h5>
+                            <span class="text-[9px] text-slate-400 line-clamp-1 font-mono">${v.url}</span>
+                        </div>
+                    </div>
+                    <button onclick="removeEditorVideo(${i})" class="w-8 h-8 rounded-full bg-red-50 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all">
+                        <i class="fas fa-trash-alt text-xs"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        window.removeEditorVideo = (index) => {
+            currentEditorVideos.splice(index, 1);
+            renderEditorVideos();
+            showToast('Video removido.');
+        };
+
+        // Add video to list
+        document.getElementById('btn-add-video').onclick = () => {
+            const title = document.getElementById('vid_title').value.trim();
+            const desc = document.getElementById('vid_desc').value.trim();
+            const url = document.getElementById('vid_url').value.trim();
+            let thumbnail = document.getElementById('vid_thumbnail').value.trim();
+
+            if (!title || !url) {
+                return showPopup('Datos incompletos', 'Por favor especifica un título y el enlace o archivo de tu video.', 'error');
+            }
+
+            if (!thumbnail) {
+                thumbnail = 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&q=80';
+            }
+
+            currentEditorVideos.push({ title, desc, url, thumbnail });
+
+            // Reset fields
+            document.getElementById('vid_title').value = '';
+            document.getElementById('vid_desc').value = '';
+            document.getElementById('vid_url').value = '';
+            document.getElementById('vid_thumbnail').value = '';
+
+            renderEditorVideos();
+            showToast('¡Video añadido!');
+        };
+
+        // Render routine builder exercises
+        function renderBuilderExercises() {
+            const container = document.getElementById('builder-exercises-list');
+            if (currentBuilderExercises.length === 0) {
+                container.innerHTML = `<span class="text-[9px] text-slate-400 italic">No hay ejercicios en esta rutina. Agrega al menos uno abajo.</span>`;
+                return;
+            }
+
+            container.innerHTML = currentBuilderExercises.map((ex, i) => `
+                <div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+                    <div class="flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-full bg-slate-100 text-slate-600 font-bold text-[10px] flex items-center justify-center">${i+1}</span>
+                        <div>
+                            <span class="font-bold text-xs uppercase text-slate-800 block">${ex.name}</span>
+                            <span class="text-[9px] text-slate-400">${ex.series} series x ${ex.reps} reps | ${ex.notes || 'Sin notas'}</span>
+                        </div>
+                    </div>
+                    <button type="button" onclick="removeBuilderExercise(${i})" class="text-red-400 hover:text-red-500 text-xs px-2">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        window.removeBuilderExercise = (index) => {
+            currentBuilderExercises.splice(index, 1);
+            renderBuilderExercises();
+        };
+
+        // Add exercise to builder
+        document.getElementById('btn-add-exercise').onclick = () => {
+            const name = document.getElementById('ex_name').value.trim();
+            const series = document.getElementById('ex_series').value.trim();
+            const reps = document.getElementById('ex_reps').value.trim();
+            const notes = document.getElementById('ex_notes').value.trim();
+
+            if (!name || !series || !reps) {
+                return showPopup('Faltan Datos', 'Por favor especifica el nombre, series y repeticiones del ejercicio.', 'error');
+            }
+
+            currentBuilderExercises.push({ name, series, reps, notes });
+
+            // Reset fields
+            document.getElementById('ex_name').value = '';
+            document.getElementById('ex_series').value = '';
+            document.getElementById('ex_reps').value = '';
+            document.getElementById('ex_notes').value = '';
+
+            renderBuilderExercises();
+            showToast('Ejercicio agregado a la rutina.');
+        };
+
+        // Render editor routines list
+        function renderEditorRoutines() {
+            const container = document.getElementById('editor-routines-list');
+            if (currentEditorRoutines.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic py-4 text-center border border-dashed rounded-2xl">No hay rutinas creadas aún.</p>`;
+                return;
+            }
+
+            container.innerHTML = currentEditorRoutines.map((r, i) => `
+                <div class="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-2xl">
+                    <div>
+                        <span class="px-2 py-0.5 bg-emerald-50 text-emerald-600 border border-emerald-100 text-[8px] font-black uppercase rounded-full">${r.difficulty}</span>
+                        <h5 class="font-bold text-xs uppercase text-slate-800 mt-1">${r.title}</h5>
+                        <p class="text-[10px] text-slate-400 font-medium">${r.exercises ? r.exercises.length : 0} Ejercicios | Duración: ${r.duration}</p>
+                    </div>
+                    <button onclick="removeEditorRoutine(${i})" class="w-8 h-8 rounded-full bg-red-50 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all">
+                        <i class="fas fa-trash-alt text-xs"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        window.removeEditorRoutine = (index) => {
+            currentEditorRoutines.splice(index, 1);
+            renderEditorRoutines();
+            showToast('Rutina removida.');
+        };
+
+        // Save built routine to editor list
+        document.getElementById('btn-save-routine').onclick = () => {
+            const title = document.getElementById('rout_title').value.trim();
+            const desc = document.getElementById('rout_desc').value.trim();
+            const duration = document.getElementById('rout_duration').value.trim() || '4 Semanas';
+            const difficulty = document.getElementById('rout_difficulty').value;
+
+            if (!title) {
+                return showPopup('Falta Título', 'Especifica un título para guardar esta rutina.', 'error');
+            }
+
+            if (currentBuilderExercises.length === 0) {
+                return showPopup('Sin Ejercicios', 'Agrega al menos un ejercicio a esta rutina antes de guardarla.', 'error');
+            }
+
+            currentEditorRoutines.push({
+                title,
+                desc,
+                duration,
+                difficulty,
+                exercises: [...currentBuilderExercises]
+            });
+
+            // Reset fields
+            document.getElementById('rout_title').value = '';
+            document.getElementById('rout_desc').value = '';
+            document.getElementById('rout_duration').value = '';
+            currentBuilderExercises = [];
+
+            renderBuilderExercises();
+            renderEditorRoutines();
+            showToast('¡Rutina creada y listada para publicar!');
+        };
+
+        // Open content manager / editor modal
+        window.openLandingEditor = (id) => {
+            const t = loadedTrainers.find(x => x.id == id);
+            if (!t) return;
+
+            document.getElementById('editor-trainer-id').value = t.id;
+            document.getElementById('editor-trainer-name').innerText = t.full_name;
+
+            let extra = { videos: [], routines: [], stats: { exp: '5+', clients: '100+', rating: '99%', stars: '5.0' } };
+            if (t.contact_info) {
+                try {
+                    extra = JSON.parse(t.contact_info);
+                } catch(e) {
+                    console.error("Error decoding contact_info JSON", e);
+                }
+            }
+
+            currentEditorVideos = extra.videos || [];
+            currentEditorRoutines = extra.routines || [];
+            currentBuilderExercises = [];
+
+            // Set dynamic stat fields
+            document.getElementById('stat_exp').value = extra.stats?.exp || '5+';
+            document.getElementById('stat_clients').value = extra.stats?.clients || '100+';
+            document.getElementById('stat_rating').value = extra.stats?.rating || '99%';
+            document.getElementById('stat_stars').value = extra.stats?.stars || '5.0';
+
+            // Reset input builders
+            document.getElementById('vid_title').value = '';
+            document.getElementById('vid_desc').value = '';
+            document.getElementById('vid_url').value = '';
+            document.getElementById('vid_thumbnail').value = '';
+            document.getElementById('rout_title').value = '';
+            document.getElementById('rout_desc').value = '';
+            document.getElementById('rout_duration').value = '';
+
+            renderEditorVideos();
+            renderEditorRoutines();
+            renderBuilderExercises();
+
+            switchTab('stats');
+
+            document.getElementById('modal-landing-editor').style.display = 'flex';
+        };
+
+        // Save all editor changes to Supabase!
+        document.getElementById('btn-save-landing-all').onclick = async () => {
+            const id = document.getElementById('editor-trainer-id').value;
+            if (!id) return;
+
+            const saveBtn = document.getElementById('btn-save-landing-all');
+            const originalText = saveBtn.innerText;
+            saveBtn.disabled = true;
+            saveBtn.innerText = 'GUARDANDO CAMBIOS EN LA NUBE...';
+
+            const finalData = {
+                videos: currentEditorVideos,
+                routines: currentEditorRoutines,
+                stats: {
+                    exp: document.getElementById('stat_exp').value.trim() || '5+',
+                    clients: document.getElementById('stat_clients').value.trim() || '100+',
+                    rating: document.getElementById('stat_rating').value.trim() || '99%',
+                    stars: document.getElementById('stat_stars').value.trim() || '5.0'
+                }
+            };
+
+            const { error } = await supabase
+                .from('gym_trainers')
+                .update({ contact_info: JSON.stringify(finalData) })
+                .eq('id', id);
+
+            saveBtn.disabled = false;
+            saveBtn.innerText = originalText;
+
+            if (error) {
+                return showPopup('Error al Guardar', error.message, 'error');
+            }
+
+            document.getElementById('modal-landing-editor').style.display = 'none';
+            showPopup('Guardado Exitoso', 'Los videos, rutinas y estadísticas se han sincronizado correctamente.');
+            loadTrainers();
+        };
 
         window.editTrainer = (id) => {
             const t = loadedTrainers.find(x => x.id == id);
