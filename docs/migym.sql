@@ -71,6 +71,11 @@ FOR ALL TO authenticated
 USING (owner_id = auth.uid())
 WITH CHECK (owner_id = auth.uid());
 
+-- 7. Notificar a PostgREST para recargar la caché del esquema de base de datos inmediatamente
+-- Esto asegura que la nueva columna 'nfc_uid' se reconozca de inmediato en las APIs de Supabase sin el error "Could not find column in schema cache"
+-- Nota: Ejecutar esto al final del script DDL en la consola de Supabase SQL Editor.
+NOTIFY pgrst, 'reload schema';
+
 -- 5. Políticas para gym_clients
 CREATE POLICY "Admin has full access on gym_clients" ON public.gym_clients
 FOR ALL TO authenticated
