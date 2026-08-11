@@ -25,30 +25,8 @@
 
         <h1 class="text-2xl font-black uppercase tracking-widest opacity-80 mb-12">Panel Wisbe</h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20 animate-fade">
-            <!-- Usuarios -->
-            <a href="adminUsuarios.html" class="neu-card p-8 group">
-                <i class="fas fa-users text-4xl mb-4 transition-all duration-300 group-hover:scale-110"></i>
-                <span class="text-sm font-bold uppercase tracking-widest">Usuarios</span>
-            </a>
-
-            <!-- Nutrición -->
-            <a href="adminNutricion.html" class="neu-card p-8 group">
-                <i class="fas fa-leaf text-4xl mb-4 transition-all duration-300 group-hover:scale-110"></i>
-                <span class="text-sm font-bold uppercase tracking-widest">Nutrición</span>
-            </a>
-
-            <!-- Rutinas -->
-            <a href="adminRutinas.html" class="neu-card p-8 group">
-                <i class="fas fa-dumbbell text-4xl mb-4 transition-all duration-300 group-hover:scale-110"></i>
-                <span class="text-sm font-bold uppercase tracking-widest">Rutinas</span>
-            </a>
-
-            <!-- Entrenadores -->
-            <a href="adminEntrenadores.html" class="neu-card p-8 group">
-                <i class="fas fa-user-tie text-4xl mb-4 transition-all duration-300 group-hover:scale-110"></i>
-                <span class="text-sm font-bold uppercase tracking-widest">Equipo</span>
-            </a>
+        <div id="gym-slots-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20 animate-fade">
+            <!-- Los slots se cargarán dinámicamente según el rol del usuario -->
         </div>
 
         <!-- Widget Section -->
@@ -115,7 +93,63 @@
                 });
             }
 
+            renderSlots();
             updateWidgetCode();
+        }
+
+        function renderSlots() {
+            const grid = document.getElementById('gym-slots-grid');
+            if (!grid) return;
+
+            let html = '';
+
+            // 1. Usuarios (Solo visible para administrador)
+            if (isAdmin) {
+                html += `
+                    <a href="adminUsuarios.html" class="neu-card p-8 group">
+                        <i class="fas fa-users text-4xl mb-4 transition-all duration-300 group-hover:scale-110 text-slate-600 dark:text-slate-300 group-hover:text-blue-500"></i>
+                        <span class="text-sm font-bold uppercase tracking-widest">Usuarios</span>
+                    </a>
+                `;
+            }
+
+            // 2. Mi Gym (Visible para administrador y dueño)
+            html += `
+                <a href="adminMiGym.html" class="neu-card p-8 group">
+                    <i class="fas fa-building-shield text-4xl mb-4 transition-all duration-300 group-hover:scale-110 text-slate-600 dark:text-slate-300 group-hover:text-blue-500"></i>
+                    <span class="text-sm font-bold uppercase tracking-widest">Mi Gym</span>
+                </a>
+            `;
+
+            // 3. Nutrición (Visible para ambos)
+            html += `
+                <a href="adminNutricion.html" class="neu-card p-8 group">
+                    <i class="fas fa-leaf text-4xl mb-4 transition-all duration-300 group-hover:scale-110 text-slate-600 dark:text-slate-300 group-hover:text-blue-500"></i>
+                    <span class="text-sm font-bold uppercase tracking-widest">Nutrición</span>
+                </a>
+            `;
+
+            // 4. Rutinas (Visible para ambos)
+            html += `
+                <a href="adminRutinas.html" class="neu-card p-8 group">
+                    <i class="fas fa-dumbbell text-4xl mb-4 transition-all duration-300 group-hover:scale-110 text-slate-600 dark:text-slate-300 group-hover:text-blue-500"></i>
+                    <span class="text-sm font-bold uppercase tracking-widest">Rutinas</span>
+                </a>
+            `;
+
+            // 5. Equipo (Visible para ambos)
+            html += `
+                <a href="adminEntrenadores.html" class="neu-card p-8 group">
+                    <i class="fas fa-user-tie text-4xl mb-4 transition-all duration-300 group-hover:scale-110 text-slate-600 dark:text-slate-300 group-hover:text-blue-500"></i>
+                    <span class="text-sm font-bold uppercase tracking-widest">Equipo</span>
+                </a>
+            `;
+
+            grid.innerHTML = html;
+
+            // Ajustar el número de columnas de forma dinámica para un look perfecto
+            const totalItems = isAdmin ? 5 : 4;
+            grid.className = `grid grid-cols-1 sm:grid-cols-2 ${totalItems === 5 ? 'lg:grid-cols-5' : 'lg:grid-cols-4'} gap-8 mb-20 animate-fade`;
         }
 
         async function updateWidgetCode() {
