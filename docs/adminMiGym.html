@@ -921,9 +921,18 @@
                 owner_id: targetOwnerId
             };
 
-            const { error } = id
+            let { error } = id
                 ? await supabase.from('gym_clients').update(data).eq('id', id)
                 : await supabase.from('gym_clients').insert([data]);
+
+            // Si la columna nfc_uid no está en la caché de Supabase o la tabla, reintentar omitiendo nfc_uid
+            if (error && error.message && error.message.includes('nfc_uid')) {
+                delete data.nfc_uid;
+                const retry = id
+                    ? await supabase.from('gym_clients').update(data).eq('id', id)
+                    : await supabase.from('gym_clients').insert([data]);
+                error = retry.error;
+            }
 
             if (error) return showPopup('Error de Conexión', error.message, 'error');
 
