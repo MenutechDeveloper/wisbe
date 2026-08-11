@@ -294,6 +294,51 @@
             </div>
         </div>
 
+        <!-- E. Modal Renovación Rápida de Membresía -->
+        <div id="modal-renovacion" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+            <div class="card bg-white w-full max-w-md p-10 shadow-2xl animate-fade">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-2xl font-black text-slate-900 tracking-tight uppercase"><i class="fas fa-sync-alt text-blue-600 mr-2"></i> Renovar Membresía</h2>
+                    <button id="close-modal-renovacion" class="text-slate-400 hover:text-slate-600 transition-colors">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <form id="renovacion-form" class="space-y-6">
+                    <input type="hidden" id="renew-client-id">
+
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Socio</label>
+                        <p id="renew-client-name" class="text-lg font-bold text-slate-800">Cargando...</p>
+                        <p id="renew-current-status" class="text-xs text-slate-400 mt-1 uppercase font-semibold">Expiración actual: —</p>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Seleccionar Nuevo Plan</label>
+                        <select id="renew_membership_id" required class="input bg-white cursor-pointer">
+                            <option value="">-- Seleccionar Plan --</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <div>
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 block">Fecha de Inicio</label>
+                            <input type="date" id="renew_membership_start" required class="input bg-white">
+                        </div>
+                        <div>
+                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5 block">Fecha de Fin</label>
+                            <input type="date" id="renew_membership_end" required class="input bg-white">
+                        </div>
+                    </div>
+
+                    <div class="pt-6">
+                        <button type="submit" id="submit-btn-renovacion" class="w-full btn btn-primary py-4 text-xs font-black uppercase tracking-widest shadow-xl shadow-blue-600/30">
+                            Confirmar Renovación
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </main>
 
     <script type="module">
@@ -457,14 +502,38 @@
             container.innerHTML = clients.map(c => {
                 if (!c) return '';
                 console.log("Rendering client row for:", c);
-                const badgeColor = c.membership_status === 'Activa' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
-                                   c.membership_status === 'Vencida' ? 'bg-red-50 text-red-600 border-red-100' :
-                                   'bg-slate-100 text-slate-500 border-slate-200';
 
                 const membershipName = c.gym_memberships?.name || '<span class="text-slate-300">Ninguna</span>';
                 const dateStart = c.membership_start ? new Date(c.membership_start).toLocaleDateString('es-ES') : '—';
                 const dateEnd = c.membership_end ? new Date(c.membership_end).toLocaleDateString('es-ES') : '—';
                 const clientName = c.full_name || 'Sin Nombre';
+
+                // Calcular días restantes y alertas de vencimiento
+                let badgeColor = 'bg-slate-100 text-slate-500 border-slate-200';
+                let badgeText = c.membership_status;
+
+                if (c.membership_status === 'Activa' && c.membership_end) {
+                    const today = new Date();
+                    today.setHours(0,0,0,0);
+                    const endDate = new Date(c.membership_end);
+                    endDate.setHours(0,0,0,0);
+                    const diffTime = endDate - today;
+                    const daysRemaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    if (daysRemaining <= 0) {
+                        badgeColor = 'bg-red-50 text-red-600 border-red-100';
+                        badgeText = 'Vencida';
+                    } else if (daysRemaining <= 5) {
+                        badgeColor = 'bg-orange-50 text-orange-600 border-orange-100 animate-pulse';
+                        badgeText = `Por Vencer (${daysRemaining} d)`;
+                    } else {
+                        badgeColor = 'bg-emerald-50 text-emerald-600 border-emerald-100';
+                        badgeText = `Vigente (${daysRemaining} d)`;
+                    }
+                } else if (c.membership_status === 'Vencida') {
+                    badgeColor = 'bg-red-50 text-red-600 border-red-100';
+                    badgeText = 'Vencida';
+                }
 
                 return `
                     <tr class="hover:bg-slate-50 transition-colors">
@@ -488,12 +557,15 @@
                         </td>
                         <td class="px-6 py-4">
                             <span class="px-2.5 py-1 border text-[9px] font-black uppercase tracking-widest rounded-full ${badgeColor}">
-                                ${c.membership_status}
+                                ${badgeText}
                             </span>
                         </td>
                         <td class="px-6 py-4 text-right">
                             <button onclick="quickCheckIn('${c.id}')" class="p-2 text-slate-400 hover:text-emerald-500 transition-colors mr-2" title="Registrar Entrada Rápida">
                                 <i class="fas fa-calendar-check text-base"></i>
+                            </button>
+                            <button onclick="openRenewModal('${c.id}')" class="p-2 text-slate-400 hover:text-blue-600 transition-colors mr-2" title="Renovar Membresía">
+                                <i class="fas fa-sync-alt text-base"></i>
                             </button>
                             <button onclick="editClient('${c.id}')" class="p-2 text-slate-400 hover:text-blue-500 transition-colors mr-2" title="Editar">
                                 <i class="fas fa-edit"></i>
@@ -706,6 +778,95 @@
             document.getElementById('attendance-status-preview').classList.add('hidden');
             document.getElementById('modal-asistencia').style.display = 'flex';
         }
+
+        // --- RENEWAL SYSTEM (RENOVACIÓN DE MEMBRESÍA) ---
+
+        const modalRenovacion = document.getElementById('modal-renovacion');
+        document.getElementById('close-modal-renovacion').onclick = () => {
+            modalRenovacion.style.display = 'none';
+        };
+
+        window.openRenewModal = (clientId) => {
+            const c = loadedClientes.find(x => x.id === clientId);
+            if (!c) return;
+
+            document.getElementById('renew-client-id').value = c.id;
+            document.getElementById('renew-client-name').innerText = c.full_name;
+
+            const currentExp = c.membership_end ? new Date(c.membership_end).toLocaleDateString() : 'Ninguna';
+            document.getElementById('renew-current-status').innerText = `Vence actual: ${currentExp} (${c.membership_status})`;
+
+            // Populate select
+            const renewSelect = document.getElementById('renew_membership_id');
+            renewSelect.innerHTML = '<option value="">-- Seleccionar Plan --</option>' +
+                loadedMemberships.map(m => `<option value="${m.id}">${m.name} (${m.duration_days} días - $${m.price})</option>`).join('');
+
+            // Reset dates inputs
+            document.getElementById('renew_membership_start').value = '';
+            document.getElementById('renew_membership_end').value = '';
+
+            // Handle date calc on select
+            renewSelect.onchange = () => {
+                const mId = renewSelect.value;
+                if (!mId) {
+                    document.getElementById('renew_membership_start').value = '';
+                    document.getElementById('renew_membership_end').value = '';
+                    return;
+                }
+
+                const m = loadedMemberships.find(x => x.id === mId);
+                if (m) {
+                    let start = new Date();
+                    // Si el cliente ya está activo y tiene fecha futura, renovar a partir del vencimiento actual para no robarle días
+                    if (c.membership_status === 'Activa' && c.membership_end) {
+                        const currentEndDate = new Date(c.membership_end);
+                        if (currentEndDate > start) {
+                            start = currentEndDate;
+                            // Sumar un día para iniciar al día siguiente del vencimiento
+                            start.setDate(start.getDate() + 1);
+                        }
+                    }
+
+                    const startStr = start.toISOString().substring(0, 10);
+                    const end = new Date(start);
+                    end.setDate(start.getDate() + parseInt(m.duration_days));
+                    const endStr = end.toISOString().substring(0, 10);
+
+                    document.getElementById('renew_membership_start').value = startStr;
+                    document.getElementById('renew_membership_end').value = endStr;
+                }
+            };
+
+            modalRenovacion.style.display = 'flex';
+        };
+
+        document.getElementById('renovacion-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const clientId = document.getElementById('renew-client-id').value;
+            const membershipId = document.getElementById('renew_membership_id').value;
+            const start = document.getElementById('renew_membership_start').value;
+            const end = document.getElementById('renew_membership_end').value;
+
+            if (!clientId || !membershipId) return;
+
+            const updateData = {
+                membership_id: membershipId,
+                membership_start: start,
+                membership_end: end,
+                membership_status: 'Activa'
+            };
+
+            const { error } = await supabase
+                .from('gym_clients')
+                .update(updateData)
+                .eq('id', clientId);
+
+            if (error) return showPopup('Error de Conexión', error.message, 'error');
+
+            modalRenovacion.style.display = 'none';
+            showPopup('¡Membresía Renovada!', 'Se ha procesado y extendido la vigencia del socio correctamente.');
+            loadAllData();
+        };
 
         // --- EDIT MODALS ---
 
