@@ -1,0 +1,88 @@
+===============================================================================
+    GUÍA DE INTEGRACIÓN DE ESCÁNERES Y BOTELLAS NFC - MI GYM / WISBE
+===============================================================================
+
+Esta guía describe el funcionamiento, hardware recomendado y flujo de integración
+para implementar un sistema de control de acceso automatizado sin personal físico,
+utilizando las botellas brandeadas con pegatinas NFC.
+
+-------------------------------------------------------------------------------
+1. CONCEPTO Y FLUJO DE FUNCIONAMIENTO
+-------------------------------------------------------------------------------
+Cada cliente del gimnasio recibe una botella reutilizable que tiene una pegatina
+NFC interna de alta resistencia colocada debajo del logo. Esta pegatina contiene
+un identificador único de hardware conocido como UID (Unique Identifier).
+
+El flujo operativo es el siguiente:
+1. REGISTRO: El administrador del gimnasio escanea la botella una vez al registrar
+   al cliente en la plataforma (en el nuevo campo "Código de Botella NFC / UID")
+   dentro de la sección de Clientes de "Mi Gym".
+2. ACCESO AUTOMATIZADO: En la recepción del gimnasio se coloca un tótem o soporte
+   con una tablet, laptop o pantalla táctil apuntando a la entrada, conectada al
+   "Lector Escáner NFC" por USB.
+3. MODO PANTALLA COMPLETA NFC: El software de "Mi Gym" tendrá activa una vista
+   especial ("Modo Autocheck-In NFC") con un campo de lectura invisible y con autofoco.
+4. ESCANEO DE BOTELLA: El cliente aproxima su botella al escáner. El escáner lee el
+   UID, lo digita automáticamente en el sistema y simula pulsar "Enter".
+5. VALIDACIÓN EN TIEMPO REAL: El sistema inmediatamente:
+   - Busca al cliente asociado a ese UID en la base de datos de Supabase.
+   - Verifica el estado de su membresía (Activa vs. Vencida/Inactiva).
+   - Registra de forma autónoma una fila en la tabla de asistencias (`gym_attendance`),
+     marcando el estado como "Permitido" o "Denegado" y guardando la hora exacta.
+   - Muestra una pantalla de feedback visual gigante por 3 segundos:
+     * VERDE: "¡ACCESO PERMITIDO! Bienvenido [Nombre del Cliente]"
+     * ROJO: "¡ACCESO DENEGADO! Membresía vencida/inactiva. Favor de pasar a administración."
+   - Limpia el campo y vuelve a quedar en espera automática para el siguiente cliente.
+
+-------------------------------------------------------------------------------
+2. HARDWARE RECOMENDADO (QUÉ ADQUIRIR)
+-------------------------------------------------------------------------------
+Para que la integración sea sumamente fácil y no requiera instalar drivers complejos
+o programar SDKs nativos en el navegador, debemos adquirir un lector que funcione
+bajo la tecnología "Keyboard Emulation" o "Keyboard Wedge" (Emulación de Teclado USB HID).
+
+Estos lectores se conectan por USB y, al aproximar un tag NFC, leen su código UID,
+lo escriben en la computadora o tablet exactamente como si lo estuvieras tecleando
+con un teclado físico a alta velocidad, y terminan con un salto de línea (Enter).
+
+Lectores recomendados para comprar:
+1. LECTOR NFC EN EMULACIÓN DE TECLADO 13.56 MHz (GENÉRICO):
+   - Busca en Amazon o distribuidores como: "NFC Reader USB Keyboard Emulation 13.56MHz".
+   - Modelos como el "Sycreader USB NFC" o similares que vengan preconfigurados de fábrica
+     para emitir el UID en formato decimal o hexadecimal de 8 u 8+10 caracteres.
+2. ACR122U (EL ESTÁNDAR DE LA INDUSTRIA):
+   - Muy confiable y duradero. Lee tags ISO14443 Tipo A y B (Mifare, pegatinas NTAG213, NTAG215).
+   - Nota: Algunos modelos del ACR122U requieren que configures mediante su software oficial
+     el modo "Keyboard Emulation", de lo contrario funciona como lector inteligente PC/SC.
+     Asegúrate de pedir la versión configurada como Keyboard Wedge o emulador de teclado.
+3. LECTORES EMPOTRABLES DE LARGO ALCANCE:
+   - Si vas a fabricar un torniquete o puerta física, busca un módulo lector RFID/NFC
+     OEM de 13.56 MHz con interfaz USB HID Keyboard Emulation. Son fáciles de empotrar.
+
+-------------------------------------------------------------------------------
+3. SOBRE LAS PEGATINAS NFC Y BOTELLAS
+-------------------------------------------------------------------------------
+- TIPO DE TAG NFC: Compra pegatinas del tipo NTAG213 o NTAG215 (las más comunes,
+  compatibles con todos los dispositivos y lectores de 13.56 MHz).
+- COLOCACIÓN: Dado que las botellas suelen ser de metal o aluminio, debes comprar
+  pegatinas NFC especiales para metal denominadas "Anti-Metal NFC Tags" o "On-Metal NFC".
+  Las pegatinas NFC normales se anulan y no funcionan si se pegan directamente
+  sobre superficies metálicas debido a la interferencia del material. ¡Este detalle es clave!
+
+-------------------------------------------------------------------------------
+4. CAMBIOS REALIZADOS EN EL CÓDIGO
+-------------------------------------------------------------------------------
+1. BASE DE DATOS (docs/migym.sql):
+   - Se añadió la columna `nfc_uid` (TEXT, UNIQUE) en la tabla `gym_clients` para
+     vincular el UID de la botella NFC a cada socio.
+2. MODAL DE CLIENTES (docs/adminMiGym.html):
+   - Se agregó el campo opcional "Código de Botella NFC / UID" para poder asignarlo
+     directamente al crear o editar el perfil de un socio.
+3. MODO ESCÁNER NFC AUTOMÁTICO (docs/adminMiGym.html):
+   - Se implementó un nuevo botón "Modo Escáner NFC" al lado de los filtros.
+   - Al presionarlo, abre una hermosa interfaz oscura a pantalla completa optimizada
+     para tótems/tablets de entrada, con autofoco continuo en un campo de lectura oculto.
+   - Sincroniza al instante y muestra el aviso de gran tamaño por 3 segundos con sonido
+     y colores sumamente atractivos (Verde/Rojo) antes de limpiarse para el próximo cliente.
+
+===============================================================================

@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS public.gym_clients (
     membership_status TEXT NOT NULL DEFAULT 'Inactiva', -- 'Activa', 'Inactiva', 'Vencida'
     membership_start DATE,
     membership_end DATE,
+    nfc_uid TEXT UNIQUE, -- UID único de la botella NFC vinculada al socio
     owner_id UUID NOT NULL REFERENCES public.wisbe_users(id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
