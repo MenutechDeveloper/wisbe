@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wisbe Admin - Texturas 3D</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./assets/css/styleGYM.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .drop-zone--over {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+
+        .drop-zone__thumb {
+            width: 100%;
+            height: 100%;
+            border-radius: 1rem;
+            overflow: hidden;
+            background-color: #f1f5f9;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: relative;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <nav id="main-nav"></nav>
+
+    <main class="container mx-auto px-4 py-12">
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight uppercase">Admin Texturas 3D</h1>
+                <p class="text-slate-500 font-medium mt-1">Gestiona los archivos de textura para los modelos 3D del portfolio.</p>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Formulario -->
+            <div class="lg:col-span-1">
+                <div class="card bg-white p-8 shadow-xl border-slate-200">
+                    <h2 class="text-xl font-black text-slate-900 mb-6 uppercase tracking-tight">Nueva Textura</h2>
+
+                    <form id="texture-form" class="space-y-6">
+                        <div>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Producto (GLTF)</label>
+                            <select id="gltf_key" required class="input bg-white cursor-pointer">
+                                <option value="shirt">Camiseta</option>
+                                <option value="flyer">Flyer</option>
+                                <option value="poster">Poster</option>
+                                <option value="sticker">Sticker</option>
+                                <option value="tableqr">QR de Mesa</option>
+                                <option value="xbanner">X-Banner</option>
+                                <option value="flag">Bandera</option>
+                                <option value="banner">Banner</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Nombre / Etiqueta</label>
+                            <input type="text" id="label" placeholder="Ej: Diseño Verano" required class="input">
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Imagen de Textura</label>
+                            <div id="texture-drop-zone" class="w-full h-40 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center cursor-pointer hover:border-blue-500 transition-all overflow-hidden relative">
+                                <div class="text-center p-4">
+                                    <i class="fas fa-cloud-upload-alt text-3xl text-slate-300 mb-2"></i>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Suelta o haz clic</p>
+                                </div>
+                                <input type="file" id="texture-file" class="hidden" accept="image/*">
+                            </div>
+                        </div>
+
+                        <button type="submit" id="save-btn" class="w-full btn btn-primary py-4 text-xs font-black uppercase tracking-widest shadow-xl shadow-blue-600/30">
+                            Guardar Textura
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tabla -->
+            <div class="lg:col-span-2">
+                <div class="card bg-white border-slate-200 overflow-hidden shadow-xl">
+                    <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                        <h2 class="text-lg font-black text-slate-900 uppercase tracking-tight">Texturas Registradas</h2>
+                        <button onclick="fetchTextures()" class="text-blue-500 hover:text-blue-600">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-200">
+                                    <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Producto</th>
+                                    <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Etiqueta</th>
+                                    <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Vista Previa</th>
+                                    <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="texture-table-body" class="divide-y divide-slate-100">
+                                <tr>
+                                    <td colspan="4" class="px-6 py-12 text-center text-slate-400 font-medium italic">
+                                        Cargando texturas...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { supabase, uploadToCloudinary, Auth, showToast, showConfirm, renderNavbar, setupDragAndDrop } from './assets/js/utils.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = await Auth.checkAccess(['gym-admin']);
+            if (!user) return;
+
+            renderNavbar();
+            fetchTextures();
+
+            const dropZone = document.getElementById('texture-drop-zone');
+            const fileInput = document.getElementById('texture-file');
+            const form = document.getElementById('texture-form');
+            const saveBtn = document.getElementById('save-btn');
+
+            setupDragAndDrop(dropZone, fileInput, (file) => {
+                updateThumbnail(dropZone, file);
+            });
+
+            function updateThumbnail(dropZoneElement, file) {
+                let thumb = dropZoneElement.querySelector('.drop-zone__thumb');
+                if (!thumb) {
+                    thumb = document.createElement('div');
+                    thumb.classList.add('drop-zone__thumb');
+                    dropZoneElement.appendChild(thumb);
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    thumb.style.backgroundImage = `url('${e.target.result}')`;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                if (fileInput.files.length === 0) {
+                    showToast('Por favor selecciona una imagen', 'error');
+                    return;
+                }
+
+                const originalBtnText = saveBtn.textContent;
+                saveBtn.disabled = true;
+                saveBtn.textContent = 'SUBIENDO...';
+
+                try {
+                    showToast('Subiendo imagen...', 'info');
+                    const imageUrl = await uploadToCloudinary(fileInput.files[0]);
+
+                    const textureData = {
+                        gltf_key: document.getElementById('gltf_key').value,
+                        label: document.getElementById('label').value,
+                        texture_url: imageUrl
+                    };
+
+                    const { error } = await supabase.from('wisbe_render_textures').insert([textureData]);
+
+                    if (error) throw error;
+
+                    showToast('Textura guardada con éxito', 'success');
+                    form.reset();
+                    const thumb = dropZone.querySelector('.drop-zone__thumb');
+                    if (thumb) thumb.remove();
+                    fetchTextures();
+
+                } catch (err) {
+                    showToast(`Error: ${err.message}`, 'error');
+                } finally {
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = originalBtnText;
+                }
+            });
+        });
+
+        window.fetchTextures = async () => {
+            const { data, error } = await supabase
+                .from('wisbe_render_textures')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                showToast('Error al cargar texturas', 'error');
+                return;
+            }
+
+            renderTable(data);
+        };
+
+        function renderTable(textures) {
+            const tbody = document.getElementById('texture-table-body');
+            if (textures.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-12 text-center text-slate-400">No hay texturas registradas.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = textures.map(t => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 bg-blue-50 text-blue-600 text-[10px] font-black uppercase rounded">
+                            ${t.gltf_key}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm font-bold text-slate-700">${t.label}</td>
+                    <td class="px-6 py-4">
+                        <img src="${t.texture_url}" class="w-12 h-12 object-cover rounded-lg border border-slate-200">
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="deleteTexture('${t.id}')" class="text-slate-400 hover:text-red-500 transition-colors">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        window.deleteTexture = async (id) => {
+            if (await showConfirm('Eliminar Textura', '¿Estás seguro de que quieres eliminar esta textura?')) {
+                const { error } = await supabase.from('wisbe_render_textures').delete().eq('id', id);
+                if (error) {
+                    showToast('Error al eliminar', 'error');
+                } else {
+                    showToast('Textura eliminada', 'success');
+                    fetchTextures();
+                }
+            }
+        };
+    </script>
+</body>
+</html>
