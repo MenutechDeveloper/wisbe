@@ -675,6 +675,16 @@
                     tex.sampler.setRotation(0);
                     tex.sampler.setOffset({ u: 0, v: 0 });
                     tex.sampler.setScale({ u: 1, v: 1 });
+
+                    // Forzar filtros de suavizado lineal e interpolación de alta calidad
+                    // 9729 corresponde a LINEAR (Suave al hacer zoom)
+                    // 9987 corresponde a LINEAR_MIPMAP_LINEAR (Suave a la distancia)
+                    if (typeof tex.sampler.setMinFilter === 'function') {
+                        tex.sampler.setMinFilter(9987);
+                    }
+                    if (typeof tex.sampler.setMagFilter === 'function') {
+                        tex.sampler.setMagFilter(9729);
+                    }
                 }
 
                 let mat;
