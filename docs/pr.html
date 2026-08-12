@@ -678,9 +678,8 @@
 
                     // Forzar filtros de suavizado lineal e interpolación de alta calidad
                     // 9729 corresponde a LINEAR (Suave al hacer zoom)
-                    // 9987 corresponde a LINEAR_MIPMAP_LINEAR (Suave a la distancia)
                     if (typeof tex.sampler.setMinFilter === 'function') {
-                        tex.sampler.setMinFilter(9987);
+                        tex.sampler.setMinFilter(9729);
                     }
                     if (typeof tex.sampler.setMagFilter === 'function') {
                         tex.sampler.setMagFilter(9729);
@@ -695,6 +694,79 @@
 
                 if (mat && mat.pbrMetallicRoughness.baseColorTexture) {
                     mat.pbrMetallicRoughness.baseColorTexture.setTexture(tex);
+                }
+
+                // --- ESCANER PROFUNDO DE TEXTURAS DE THREE.JS PARA CALIDAD EXTREMA ---
+                const configureThreeTexture = (obj) => {
+                    if (!obj) return false;
+                    const isThreeTexture = obj.isTexture ||
+                        ('minFilter' in obj && 'magFilter' in obj && 'needsUpdate' in obj);
+                    if (isThreeTexture) {
+                        obj.minFilter = 9729; // LINEAR (Suavizado de minificación sin depender de dimensiones potencia de 2)
+                        obj.magFilter = 9729; // LINEAR (Suavizado de magnificación)
+                        obj.generateMipmaps = true;
+                        obj.needsUpdate = true;
+                        if ('anisotropy' in obj) {
+                            // Aplicar filtro anisotrópico si el navegador lo soporta para máxima nitidez en ángulos inclinados
+                            obj.anisotropy = 4;
+                        }
+                        return true;
+                    }
+                    return false;
+                };
+
+                const scanAndConfigure = (sourceObj) => {
+                    if (!sourceObj || typeof sourceObj !== 'object') return;
+
+                    // Propiedades estándar
+                    for (const key of Object.getOwnPropertyNames(sourceObj)) {
+                        try {
+                            const val = sourceObj[key];
+                            if (val && typeof val === 'object') {
+                                if (configureThreeTexture(val)) continue;
+                                for (const subKey of Object.getOwnPropertyNames(val)) {
+                                    const subVal = val[subKey];
+                                    if (subVal && typeof subVal === 'object') {
+                                        configureThreeTexture(subVal);
+                                    }
+                                }
+                            }
+                        } catch (e) {}
+                    }
+
+                    // Símbolos de JS (Muy común en model-viewer para ocultar objetos Three.js)
+                    for (const sym of Object.getOwnPropertySymbols(sourceObj)) {
+                        try {
+                            const val = sourceObj[sym];
+                            if (val && typeof val === 'object') {
+                                if (configureThreeTexture(val)) continue;
+                                for (const subKey of Object.getOwnPropertyNames(val)) {
+                                    const subVal = val[subKey];
+                                    if (subVal && typeof subVal === 'object') {
+                                        configureThreeTexture(subVal);
+                                    }
+                                }
+                                for (const subSym of Object.getOwnPropertySymbols(val)) {
+                                    const subVal = val[subSym];
+                                    if (subVal && typeof subVal === 'object') {
+                                        configureThreeTexture(subVal);
+                                    }
+                                }
+                            }
+                        } catch (e) {}
+                    }
+                };
+
+                // Escanear recursivamente la textura creada, el material y las propiedades de textura aplicadas
+                scanAndConfigure(tex);
+                if (mat) {
+                    scanAndConfigure(mat);
+                    if (mat.pbrMetallicRoughness) {
+                        scanAndConfigure(mat.pbrMetallicRoughness);
+                        if (mat.pbrMetallicRoughness.baseColorTexture) {
+                            scanAndConfigure(mat.pbrMetallicRoughness.baseColorTexture);
+                        }
+                    }
                 }
             } catch (e) {
                 console.error('Error applying texture:', e);
