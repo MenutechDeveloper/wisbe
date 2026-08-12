@@ -7,12 +7,16 @@
     <link rel="icon" type="image/png" sizes="1662x604" href="./assets/img/iconwisbe.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="./assets/css/styleGYM.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+        :root {
+            --primary: #3b82f6;
+            --border: #e2e8f0;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -20,10 +24,69 @@
             background-color: #f8fafc;
         }
 
-        /* Sidebar override to match styleGYM.css and user request */
+        /* Sidebar and styles extracted from styleGYM.css */
         #admin-sidebar {
+            position: fixed;
             top: 20px; /* Adjusting for no-navbar view */
+            left: 0;
+            z-index: 1000;
+            display: flex;
             height: calc(100vh - 40px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .admin-sidebar-closed {
+            left: -380px !important;
+        }
+
+        .admin-sidebar-open {
+            left: 0 !important;
+        }
+
+        .admin-sidebar-content {
+            width: 380px; /* Made bigger */
+            background: white;
+            padding: 2.5rem;
+            border-radius: 0 40px 40px 0;
+            box-shadow: 20px 0 60px rgba(0,0,0,0.1);
+            border: 2px solid var(--border);
+            border-left: none;
+            display: flex;
+            flex-direction: column;
+            min-height: 85vh; /* Increased height */
+        }
+
+        .admin-sidebar-tab {
+            width: 40px; /* Thinner by default */
+            height: 160px;
+            background: var(--primary);
+            border-radius: 0 24px 24px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 10px 0 30px rgba(59, 130, 246, 0.3);
+            position: absolute;
+            right: -40px; /* Match thinner width */
+            top: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .admin-sidebar-tab:hover {
+            width: 60px; /* Expands on hover */
+            right: -60px;
+        }
+
+        .admin-sidebar-tab span {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            color: white;
+            font-weight: 900;
+            font-size: 14px;
+            letter-spacing: 2px;
+            transform: rotate(180deg);
+            white-space: nowrap;
+            overflow: hidden;
         }
 
         .service-content {
@@ -177,7 +240,59 @@
         .sidebar-open .content-area {
             padding-left: 380px;
         }
+
+        /* 3D Viewer Styles */
+        model-viewer {
+            width: 100%;
+            height: 450px;
+            background-color: transparent;
+            --progress-bar-color: #3b82f6;
+        }
+
+        .texture-switcher {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 12px 4px;
+            scrollbar-width: none;
+            justify-content: center;
+        }
+
+        .texture-switcher::-webkit-scrollbar {
+            display: none;
+        }
+
+        .texture-option {
+            flex: 0 0 64px;
+            height: 64px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .texture-option.active {
+            border-color: #3b82f6;
+            transform: scale(1.1);
+        }
+
+        .current-texture-label {
+            font-size: 10px;
+            font-weight: 900;
+            color: #2563eb;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.5rem;
+            display: block;
+            height: 1rem;
+        }
     </style>
+
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="sidebar-open">
 
@@ -359,26 +474,20 @@
 
                     <!-- Sub-menu -->
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="switchSubTab('camisetas')" class="sub-tab px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border border-slate-200 text-slate-500 hover:bg-slate-100 transition-all active" data-sub="camisetas" data-t="sub-camisetas">Camisetas</button>
-                        <button onclick="switchSubTab('flyers')" class="sub-tab px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border border-slate-200 text-slate-500 hover:bg-slate-100 transition-all" data-sub="flyers" data-t="sub-flyers">Flyers</button>
-                        <button onclick="switchSubTab('posters')" class="sub-tab px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border border-slate-200 text-slate-500 hover:bg-slate-100 transition-all" data-sub="posters" data-t="sub-posters">Posters</button>
-                        <button onclick="switchSubTab('stickers')" class="sub-tab px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border border-slate-200 text-slate-500 hover:bg-slate-100 transition-all" data-sub="stickers" data-t="sub-stickers">Stickers</button>
+                        <button onclick="switchSubTab('paquetes')" class="sub-tab px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border border-slate-200 text-slate-500 hover:bg-slate-100 transition-all active" data-sub="paquetes">Packages</button>
+                        <button onclick="switchSubTab('camisetas')" class="sub-tab px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border border-slate-200 text-slate-500 hover:bg-slate-100 transition-all" data-sub="camisetas">T-Shirt</button>
+                        <button onclick="switchSubTab('flyers')" class="sub-tab px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border border-slate-200 text-slate-500 hover:bg-slate-100 transition-all" data-sub="flyers">Flyers</button>
+                        <button onclick="switchSubTab('posters')" class="sub-tab px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border border-slate-200 text-slate-500 hover:bg-slate-100 transition-all" data-sub="posters">Posters</button>
+                        <button onclick="switchSubTab('stickers')" class="sub-tab px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border border-slate-200 text-slate-500 hover:bg-slate-100 transition-all" data-sub="stickers">Stickers</button>
                     </div>
                 </div>
 
                 <div id="sub-content-container" class="flex-grow">
-                    <!-- Camisetas -->
-                    <div id="sub-camisetas" class="sub-content py-8">
-                        <div class="p-20 border-2 border-dashed border-slate-200 rounded-[40px] text-center text-slate-400 font-bold uppercase tracking-widest" data-t="coming-soon">
-                            Content Coming Soon
-                        </div>
-                    </div>
-
-                    <!-- Flyers (Containing Kits) -->
-                    <div id="sub-flyers" class="sub-content hidden py-8 space-y-12">
+                    <!-- Paquetes (Default View) -->
+                    <div id="sub-paquetes" class="sub-content py-8">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <!-- Starter -->
-                            <div class="space-y-4">
+                            <div class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-xl space-y-4">
                                 <h3 class="text-xl font-bold text-slate-800" id="kit-starter-title">Starter Marketing Kit <span class="text-amber-600">$399</span></h3>
                                 <ul class="space-y-2 text-sm text-slate-600 font-medium" id="kit-starter-list">
                                     <li>- 2 Sheet Posters (7.12x10.27")</li>
@@ -388,7 +497,7 @@
                                 </ul>
                             </div>
                             <!-- Premium -->
-                            <div class="space-y-4">
+                            <div class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-xl space-y-4">
                                 <h3 class="text-xl font-bold text-slate-800" id="kit-premium-title">Premium Marketing Kit <span class="text-amber-600">$555.04</span></h3>
                                 <ul class="space-y-2 text-sm text-slate-600 font-medium" id="kit-premium-list">
                                     <li>- 35 Table QR Codes (5.08x7.83")</li>
@@ -399,7 +508,7 @@
                                 </ul>
                             </div>
                             <!-- Deluxe -->
-                            <div class="space-y-4">
+                            <div class="bg-white p-8 rounded-[32px] border border-slate-100 shadow-xl space-y-4">
                                 <h3 class="text-xl font-bold text-slate-800" id="kit-deluxe-title">Deluxe Marketing Kit <span class="text-amber-600">$1372.48</span></h3>
                                 <ul class="space-y-2 text-sm text-slate-600 font-medium" id="kit-deluxe-list">
                                     <li>- 100 Promotional Cards (3.5x2")</li>
@@ -414,15 +523,43 @@
                         </div>
                     </div>
 
-                    <!-- Other subtabs -->
-                    <div id="sub-posters" class="sub-content hidden py-8">
-                        <div class="p-20 border-2 border-dashed border-slate-200 rounded-[40px] text-center text-slate-400 font-bold uppercase tracking-widest" data-t="coming-soon">
-                            Content Coming Soon
+                    <!-- Camisetas -->
+                    <div id="sub-camisetas" class="sub-content hidden py-8">
+                        <div class="max-w-3xl mx-auto flex flex-col items-center">
+                            <div class="w-full bg-white rounded-[40px] p-6 shadow-2xl border border-slate-100">
+                                <model-viewer id="shirt-viewer" src="./assets/img/shirt.gltf" camera-controls auto-rotate></model-viewer>
+                            </div>
+                            <div id="shirt-switcher" class="texture-switcher mt-8"></div>
                         </div>
                     </div>
+
+                    <!-- Flyers -->
+                    <div id="sub-flyers" class="sub-content hidden py-8">
+                        <div class="max-w-3xl mx-auto flex flex-col items-center">
+                            <div class="w-full bg-white rounded-[40px] p-6 shadow-2xl border border-slate-100">
+                                <model-viewer id="flyer-viewer" src="./assets/img/flyer.gltf" camera-controls auto-rotate></model-viewer>
+                            </div>
+                            <div id="flyer-switcher" class="texture-switcher mt-8"></div>
+                        </div>
+                    </div>
+
+                    <!-- Posters -->
+                    <div id="sub-posters" class="sub-content hidden py-8">
+                        <div class="max-w-3xl mx-auto flex flex-col items-center">
+                            <div class="w-full bg-white rounded-[40px] p-6 shadow-2xl border border-slate-100">
+                                <model-viewer id="poster-viewer" src="./assets/img/poster.gltf" camera-controls auto-rotate></model-viewer>
+                            </div>
+                            <div id="poster-switcher" class="texture-switcher mt-8"></div>
+                        </div>
+                    </div>
+
+                    <!-- Stickers -->
                     <div id="sub-stickers" class="sub-content hidden py-8">
-                        <div class="p-20 border-2 border-dashed border-slate-200 rounded-[40px] text-center text-slate-400 font-bold uppercase tracking-widest" data-t="coming-soon">
-                            Content Coming Soon
+                        <div class="max-w-3xl mx-auto flex flex-col items-center">
+                            <div class="w-full bg-white rounded-[40px] p-6 shadow-2xl border border-slate-100">
+                                <model-viewer id="sticker-viewer" src="./assets/img/sticker.gltf" camera-controls auto-rotate></model-viewer>
+                            </div>
+                            <div id="sticker-switcher" class="texture-switcher mt-8"></div>
                         </div>
                     </div>
                 </div>
@@ -430,6 +567,78 @@
         </section>
 
     </main>
+
+    <script type="module">
+        import { supabase } from './assets/js/utils.js';
+
+        const keys = ['shirt', 'flyer', 'poster', 'sticker'];
+
+        async function loadTextures(key) {
+            const viewer = document.getElementById(`${key}-viewer`);
+            const switcher = document.getElementById(`${key}-switcher`);
+
+            const { data, error } = await supabase
+                .from('wisbe_render_textures')
+                .select('*')
+                .eq('gltf_key', key)
+                .order('created_at', { ascending: true });
+
+            if (error || !data || data.length === 0) return;
+
+            switcher.innerHTML = data.map((t, i) => `
+                <div class="texture-option ${i === 0 ? 'active' : ''}"
+                     style="background-image: url('${t.texture_url}')"
+                     onclick="window.applyTexture('${key}', '${t.texture_url}', '${t.label}', this)">
+                </div>
+            `).join('');
+
+            // Apply first texture
+            if (data[0]) {
+                window.applyTexture(key, data[0].texture_url, data[0].label);
+            }
+        }
+
+        window.applyTexture = async (key, url, labelText, element) => {
+            const viewer = document.getElementById(`${key}-viewer`);
+
+            if (element) {
+                const switcher = element.parentElement;
+                switcher.querySelectorAll('.texture-option').forEach(opt => opt.classList.remove('active'));
+                element.classList.add('active');
+            }
+
+            if (!viewer.model) {
+                viewer.addEventListener('load', () => window.applyTexture(key, url, labelText, element), { once: true });
+                return;
+            }
+
+            try {
+                const tex = await viewer.createTexture(url);
+
+                // Reset texture transformation to avoid "weird rotations"
+                if (tex && tex.sampler) {
+                    tex.sampler.setRotation(0);
+                    tex.sampler.setOffset({ u: 0, v: 0 });
+                    tex.sampler.setScale({ u: 1, v: 1 });
+                }
+
+                let mat;
+                const model = viewer.model;
+
+                if (key === 'sticker') mat = model.materials.find(m => m.name === 'texturaCircle');
+                else mat = model.materials.find(m => m.pbrMetallicRoughness.baseColorTexture);
+
+                if (mat && mat.pbrMetallicRoughness.baseColorTexture) {
+                    mat.pbrMetallicRoughness.baseColorTexture.setTexture(tex);
+                }
+            } catch (e) {
+                console.error('Error applying texture:', e);
+            }
+        };
+
+        // Initialize
+        keys.forEach(key => loadTextures(key));
+    </script>
 
     <script>
         const translations = {
@@ -494,10 +703,6 @@
 
                 'kit-badge': 'Material Físico',
                 'kit-title': 'Marketing Kit',
-                'sub-camisetas': 'Camisetas',
-                'sub-flyers': 'Flyers',
-                'sub-posters': 'Posters',
-                'sub-stickers': 'Stickers',
                 'coming-soon': 'Contenido Próximamente',
 
                 'kit-starter-title': 'Starter Marketing Kit <span class="text-amber-600">$399</span>',
@@ -587,10 +792,6 @@
 
                 'kit-badge': 'Physical Material',
                 'kit-title': 'Marketing Kit',
-                'sub-camisetas': 'Camisetas',
-                'sub-flyers': 'Flyers',
-                'sub-posters': 'Posters',
-                'sub-stickers': 'Stickers',
                 'coming-soon': 'Content Coming Soon',
 
                 'kit-starter-title': 'Starter Marketing Kit <span class="text-amber-600">$399</span>',
@@ -707,6 +908,11 @@
             if (target) {
                 target.classList.add('active');
                 target.scrollTop = 0;
+
+                // If Marketing Kit is selected, ensure Packages subtab is shown
+                if (tabId === 'kit') {
+                    switchSubTab('paquetes');
+                }
             }
 
             document.querySelectorAll('.sidebar-item').forEach(item => {
@@ -722,7 +928,7 @@
             }
         }
 
-        function switchSubTab(subId) {
+        window.switchSubTab = (subId) => {
             document.querySelectorAll('.sub-content').forEach(content => {
                 content.classList.add('hidden');
             });
