@@ -57,7 +57,7 @@
 
                     <form id="texture-form" class="space-y-6">
                         <div>
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Producto (GLTF)</label>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Producto (GLTF) / Tipo</label>
                             <select id="gltf_key" required class="input bg-white cursor-pointer">
                                 <option value="shirt">Camiseta</option>
                                 <option value="flyer">Flyer</option>
@@ -67,7 +67,13 @@
                                 <option value="xbanner">X-Banner</option>
                                 <option value="flag">Bandera</option>
                                 <option value="banner">Banner</option>
+                                <option value="web">Website Portfolio</option>
                             </select>
+                        </div>
+
+                        <div id="website-url-container" class="hidden">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Enlace de la Website</label>
+                            <input type="url" id="website_url" placeholder="Ej: https://misitio.com" class="input">
                         </div>
 
                         <div>
@@ -141,6 +147,21 @@
             const form = document.getElementById('texture-form');
             const saveBtn = document.getElementById('save-btn');
 
+            const gltfSelect = document.getElementById('gltf_key');
+            const websiteUrlContainer = document.getElementById('website-url-container');
+            const websiteUrlInput = document.getElementById('website_url');
+
+            gltfSelect.addEventListener('change', () => {
+                if (gltfSelect.value === 'web') {
+                    websiteUrlContainer.classList.remove('hidden');
+                    websiteUrlInput.required = true;
+                } else {
+                    websiteUrlContainer.classList.add('hidden');
+                    websiteUrlInput.required = false;
+                    websiteUrlInput.value = '';
+                }
+            });
+
             setupDragAndDrop(dropZone, fileInput, (file) => {
                 updateThumbnail(dropZone, file);
             });
@@ -182,12 +203,20 @@
                         texture_url: imageUrl
                     };
 
+                    if (document.getElementById('gltf_key').value === 'web') {
+                        textureData.website_url = document.getElementById('website_url').value;
+                    }
+
                     const { error } = await supabase.from('wisbe_render_textures').insert([textureData]);
 
                     if (error) throw error;
 
                     showToast('Textura guardada con éxito', 'success');
                     form.reset();
+                    if (websiteUrlContainer) {
+                        websiteUrlContainer.classList.add('hidden');
+                        websiteUrlInput.required = false;
+                    }
                     const thumb = dropZone.querySelector('.drop-zone__thumb');
                     if (thumb) thumb.remove();
                     fetchTextures();
@@ -229,7 +258,10 @@
                             ${t.gltf_key}
                         </span>
                     </td>
-                    <td class="px-6 py-4 text-sm font-bold text-slate-700">${t.label}</td>
+                    <td class="px-6 py-4 text-sm font-bold text-slate-700">
+                        ${t.label}
+                        ${t.website_url ? `<span class="block text-[10px] text-slate-400 font-medium font-mono">${t.website_url}</span>` : ''}
+                    </td>
                     <td class="px-6 py-4">
                         <img src="${t.texture_url}" class="w-12 h-12 object-cover rounded-lg border border-slate-200">
                     </td>
