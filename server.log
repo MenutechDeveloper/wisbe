@@ -46,3 +46,7 @@
 127.0.0.1 - - [11/Aug/2026 20:42:07] "GET /assets/css/styleGYM.css HTTP/1.1" 200 -
 127.0.0.1 - - [11/Aug/2026 20:42:09] "GET /assets/js/utils.js HTTP/1.1" 200 -
 127.0.0.1 - - [11/Aug/2026 20:42:09] "GET /assets/js/config.js HTTP/1.1" 200 -
+127.0.0.1 - - [11/Aug/2026 23:57:06] "GET /adminEntrenadores.html HTTP/1.1" 200 -
+127.0.0.1 - - [11/Aug/2026 23:57:06] "GET /assets/css/styleGYM.css HTTP/1.1" 200 -
+127.0.0.1 - - [11/Aug/2026 23:57:07] "GET /assets/js/utils.js HTTP/1.1" 200 -
+127.0.0.1 - - [11/Aug/2026 23:57:07] "GET /assets/js/config.js HTTP/1.1" 200 -
