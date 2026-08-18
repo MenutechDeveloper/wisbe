@@ -812,6 +812,17 @@
             document.getElementById('modal-routine-details').style.display = 'none';
         };
 
+        function isGifOrImage(url) {
+            if (!url) return false;
+            const lower = url.toLowerCase();
+            return lower.includes('.gif') ||
+                   lower.includes('.png') ||
+                   lower.includes('.jpg') ||
+                   lower.includes('.jpeg') ||
+                   lower.includes('.webp') ||
+                   lower.includes('/image/upload/');
+        }
+
         window.playVideo = (title, desc, url) => {
             const container = document.getElementById('video-container');
             document.getElementById('player-video-title').innerText = title;
@@ -826,6 +837,8 @@
                     videoId = match[2];
                 }
                 html = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            } else if (isGifOrImage(url)) {
+                html = `<img class="w-full h-full object-contain animate-fade max-h-[80vh] mx-auto" src="${url}" alt="${title}">`;
             } else {
                 html = `<video class="w-full h-full animate-fade" controls autoplay src="${url}"></video>`;
             }
@@ -942,6 +955,8 @@
                         }
                         const ytThumb = `https://img.youtube.com/vi/${videoId}/0.jpg`;
                         mediaHtml = `<img src="${ytThumb}" class="w-full h-full object-cover opacity-60 group-hover/vid:scale-105 transition-transform duration-500">`;
+                    } else if (isGifOrImage(v.url)) {
+                        mediaHtml = `<img src="${v.url}" class="w-full h-full object-cover opacity-60 group-hover/vid:scale-105 transition-transform duration-500">`;
                     } else {
                         mediaHtml = `<video src="${v.url}#t=0.1" preload="metadata" muted class="w-full h-full object-cover opacity-60 group-hover/vid:scale-105 transition-transform duration-500"></video>`;
                     }
@@ -1092,6 +1107,8 @@
                     }
                     const ytThumb = `https://img.youtube.com/vi/${videoId}/0.jpg`;
                     mediaHtml = `<img src="${ytThumb}" class="w-full h-full object-cover">`;
+                } else if (isGifOrImage(v.url)) {
+                    mediaHtml = `<img src="${v.url}" class="w-full h-full object-cover">`;
                 } else {
                     mediaHtml = `<video src="${v.url}#t=0.1" preload="metadata" muted class="w-full h-full object-cover"></video>`;
                 }
