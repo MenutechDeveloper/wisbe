@@ -338,54 +338,65 @@
             }
         }
         openModal(r) {
-            const root = this.shadowRoot.getElementById('modal-root');
-            root.innerHTML = `
-                <div class="modal-overlay" id="overlay" style="display:flex">
-                    <div class="modal-container">
-                        <button class="close-btn" id="close-modal">
+            let globalPortal = document.getElementById('wisbe-gym-global-portal');
+            if (!globalPortal) {
+                globalPortal = document.createElement('div');
+                globalPortal.id = 'wisbe-gym-global-portal';
+                document.body.appendChild(globalPortal);
+            }
+
+            globalPortal.innerHTML = `
+                <div style="position:fixed; inset:0; width:100vw; height:100vh; background:rgba(15, 23, 42, 0.92); backdrop-filter:blur(8px); z-index:9999999; display:flex; align-items:center; justify-content:center; padding:1rem; box-sizing:border-box; margin:0; font-family:'Inter', system-ui, sans-serif; scrollbar-width:none; -ms-overflow-style:none;" id="wisbe-global-recipe-overlay">
+                    <div style="background:white; width:100%; max-width:1050px; max-height:88vh; border-radius:40px; overflow-y:auto; display:flex; flex-direction:row; position:relative; box-shadow:0 25px 50px -12px rgba(0, 0, 0, 0.5); scrollbar-width:none; -ms-overflow-style:none; flex-wrap:wrap;">
+                        <button id="wisbe-close-recipe-modal" style="position:absolute; top:1.5rem; right:1.5rem; width:42px; height:42px; border-radius:50%; background:#dbeafe; color:#1e40af; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.3s; z-index:1000; box-shadow:0 4px 6px -1px rgba(0, 0, 0, 0.1);">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="18" y1="6" x2="6" y2="18"></line>
                                 <line x1="6" y1="6" x2="18" y2="18"></line>
                             </svg>
                         </button>
-                        <div class="modal-image-side">
-                            <img src="${r.image_url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800'}">
-                            <div class="modal-image-overlay">
-                                <span style="background:var(--emerald-500); color:white; padding:0.4rem 1rem; border-radius:2rem; font-size:9px; font-weight:900; text-transform:uppercase; margin-bottom:0.75rem; width:fit-content; letter-spacing:0.15em;">${r.category || 'CENA'}</span>
+                        <div style="min-width:300px; flex:1; position:relative; flex-shrink:0; min-height:280px;">
+                            <img src="${r.image_url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800'}" style="width:100%; height:100%; object-fit:cover;">
+                            <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.7), transparent 60%); padding:2.5rem; display:flex; flex-direction:column; justify-content:flex-end;">
+                                <span style="background:#10b981; color:white; padding:0.4rem 1rem; border-radius:2rem; font-size:9px; font-weight:900; text-transform:uppercase; margin-bottom:0.75rem; width:fit-content; letter-spacing:0.15em;">${r.category || 'NUTRICIÓN'}</span>
                                 <h2 style="font-size:2.5rem; font-weight:900; color:white; margin:0; line-height:1; letter-spacing:-0.04em;">${r.title}</h2>
                             </div>
                         </div>
-                        <div class="modal-content-side">
-                            <div class="macro-grid">
-                                <div class="macro-card"><span class="macro-val">${r.calories || 0}</span><span class="macro-lbl">Kcal</span></div>
-                                <div class="macro-card"><span class="macro-val dark">${r.protein || 0}</span><span class="macro-lbl">Proteínas</span></div>
-                                <div class="macro-card"><span class="macro-val dark">${r.carbs || 0}</span><span class="macro-lbl">Carbs</span></div>
-                                <div class="macro-card"><span class="macro-val dark">${r.fats || 0}</span><span class="macro-lbl">Grasas</span></div>
+                        <div style="flex-grow:1; min-width:320px; flex:1.2; padding:2.5rem; overflow-y:auto; background:white; position:relative; display:flex; flex-direction:column; scrollbar-width:none; -ms-overflow-style:none;">
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(90px, 1fr)); gap:1rem; margin-bottom:2rem; width:100%;">
+                                <div style="background:#f8fafc; padding:1.25rem 0.5rem; border-radius:24px; text-align:center; border:1px solid #f1f5f9;"><span style="display:block; font-size:1.5rem; font-weight:900; color:#059669; margin-bottom:0.25rem;">${r.calories || 0}</span><span style="font-size:8px; font-weight:900; color:#94a3b8; text-transform:uppercase; letter-spacing:0.1em;">Kcal</span></div>
+                                <div style="background:#f8fafc; padding:1.25rem 0.5rem; border-radius:24px; text-align:center; border:1px solid #f1f5f9;"><span style="display:block; font-size:1.5rem; font-weight:900; color:#1e293b; margin-bottom:0.25rem;">${r.protein || 0}g</span><span style="font-size:8px; font-weight:900; color:#94a3b8; text-transform:uppercase; letter-spacing:0.1em;">Proteínas</span></div>
+                                <div style="background:#f8fafc; padding:1.25rem 0.5rem; border-radius:24px; text-align:center; border:1px solid #f1f5f9;"><span style="display:block; font-size:1.5rem; font-weight:900; color:#1e293b; margin-bottom:0.25rem;">${r.carbs || 0}g</span><span style="font-size:8px; font-weight:900; color:#94a3b8; text-transform:uppercase; letter-spacing:0.1em;">Carbs</span></div>
+                                <div style="background:#f8fafc; padding:1.25rem 0.5rem; border-radius:24px; text-align:center; border:1px solid #f1f5f9;"><span style="display:block; font-size:1.5rem; font-weight:900; color:#1e293b; margin-bottom:0.25rem;">${r.fats || 0}g</span><span style="font-size:8px; font-weight:900; color:#94a3b8; text-transform:uppercase; letter-spacing:0.1em;">Grasas</span></div>
                             </div>
 
-                            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2.5rem;">
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:2rem; margin-bottom:2.5rem;">
                                 <div>
-                                    <h4 class="section-title"><div class="section-num">01</div> Ingredientes</h4>
-                                    <div class="ingredients-list">${cleanData(r.ingredients).join('<br>')}</div>
+                                    <h4 style="font-size:1rem; font-weight:900; color:#1e293b; text-transform:uppercase; letter-spacing:-0.01em; display:flex; align-items:center; gap:0.5rem; margin-bottom:1.25rem;"><div style="width:1.75rem; height:1.75rem; background:#d1fae5; color:#059669; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:900;">01</div> Ingredientes</h4>
+                                    <div style="padding:1.25rem; background:white; border-radius:1rem; color:#475569; font-size:13px; line-height:1.6; margin-bottom:2rem; white-space:pre-wrap; border:1px solid #f8fafc;">${cleanData(r.ingredients).join('<br>')}</div>
                                 </div>
                                 <div>
-                                    <h4 class="section-title"><div class="section-num">02</div> Bio-Datos</h4>
-                                    <div class="bio-datos-grid">
-                                        <div class="bio-item"><span>⏱ Tiempo</span> <span class="bio-val">${r.prep_time || '20 min'}</span></div>
-                                        <div class="bio-item"><span>🔪 Dificultad</span> <span class="bio-val emerald">${r.difficulty || 'Media'}</span></div>
-                                        <div class="bio-item"><span>🥗 Estilo</span> <span class="bio-val">${r.diet_type || 'Equilibrada'}</span></div>
+                                    <h4 style="font-size:1rem; font-weight:900; color:#1e293b; text-transform:uppercase; letter-spacing:-0.01em; display:flex; align-items:center; gap:0.5rem; margin-bottom:1.25rem;"><div style="width:1.75rem; height:1.75rem; background:#d1fae5; color:#059669; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:900;">02</div> Bio-Datos</h4>
+                                    <div style="display:grid; gap:0.75rem; margin-bottom:2rem;">
+                                        <div style="background:#f8fafc; padding:0.75rem 1rem; border-radius:12px; display:flex; justify-content:space-between; align-items:center; font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8; border:1px solid #f1f5f9;"><span>⏱ Tiempo</span> <span style="color:#0f172a; font-weight:900;">${r.prep_time || '20 min'}</span></div>
+                                        <div style="background:#f8fafc; padding:0.75rem 1rem; border-radius:12px; display:flex; justify-content:space-between; align-items:center; font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8; border:1px solid #f1f5f9;"><span>🔪 Dificultad</span> <span style="color:#059669; font-weight:900;">${r.difficulty || 'Media'}</span></div>
+                                        <div style="background:#f8fafc; padding:0.75rem 1rem; border-radius:12px; display:flex; justify-content:space-between; align-items:center; font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8; border:1px solid #f1f5f9;"><span>🥗 Estilo</span> <span style="color:#0f172a; font-weight:900;">${r.diet_type || 'Equilibrada'}</span></div>
                                     </div>
                                 </div>
                             </div>
 
-                            <h4 class="section-title"><div class="section-num">03</div> Preparación Master</h4>
-                            <div class="instructions-box">${cleanData(r.instructions).join('<br>')}</div>
+                            <h4 style="font-size:1rem; font-weight:900; color:#1e293b; text-transform:uppercase; letter-spacing:-0.01em; display:flex; align-items:center; gap:0.5rem; margin-bottom:1.25rem;"><div style="width:1.75rem; height:1.75rem; background:#d1fae5; color:#059669; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:900;">03</div> Preparación Master</h4>
+                            <div style="background:#f8fafc; padding:2rem; border-radius:30px; border:2px dashed #e2e8f0; color:#475569; font-size:13px; line-height:1.6; white-space:pre-wrap;">${cleanData(r.instructions).join('<br>')}</div>
                         </div>
                     </div>
                 </div>
             `;
-            root.querySelector('#close-modal').onclick = () => root.innerHTML = '';
-            root.querySelector('#overlay').onclick = (e) => { if(e.target.id === 'overlay') root.innerHTML = ''; };
+
+            const closeBtn = document.getElementById('wisbe-close-recipe-modal');
+            const overlay = document.getElementById('wisbe-global-recipe-overlay');
+
+            const closeFn = () => { globalPortal.innerHTML = ''; };
+            if (closeBtn) closeBtn.onclick = closeFn;
+            if (overlay) overlay.onclick = (e) => { if (e.target === overlay) closeFn(); };
         }
     }
 
