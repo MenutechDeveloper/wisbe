@@ -1078,7 +1078,21 @@
                 try {
                     const url = await uploadToCloudinary(file);
                     document.getElementById('vid_url').value = url;
-                    showToast('¡Video subido con éxito!');
+
+                    const titleInput = document.getElementById('vid_title');
+                    const descInput = document.getElementById('vid_desc');
+
+                    const title = titleInput.value.trim() || file.name.replace(/\.[^/.]+$/, "") || 'Video de Ejercicio';
+                    const desc = descInput.value.trim();
+
+                    currentEditorVideos.push({ title, desc, url, thumbnail: '' });
+
+                    titleInput.value = '';
+                    descInput.value = '';
+                    document.getElementById('vid_url').value = '';
+
+                    renderEditorVideos();
+                    showToast('¡Video subido y añadido a la lista!');
                 } catch (err) {
                     console.error(err);
                     showPopup('Error', 'No se pudo subir el video a Cloudinary.', 'error');
