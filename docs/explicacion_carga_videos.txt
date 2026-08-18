@@ -1,0 +1,36 @@
+====================================================================
+EXPLICACIÓN: POR QUÉ NO SE MUESTRAN LOS VIDEOS EN LA LANDING PAGE
+====================================================================
+
+Cuando subes un video o un GIF en el Gestor de Contenido ("Contenido"), el sistema realiza un proceso en 3 pasos:
+
+1. SUBIR ARCHIVO / PEGAR ENLACE:
+   - Al seleccionar tu archivo GIF o video, se sube a Cloudinary y aparece el mensaje "¡Video subido con éxito!".
+   - En ese momento, la URL del video se coloca automáticamente en la caja de texto.
+
+2. AÑADIR AL LISTADO (PASO OBLIGATORIO 1):
+   - Debes asignar un "Título del Video" en la caja correspondiente.
+   - Debes hacer clic en el botón azul con el signo "+" (+ Añadir) para que el video pase a la lista de "Videos Publicados" que está abajo.
+
+3. GUARDAR CAMBIOS EN LA NUBE (PASO OBLIGATORIO 2):
+   - Al final de la ventana emergente (modal), debes hacer clic en el botón azul grande que dice:
+     "GUARDAR TODOS LOS CAMBIOS DEL PERFIL".
+
+====================================================================
+¿POR QUÉ APARECE EN 0 Y "SIN VIDEOS PUBLICADOS"?
+====================================================================
+Si solo subes el archivo pero NO haces clic en el botón "+" y luego en "GUARDAR TODOS LOS CAMBIOS DEL PERFIL", la base de datos (Supabase) sigue teniendo 0 videos guardados para ese entrenador.
+
+Por esa razón, al abrir "Ver Landing Page", la página lee la información guardada y muestra "0 VIDEOS DE TÉCNICA" y "SIN VIDEOS PUBLICADOS".
+
+====================================================================
+PASOS A SEGUIR PARA PUBLICAR TU VIDEO/GIF CORRECTAMENTE:
+====================================================================
+1. Haz clic en "Contenido" en la tarjeta del entrenador.
+2. Ve a la pestaña "Videos".
+3. Arrastra o selecciona tu archivo (o pega el enlace).
+4. Escribe un "Título del Video" (por ejemplo: "Sentadilla Libre").
+5. Haz clic en el botón cuadrado azul "+" para añadirlo a la lista.
+6. Verifica que el video aparezca listado abajo en "Videos Publicados".
+7. Haz clic en el botón grande inferior "GUARDAR TODOS LOS CAMBIOS DEL PERFIL".
+8. ¡Listo! Ahora abre "Ver Landing Page" y verás tu video/GIF reproduciéndose correctamente.
