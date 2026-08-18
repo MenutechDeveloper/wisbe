@@ -1065,6 +1065,8 @@
         const videoFileInput = document.getElementById('video-file-input');
         const videoPlaceholder = document.getElementById('video-upload-placeholder');
 
+        let lastUploadedFileName = '';
+
         setupDragAndDrop(
             videoDropZone,
             videoFileInput,
@@ -1078,21 +1080,14 @@
                 try {
                     const url = await uploadToCloudinary(file);
                     document.getElementById('vid_url').value = url;
+                    lastUploadedFileName = file.name.replace(/\.[^/.]+$/, "");
 
                     const titleInput = document.getElementById('vid_title');
-                    const descInput = document.getElementById('vid_desc');
+                    if (!titleInput.value.trim()) {
+                        titleInput.value = lastUploadedFileName;
+                    }
 
-                    const title = titleInput.value.trim() || file.name.replace(/\.[^/.]+$/, "") || 'Video de Ejercicio';
-                    const desc = descInput.value.trim();
-
-                    currentEditorVideos.push({ title, desc, url, thumbnail: '' });
-
-                    titleInput.value = '';
-                    descInput.value = '';
-                    document.getElementById('vid_url').value = '';
-
-                    renderEditorVideos();
-                    showToast('¡Video subido y añadido a la lista!');
+                    showToast('¡Video subido con éxito!');
                 } catch (err) {
                     console.error(err);
                     showPopup('Error', 'No se pudo subir el video a Cloudinary.', 'error');
@@ -1331,10 +1326,32 @@
             document.getElementById('modal-landing-editor').style.display = 'flex';
         };
 
+        // Helper to check and flush any video input currently filled into currentEditorVideos
+        function checkAndAddPendingVideo() {
+            const url = document.getElementById('vid_url').value.trim();
+            const titleInput = document.getElementById('vid_title');
+            const descInput = document.getElementById('vid_desc');
+            const title = titleInput.value.trim() || lastUploadedFileName || 'Video de Ejercicio';
+            const desc = descInput.value.trim();
+
+            if (url) {
+                // If this video isn't already added with exact same url
+                currentEditorVideos.push({ title, desc, url, thumbnail: '' });
+                titleInput.value = '';
+                descInput.value = '';
+                document.getElementById('vid_url').value = '';
+                lastUploadedFileName = '';
+                renderEditorVideos();
+            }
+        }
+
         // Save all editor changes to Supabase!
         document.getElementById('btn-save-landing-all').onclick = async () => {
             const id = document.getElementById('editor-trainer-id').value;
             if (!id) return;
+
+            // Check if there's any pending video URL/title in inputs and auto-add it before saving
+            checkAndAddPendingVideo();
 
             const saveBtn = document.getElementById('btn-save-landing-all');
             const originalText = saveBtn.innerText;
