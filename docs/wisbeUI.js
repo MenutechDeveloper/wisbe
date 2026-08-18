@@ -530,95 +530,109 @@
             }
 
             const waUrl = t.whatsapp_url ? (t.whatsapp_url.startsWith('http') ? t.whatsapp_url : 'https://wa.me/' + t.whatsapp_url) : '';
-            const igUrl = t.instagram_url ? ('https://instagram.com/' + t.instagram_url.replace('@','')) : '';
 
-            let coverHtml = `<div style="width:100%; height:100%; background: linear-gradient(135deg, #0f172a, #1e293b);"></div>`;
+            let coverHtml = ``;
             const cover = extra.cover_url || '';
             if (cover) {
                 if (cover.includes('.mp4') || cover.includes('.mov') || cover.includes('.quicktime')) {
                     coverHtml = `<video src="${cover}" style="width:100%; height:100%; object-fit:cover" autoplay loop muted playsinline></video>`;
                 } else {
-                    coverHtml = `<img src="${cover}" style="width:100%; height:100%; object-fit:cover">`;
+                    coverHtml = `<div style="width:100%; height:100%; background-image:url('${cover}'); background-size:cover; background-position:center;"></div>`;
                 }
             } else {
-                coverHtml = `<img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&q=80" style="width:100%; height:100%; object-fit:cover">`;
+                coverHtml = `<div style="width:100%; height:100%; background-image:url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&q=80'); background-size:cover; background-position:center;"></div>`;
             }
 
-            const root = this.shadowRoot.getElementById('modal-root');
-            root.innerHTML = `
-                <div class="modal-overlay" id="overlay" style="display:flex">
-                    <div class="modal-container" style="background:#020617; color:white; max-width:900px; padding:0; border-radius:32px; border:1px solid #1e293b;">
-                        <button class="close-btn" id="close-modal" style="position:absolute; top:1.25rem; right:1.25rem; z-index:100; background:#1e293b; color:white;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </button>
+            let globalPortal = document.getElementById('wisbe-gym-global-portal');
+            if (!globalPortal) {
+                globalPortal = document.createElement('div');
+                globalPortal.id = 'wisbe-gym-global-portal';
+                document.body.appendChild(globalPortal);
+            }
 
-                        <!-- Hero Header Banner -->
-                        <div style="position:relative; height:240px; width:100%; overflow:hidden; background:#0f172a;">
-                            ${coverHtml}
-                            <div style="position:absolute; inset:0; background:linear-gradient(to top, #020617 0%, rgba(2,6,23,0.4) 60%, transparent 100%);"></div>
-                            <div style="position:absolute; bottom:1.5rem; left:2rem; right:2rem; display:flex; align-items:flex-end; gap:1.5rem; flex-wrap:wrap;">
-                                <div style="width:5.5rem; height:5.5rem; border-radius:50%; border:3px solid #10b981; overflow:hidden; flex-shrink:0; background:#0f172a; box-shadow:0 10px 25px rgba(0,0,0,0.5);">
-                                    <img src="${t.image_url || 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80'}" style="width:100%; height:100%; object-fit:cover">
+            globalPortal.innerHTML = `
+                <div style="position:fixed; inset:0; width:100vw; height:100vh; background:rgba(2, 6, 23, 0.85); backdrop-filter:blur(12px); z-index:9999999; display:flex; align-items:center; justify-content:center; padding:1rem; box-sizing:border-box; margin:0; font-family:'Inter', system-ui, sans-serif; scrollbar-width:none; -ms-overflow-style:none;" id="wisbe-global-overlay">
+                    <div style="background:#020617; color:#f8fafc; width:100%; max-width:1024px; max-height:92vh; overflow-y:auto; border-radius:32px; border:1px solid #1e293b; box-shadow:0 25px 50px -12px rgba(0, 0, 0, 0.7); position:relative; display:flex; flex-direction:column; scrollbar-width:none; -ms-overflow-style:none;">
+
+                        <!-- Floating Close Button -->
+                        <div style="position:absolute; top:1.5rem; right:1.5rem; z-index:130;">
+                            <button id="wisbe-close-btn" style="width:48px; height:48px; border-radius:50%; background:rgba(30, 41, 59, 0.8); backdrop-filter:blur(8px); color:white; border:1px solid #334155; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='rgba(30, 41, 59, 0.8)'">
+                                <i class="fas fa-times" style="font-size:18px;"></i>
+                            </button>
+                        </div>
+
+                        <!-- Hero Section / Cover Banner -->
+                        <div style="position:relative; min-height:280px; height:320px; width:100%; background:#020617; overflow:hidden; display:flex; align-items:flex-end;">
+                            <div style="position:absolute; inset:0;">
+                                ${coverHtml}
+                            </div>
+                            <div style="position:absolute; inset:0; background:linear-gradient(to top, #020617 0%, rgba(2, 6, 23, 0.45) 60%, transparent 100%); z-index:10;"></div>
+
+                            <!-- Trainer Info Overlay -->
+                            <div style="position:absolute; bottom:0; left:0; right:0; padding:2rem; display:flex; flex-direction:row; align-items:flex-end; gap:1.5rem; z-index:20; flex-wrap:wrap;">
+                                <div style="width:128px; height:128px; border-radius:50%; border:4px solid #3b82f6; overflow:hidden; flex-shrink:0; background:#0f172a; box-shadow:0 20px 25px -5px rgba(0,0,0,0.5);">
+                                    <img src="${t.image_url || 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80'}" style="width:100%; height:100%; object-fit:cover;">
                                 </div>
-                                <div style="flex:1; min-width:200px;">
-                                    <span style="background:#10b981; color:white; padding:0.25rem 0.75rem; border-radius:1rem; font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:0.1em; display:inline-block; margin-bottom:0.4rem;">${t.specialty}</span>
-                                    <h2 style="font-size:1.75rem; font-weight:900; color:white; margin:0; line-height:1.2; text-transform:uppercase;">${t.full_name}</h2>
+                                <div style="flex:1; min-width:240px;">
+                                    <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; flex-wrap:wrap;">
+                                        <span style="padding:0.35rem 1rem; background:#2563eb; color:white; font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:0.1em; border-radius:9999px; box-shadow:0 10px 15px -3px rgba(37, 99, 235, 0.3);">${t.specialty}</span>
+                                        <div style="display:flex; align-items:center; gap:0.25rem; background:#1e293b; border:1px solid #334155; padding:0.25rem 0.75rem; border-radius:9999px; color:#fbbf24; font-size:12px; font-weight:900;">
+                                            <i class="fas fa-star"></i>
+                                            <span>5.0</span>
+                                        </div>
+                                    </div>
+                                    <h2 style="font-size:2.25rem; font-weight:900; color:white; margin:0; text-transform:uppercase; letter-spacing:-0.025em; line-height:1.1;">${t.full_name}</h2>
+                                    <p style="color:#94a3b8; margin-top:0.5rem; font-weight:500; max-width:36rem; font-size:0.875rem; line-height:1.5;">${t.bio || 'Instructor certificado enfocado en potenciar tu nivel y resultados de manera profesional.'}</p>
                                 </div>
+                                ${waUrl ? `
+                                    <div style="display:flex; gap:1rem;">
+                                        <a href="${waUrl}" target="_blank" style="text-decoration:none; padding:0.75rem 1.5rem; background:#059669; color:white; font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.1em; border-radius:0.75rem; display:inline-flex; align-items:center; gap:0.5rem; box-shadow:0 10px 15px -3px rgba(5, 150, 105, 0.2); transition:all 0.2s;" onmouseover="this.style.background='#10b981'" onmouseout="this.style.background='#059669'">
+                                            <i class="fab fa-whatsapp" style="font-size:18px;"></i> Asesoría Gratis
+                                        </a>
+                                    </div>
+                                ` : ''}
                             </div>
                         </div>
 
-                        <!-- Content Body -->
-                        <div style="padding:2rem; display:flex; flex-direction:column; gap:2rem;">
-                            <!-- Bio & Action Social Buttons -->
-                            <div style="display:flex; flex-direction:column; gap:1rem;">
-                                <p style="color:#94a3b8; font-size:14px; line-height:1.6; margin:0;">${t.bio || 'Instructor certificado enfocado en potenciar tu nivel y resultados.'}</p>
-
-                                <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:0.5rem;">
-                                    ${waUrl ? `
-                                        <a href="${waUrl}" target="_blank" style="text-decoration:none; background:#059669; color:white; padding:0.75rem 1.5rem; border-radius:1rem; font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:0.1em; display:inline-flex; align-items:center; gap:0.5rem; transition:all 0.3s;" onmouseover="this.style.background='#10b981'" onmouseout="this.style.background='#059669'">
-                                            <i class="fab fa-whatsapp" style="font-size:16px;"></i> WhatsApp
-                                        </a>
-                                    ` : ''}
-                                    ${igUrl ? `
-                                        <a href="${igUrl}" target="_blank" style="text-decoration:none; background:#be185d; color:white; padding:0.75rem 1.5rem; border-radius:1rem; font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:0.1em; display:inline-flex; align-items:center; gap:0.5rem; transition:all 0.3s;" onmouseover="this.style.background='#ec4899'" onmouseout="this.style.background='#be185d'">
-                                            <i class="fab fa-instagram" style="font-size:16px;"></i> Instagram
-                                        </a>
-                                    ` : ''}
-                                </div>
-                            </div>
+                        <!-- Main Content Body -->
+                        <div style="padding:2rem; display:flex; flex-direction:column; gap:2.5rem; background:#020617;">
 
                             <!-- Stats Grid -->
-                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:1rem;">
-                                <div style="background:#0f172a; padding:1.25rem 1rem; border-radius:20px; text-align:center; border:1px solid #1e293b;">
-                                    <span style="font-size:1.5rem; font-weight:900; color:#3b82f6; display:block; margin-bottom:0.25rem;">${extra.stats?.exp || '5+'}</span>
-                                    <span style="font-size:9px; font-weight:900; color:#64748b; text-transform:uppercase; letter-spacing:0.1em;">Años Exp.</span>
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem;">
+                                <div style="background:#0f172a; border:1px solid rgba(51, 65, 85, 0.8); padding:1.5rem; border-radius:1rem; text-align:center;">
+                                    <span style="display:block; font-size:1.875rem; font-weight:900; color:#3b82f6; margin-bottom:0.25rem;">${extra.stats?.exp || '5+'}</span>
+                                    <span style="font-size:10px; color:#94a3b8; font-weight:900; text-transform:uppercase; letter-spacing:0.1em;">Años de Exp.</span>
                                 </div>
-                                <div style="background:#0f172a; padding:1.25rem 1rem; border-radius:20px; text-align:center; border:1px solid #1e293b;">
-                                    <span style="font-size:1.5rem; font-weight:900; color:#10b981; display:block; margin-bottom:0.25rem;">${extra.stats?.clients || '100+'}</span>
-                                    <span style="font-size:9px; font-weight:900; color:#64748b; text-transform:uppercase; letter-spacing:0.1em;">Alumnos Activos</span>
+                                <div style="background:#0f172a; border:1px solid rgba(51, 65, 85, 0.8); padding:1.5rem; border-radius:1rem; text-align:center;">
+                                    <span style="display:block; font-size:1.875rem; font-weight:900; color:#10b981; margin-bottom:0.25rem;">${extra.stats?.clients || '100+'}</span>
+                                    <span style="font-size:10px; color:#94a3b8; font-weight:900; text-transform:uppercase; letter-spacing:0.1em;">Alumnos Activos</span>
                                 </div>
-                                <div style="background:#0f172a; padding:1.25rem 1rem; border-radius:20px; text-align:center; border:1px solid #1e293b;">
-                                    <span style="font-size:1.5rem; font-weight:900; color:#a855f7; display:block; margin-bottom:0.25rem;">${extra.videos ? extra.videos.length : '0'}</span>
-                                    <span style="font-size:9px; font-weight:900; color:#64748b; text-transform:uppercase; letter-spacing:0.1em;">Videos</span>
+                                <div style="background:#0f172a; border:1px solid rgba(51, 65, 85, 0.8); padding:1.5rem; border-radius:1rem; text-align:center;">
+                                    <span style="display:block; font-size:1.875rem; font-weight:900; color:#a855f7; margin-bottom:0.25rem;">${extra.videos ? extra.videos.length : '0'}</span>
+                                    <span style="font-size:10px; color:#94a3b8; font-weight:900; text-transform:uppercase; letter-spacing:0.1em;">Videos de Técnica</span>
                                 </div>
-                                <div style="background:#0f172a; padding:1.25rem 1rem; border-radius:20px; text-align:center; border:1px solid #1e293b;">
-                                    <span style="font-size:1.5rem; font-weight:900; color:#ec4899; display:block; margin-bottom:0.25rem;">${extra.stats?.rating || '99%'}</span>
-                                    <span style="font-size:9px; font-weight:900; color:#64748b; text-transform:uppercase; letter-spacing:0.1em;">Satisfacción</span>
+                                <div style="background:#0f172a; border:1px solid rgba(51, 65, 85, 0.8); padding:1.5rem; border-radius:1rem; text-align:center;">
+                                    <span style="display:block; font-size:1.875rem; font-weight:900; color:#ec4899; margin-bottom:0.25rem;">${extra.stats?.rating || '99%'}</span>
+                                    <span style="font-size:10px; color:#94a3b8; font-weight:900; text-transform:uppercase; letter-spacing:0.1em;">Satisfacción</span>
                                 </div>
                             </div>
 
-                            <!-- Videos Gallery -->
-                            ${(extra.videos && extra.videos.length > 0) ? `
-                                <div>
-                                    <h4 style="font-size:0.9rem; font-weight:900; color:white; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
-                                        <i class="fas fa-video" style="color:#3b82f6;"></i> Multimedia
-                                    </h4>
-                                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:1rem;">
-                                        ${extra.videos.map(v => `
-                                            <div style="background:#0f172a; border:1px solid #1e293b; border-radius:16px; overflow:hidden;">
+                            <!-- Layout Grid: Videos & Routines -->
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:2rem;">
+
+                                <!-- Videos Column -->
+                                <div style="display:flex; flex-direction:column; gap:1.5rem;">
+                                    <div style="border-bottom:1px solid #1e293b; padding-bottom:1rem;">
+                                        <h3 style="font-size:1.25rem; font-weight:900; text-transform:uppercase; letter-spacing:-0.025em; color:white; margin:0;">multimedia</h3>
+                                    </div>
+                                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:1.25rem;">
+                                        ${(!extra.videos || extra.videos.length === 0) ? `
+                                            <div style="padding:2.5rem; text-align:center; color:#64748b; border:1px dashed #1e293b; border-radius:1rem; width:100%;">
+                                                <i class="fas fa-video-slash" style="font-size:1.5rem; margin-bottom:0.5rem; display:block; color:#475569;"></i>
+                                                <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Sin videos publicados</span>
+                                            </div>
+                                        ` : extra.videos.map(v => `
+                                            <div style="background:#0f172a; border:1px solid rgba(51,65,85,0.8); border-radius:1rem; overflow:hidden; display:flex; flex-direction:column;">
                                                 <div style="aspect-ratio:16/9; background:#000; position:relative; overflow:hidden;">
                                                     ${(v.url.includes('.mp4') || v.url.includes('.mov')) ? `
                                                         <video src="${v.url}" style="width:100%; height:100%; object-fit:cover;" controls></video>
@@ -628,40 +642,52 @@
                                                         <img src="${v.url}" style="width:100%; height:100%; object-fit:cover;">
                                                     `}
                                                 </div>
-                                                <div style="padding:0.75rem 1rem;">
-                                                    <h5 style="font-size:12px; font-weight:900; color:white; margin:0; text-transform:uppercase;">${v.title}</h5>
-                                                    ${v.desc ? `<p style="font-size:11px; color:#64748b; margin:0.25rem 0 0 0; line-height:1.4;">${v.desc}</p>` : ''}
+                                                <div style="padding:1rem;">
+                                                    <h4 style="font-size:13px; font-weight:900; color:white; margin:0; text-transform:uppercase;">${v.title}</h4>
+                                                    <p style="font-size:12px; color:#94a3b8; margin:0.35rem 0 0 0; line-height:1.4;">${v.desc || 'Sin descripción'}</p>
                                                 </div>
                                             </div>
                                         `).join('')}
                                     </div>
                                 </div>
-                            ` : ''}
 
-                            <!-- Routines List -->
-                            ${(extra.routines && extra.routines.length > 0) ? `
-                                <div>
-                                    <h4 style="font-size:0.9rem; font-weight:900; color:white; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
-                                        <i class="fas fa-dumbbell" style="color:#10b981;"></i> Rutinas Destacadas
-                                    </h4>
-                                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:1rem;">
-                                        ${extra.routines.map(r => `
-                                            <div style="background:#0f172a; border:1px solid #1e293b; padding:1.25rem; border-radius:16px;">
-                                                <span style="background:rgba(16,185,129,0.1); color:#10b981; padding:0.2rem 0.6rem; border-radius:1rem; font-size:8px; font-weight:900; text-transform:uppercase; border:1px solid rgba(16,185,129,0.2); font-mono;">${r.difficulty || 'INTERMEDIO'}</span>
-                                                <h5 style="font-size:13px; font-weight:900; color:white; margin:0.5rem 0 0.25rem 0; text-transform:uppercase;">${r.title}</h5>
-                                                <p style="font-size:11px; color:#64748b; margin:0; line-height:1.4;">${r.desc || 'Plan de entrenamiento.'}</p>
+                                <!-- Routines Column -->
+                                <div style="display:flex; flex-direction:column; gap:1.5rem;">
+                                    <div style="border-bottom:1px solid #1e293b; padding-bottom:1rem;">
+                                        <h3 style="font-size:1.25rem; font-weight:900; text-transform:uppercase; letter-spacing:-0.025em; color:white; margin:0;">Rutinas</h3>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:1rem;">
+                                        ${(!extra.routines || extra.routines.length === 0) ? `
+                                            <div style="padding:2.5rem; text-align:center; color:#64748b; border:1px dashed #1e293b; border-radius:1rem;">
+                                                <i class="fas fa-dumbbell" style="font-size:1.5rem; margin-bottom:0.5rem; display:block; color:#475569;"></i>
+                                                <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Sin rutinas publicadas</span>
+                                            </div>
+                                        ` : extra.routines.map(r => `
+                                            <div style="background:#0f172a; border:1px solid #1e293b; padding:1.25rem; border-radius:1rem;">
+                                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                                                    <span style="padding:0.2rem 0.6rem; background:rgba(16, 185, 129, 0.1); color:#34d399; border:1px solid rgba(16, 185, 129, 0.2); font-size:9px; font-weight:900; text-transform:uppercase; border-radius:9999px;">${r.difficulty || 'INTERMEDIO'}</span>
+                                                    <span style="font-size:10px; color:#94a3b8; font-weight:700;"><i class="far fa-clock" style="margin-right:0.25rem;"></i> ${r.duration || '4 Semanas'}</span>
+                                                </div>
+                                                <h4 style="font-size:14px; font-weight:900; color:white; margin:0 0 0.25rem 0; text-transform:uppercase;">${r.title}</h4>
+                                                <p style="font-size:12px; color:#94a3b8; margin:0; line-height:1.4;">${r.desc || 'Plan estructurado.'}</p>
                                             </div>
                                         `).join('')}
                                     </div>
                                 </div>
-                            ` : ''}
+
+                            </div>
 
                         </div>
                     </div>
                 </div>
             `;
-            root.querySelector('#close-modal').onclick = () => root.innerHTML = '';
-            root.querySelector('#overlay').onclick = (e) => { if(e.target.id === 'overlay') root.innerHTML = ''; };
+
+            const closeBtn = document.getElementById('wisbe-close-btn');
+            const overlay = document.getElementById('wisbe-global-overlay');
+
+            const closeFn = () => { globalPortal.innerHTML = ''; };
+            if (closeBtn) closeBtn.onclick = closeFn;
+            if (overlay) overlay.onclick = (e) => { if (e.target === overlay) closeFn(); };
         }
     }
 
